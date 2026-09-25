@@ -109,6 +109,15 @@ header{display:flex;justify-content:space-between;align-items:center;padding:14p
 .row small{display:block;color:var(--muted);font-size:.86rem;line-height:1.3;margin-top:2px}
 .row .tag{display:block;font-size:.72rem;font-weight:700;color:var(--sea);margin-bottom:1px}
 .go{width:30px;height:30px;padding:6px;border-radius:50%;background:var(--mango);color:#14213D;stroke-width:2.4}
+.hot{margin:0 0 14px}
+.hot-l{margin:0 0 8px;font-size:.78rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.hot-c{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin:0 -18px;padding:2px 18px 4px;scroll-padding-inline:18px;scroll-snap-type:x proximity}
+.hot-c::-webkit-scrollbar{display:none}
+.hotb{flex:none;display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 14px 0 10px;border-radius:999px;background:var(--card);border:1.5px solid var(--line);font-weight:700;font-size:.9rem;white-space:nowrap;scroll-snap-align:start;transition:border-color .15s,transform .12s}
+.hotb:active{transform:scale(.96)}
+@media (hover:hover){.hotb:hover{border-color:var(--sea)}}
+.hotb .i{width:20px;height:20px;padding:3px;box-sizing:content-box;border-radius:50%;background:var(--mango);color:#14213D;stroke-width:2}
+.hotb:first-child .i{background:var(--rec);color:#fff}
 .results{background:var(--card);border:1.5px solid var(--line);border-radius:22px}
 .empty{color:var(--muted);padding:6px 4px}
 
@@ -213,12 +222,12 @@ textarea:focus,.in:focus{outline:none;border-color:var(--sea)}
   <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="shTitle" tabindex="-1"></div>
 </div>
 
-<script src="/config.js?v=2"></script>
+<script src="/config.js?v=3"></script>
 <script>
 const T = {
   es:{
     menuTitle:"¿En qué te ayudamos?", menuSub:"Toca una categoría, elige tu servicio y déjanos un mensaje.",
-    search:"Busca: TV, PS5, cámaras, Atlanta…", none:"No aparece aquí, pero déjanos un mensaje y lo vemos.",
+    search:"Busca: iPhone, taxes, PS5, Atlanta…", hot:"Lo más pedido", none:"No aparece aquí, pero déjanos un mensaje y lo vemos.",
     services:n=>`${n}`, tag:{casa:"Casa",tech:"Tecnología",tramites:"Trámites",negocio:"Negocios",viajes:"Viajes"},
     leave:"Déjanos un mensaje", leaveTitle:"Déjanos un mensaje", leaveSub:"Nota de voz o escrito. Te respondemos hoy.",
     when:"¿Para cuándo?", chips:["Hoy","Esta semana","Sin apuro"],
@@ -238,7 +247,7 @@ const T = {
   },
   en:{
     menuTitle:"How can we help?", menuSub:"Tap a category, pick your service and leave us a message.",
-    search:"Search: TV, PS5, cameras, Atlanta…", none:"Not listed? Leave us a message anyway.",
+    search:"Search: iPhone, taxes, PS5, Atlanta…", hot:"Most requested", none:"Not listed? Leave us a message anyway.",
     services:n=>`${n}`, tag:{casa:"Home",tech:"Tech",tramites:"Paperwork",negocio:"Business",viajes:"Rides"},
     leave:"Leave us a message", leaveTitle:"Leave us a message", leaveSub:"Voice note or text. We'll get back to you today.",
     when:"When do you need it?", chips:["Today","This week","No rush"],
@@ -302,6 +311,7 @@ function render(){
     <section class="hero"><h1>${esc(heroT)}</h1><p>${esc(heroP)}</p></section>
     ${Z.note?`<p class="zone">${ico("pin")}<span>${esc(Z.note[lang])}</span></p>`:""}
     <label class="search">${ico("search")}<input id="q" type="search" inputmode="search" autocomplete="off" enterkeyhint="search" placeholder="${esc(t.search)}" aria-label="${esc(t.search)}"></label>
+    ${seg?"":`<div class="hot" id="hot"><p class="hot-l">${esc(t.hot)}</p><div class="hot-c">${HOT.map(([k,ic,n])=>`<button type="button" class="hotb" data-k="${k}" data-i="${hotIndex(k,ic)}">${ico(ic)}<span>${esc(n[lang])}</span></button>`).join("")}</div></div>`}
     <div class="cats" id="cats">${Object.keys(S).map(k=>{
       const o = k===openCat, c = S[k][lang];
       return `<section class="cat${o?" open":""}" data-k="${k}">
@@ -326,6 +336,8 @@ function render(){
   if (st) fillSheet();
 }
 function onClick(e){
+  const hb = e.target.closest(".hotb");
+  if (hb){ openSheet(hb.dataset.k, +hb.dataset.i, hb); return; }
   const h = e.target.closest(".cat-h");
   if (h){ toggleCat(h.parentElement.dataset.k); return; }
   const r = e.target.closest(".row");
@@ -342,7 +354,8 @@ function toggleCat(k){
   if (openCat) setTimeout(()=>document.querySelector(`.cat[data-k="${openCat}"] .cat-h`).scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth",block:"start"}), 120);
 }
 function filter(q){
-  const n = norm(q.trim()), res = document.getElementById("results");
+  const n = norm(q.trim()), res = document.getElementById("results"), hot = document.getElementById("hot");
+  if (hot) hot.hidden = !!n;
   document.getElementById("cats").hidden = !!n; res.hidden = !n;
   let c = 0;
   res.querySelectorAll("li").forEach(li=>{
@@ -506,6 +519,7 @@ document.querySelectorAll(".lang button").forEach(b=>b.addEventListener("click",
 if (location.hash==="#mensaje") history.replaceState(null,"",location.search);
 render();
 if (qs.has("m")) openSheet(null, null);   // /go/?m=1 abre directo "Déjanos un mensaje" (lo usa la página principal)
+else if (seg && qs.get("i")) { const i = hotIndex(seg, qs.get("i")); if (i > -1) openSheet(seg, i); }   // /go/?s=tech&i=lock abre ese servicio
 </script>
 </body>
 </html>
