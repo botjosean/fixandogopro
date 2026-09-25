@@ -219,8 +219,8 @@ const CONFIG = {
 const ZONES = {
   bham:{ area:"Birmingham, AL", note:null },
   atl: { area:"Chamblee, Doraville y Atlanta",
-         note:{ es:"Estoy en Chamblee y Doraville los fines de semana. Déjame tu mensaje y aparta tu día.",
-                en:"I'm in Chamblee and Doraville on weekends. Leave a message to book your spot." } }
+         note:{ es:"Estamos en Chamblee y Doraville los fines de semana. Déjanos tu mensaje y aparta tu día.",
+                en:"We're in Chamblee and Doraville on weekends. Leave us a message to book your spot." } }
 };
 /* ================================================== */
 
@@ -282,43 +282,43 @@ const CAT_ICON = {casa:"home", tech:"gamepad", tramites:"file", negocio:"trend",
 
 const T = {
   es:{
-    menuTitle:"¿En qué te ayudo?", menuSub:"Toca una categoría, elige tu servicio y déjame un mensaje.",
-    search:"Busca: TV, PS5, cámaras, Atlanta…", none:"No lo encontré, pero déjame un mensaje y lo vemos.",
+    menuTitle:"¿En qué te ayudamos?", menuSub:"Toca una categoría, elige tu servicio y déjanos un mensaje.",
+    search:"Busca: TV, PS5, cámaras, Atlanta…", none:"No aparece aquí, pero déjanos un mensaje y lo vemos.",
     services:n=>`${n}`, tag:{casa:"Casa",tech:"Tecnología",tramites:"Trámites",negocio:"Negocios",viajes:"Viajes"},
-    leave:"Déjame un mensaje", leaveTitle:"Déjame un mensaje", leaveSub:"Nota de voz o escrito. Te respondo hoy.",
+    leave:"Déjanos un mensaje", leaveTitle:"Déjanos un mensaje", leaveSub:"Nota de voz o escrito. Te respondemos hoy.",
     when:"¿Para cuándo?", chips:["Hoy","Esta semana","Sin apuro"],
     voice:"Nota de voz", write:"Escribir",
     recIdle:"Toca para grabar (hasta 90 s)", recOn:"Grabando… toca para parar", recDone:"Lista. Escúchala o envíala.", redo:"Grabar de nuevo",
-    micErr:"No pude usar el micrófono. Escríbeme aquí abajo.",
-    ph:"Cuéntame qué necesitas. Ej: TV de 65\" en pared de drywall, en Hoover.",
+    micErr:"No se pudo usar el micrófono. Escríbenos aquí abajo.",
+    ph:"Cuéntanos qué necesitas. Ej: TV de 65\" en pared de drywall, en Hoover.",
     name:"Tu nombre", phone:"Tu teléfono",
     send:"Enviar mensaje", sending:"Enviando…",
     needPhone:"Pon tu teléfono para poder responderte.", needMsg:"Graba una nota o escribe tu mensaje.",
-    fail:"No se pudo enviar. Escríbeme directo abajo.",
-    or:"o escríbeme directo", sms:"Texto", tel:"Llamar", wa:"WhatsApp", fb:"Messenger",
-    doneT:n=>`¡Listo${n?`, ${n}`:""}!`, doneP:"Recibí tu mensaje. Te respondo hoy mismo.", close:"Cerrar",
-    msg:(s,w,d)=>`Hola, vi tu tarjeta. Me interesa: ${s}.`+(w?` Para: ${w.toLowerCase()}.`:"")+(d?` ${d}`:""),
-    generic:"Hola, vi tu tarjeta y quiero información.", general:"Consulta general",
+    fail:"No se pudo enviar. Escríbenos directo abajo.",
+    or:"o escríbenos directo", sms:"Texto", tel:"Llamar", wa:"WhatsApp", fb:"Messenger",
+    doneT:n=>`¡Listo${n?`, ${n}`:""}!`, doneP:"Recibimos tu mensaje. Te respondemos hoy mismo.", close:"Cerrar",
+    msg:(s,w,d)=>`Hola, vi la tarjeta de Fix & Go. Me interesa: ${s}.`+(w?` Para: ${w.toLowerCase()}.`:"")+(d?` ${d}`:""),
+    generic:"Hola, vi la tarjeta de Fix & Go y quiero información.", general:"Consulta general",
     foot:a=>`Fix & Go · ${a} · Español e inglés`
   },
   en:{
-    menuTitle:"How can I help?", menuSub:"Tap a category, pick your service and leave me a message.",
-    search:"Search: TV, PS5, cameras, Atlanta…", none:"Not listed? Leave me a message anyway.",
+    menuTitle:"How can we help?", menuSub:"Tap a category, pick your service and leave us a message.",
+    search:"Search: TV, PS5, cameras, Atlanta…", none:"Not listed? Leave us a message anyway.",
     services:n=>`${n}`, tag:{casa:"Home",tech:"Tech",tramites:"Paperwork",negocio:"Business",viajes:"Rides"},
-    leave:"Leave me a message", leaveTitle:"Leave me a message", leaveSub:"Voice note or text. I'll get back to you today.",
+    leave:"Leave us a message", leaveTitle:"Leave us a message", leaveSub:"Voice note or text. We'll get back to you today.",
     when:"When do you need it?", chips:["Today","This week","No rush"],
     voice:"Voice note", write:"Type it",
     recIdle:"Tap to record (up to 90s)", recOn:"Recording… tap to stop", recDone:"Ready. Play it back or send it.", redo:"Record again",
     micErr:"Couldn't use the microphone. Type your message below.",
-    ph:"Tell me what you need. E.g. 65\" TV on drywall, in Hoover.",
+    ph:"Tell us what you need. E.g. 65\" TV on drywall, in Hoover.",
     name:"Your name", phone:"Your phone",
     send:"Send message", sending:"Sending…",
-    needPhone:"Add your phone so I can get back to you.", needMsg:"Record a voice note or type your message.",
-    fail:"Couldn't send. Reach me directly below.",
-    or:"or reach me directly", sms:"Text", tel:"Call", wa:"WhatsApp", fb:"Messenger",
-    doneT:n=>`Got it${n?`, ${n}`:""}!`, doneP:"Your message is in. I'll get back to you today.", close:"Close",
-    msg:(s,w,d)=>`Hi, I got your card. I'm interested in: ${s}.`+(w?` Needed: ${w.toLowerCase()}.`:"")+(d?` ${d}`:""),
-    generic:"Hi, I got your card and I'd like some info.", general:"General question",
+    needPhone:"Add your phone so we can get back to you.", needMsg:"Record a voice note or type your message.",
+    fail:"Couldn't send. Reach us directly below.",
+    or:"or reach us directly", sms:"Text", tel:"Call", wa:"WhatsApp", fb:"Messenger",
+    doneT:n=>`Got it${n?`, ${n}`:""}!`, doneP:"Your message is in. We'll get back to you today.", close:"Close",
+    msg:(s,w,d)=>`Hi, I got the Fix & Go card. I'm interested in: ${s}.`+(w?` Needed: ${w.toLowerCase()}.`:"")+(d?` ${d}`:""),
+    generic:"Hi, I got the Fix & Go card and I'd like some info.", general:"General question",
     foot:a=>`Fix & Go · ${a} · English and Spanish`
   }
 };
@@ -333,7 +333,7 @@ const S = {
       ["bell",{es:["Sabe quién toca antes de abrir","Timbre con video y cerraduras inteligentes"],en:["Know who's at the door before you open","Video doorbells and smart locks"]}],
       ["fan",{es:["Ventilador de techo nuevo, instalado hoy",""],en:["New ceiling fan, installed today",""]}],
       ["bulb",{es:["Lámparas y luces que por fin se ven bien","Cambio de lámparas, LED y dimmers"],en:["Lights that finally look right","Fixture swaps, LED upgrades and dimmers"]}],
-      ["sofa",{es:["Armo tus muebles para que no pelees con las instrucciones","Camas, closets, escritorios, cunas"],en:["Furniture assembly, no instructions needed","Beds, dressers, desks, cribs"]}],
+      ["sofa",{es:["Armamos tus muebles para que no pelees con las instrucciones","Camas, closets, escritorios, cunas"],en:["Furniture assembly, no instructions needed","Beds, dressers, desks, cribs"]}],
       ["frame",{es:["Cuadros, espejos y repisas bien colgados",""],en:["Shelves, mirrors and art hung right",""]}],
       ["wifi",{es:["WiFi que llega a todos los cuartos","Se acabaron los puntos muertos"],en:["Wi-Fi in every room","No more dead spots"]}],
       ["home",{es:["Casa inteligente","Alexa, Google Home, luces y enchufes por voz"],en:["Smart home setup","Alexa, Google Home, voice-controlled lights"]}],
@@ -341,37 +341,37 @@ const S = {
     ]
   },
   tech:{
-    es:{t:"¿Lenta, caliente o no prende? La arreglo", d:"PC, PS5, controles, iPhone, Mac o cualquier cosa digital. En tu casa o a distancia.", tile:"PC, PS5, controles, Apple y cuentas hackeadas"},
-    en:{t:"Slow, overheating or dead? I'll fix it", d:"PCs, PS5, controllers, iPhone, Mac or anything digital. At your place or remote.", tile:"PC, PS5, controllers, Apple and hacked accounts"},
+    es:{t:"¿Lenta, caliente o no prende? La arreglamos", d:"PC, PS5, controles, iPhone, Mac o cualquier cosa digital. En tu casa o a distancia.", tile:"PC, PS5, controles, Apple y cuentas hackeadas"},
+    en:{t:"Slow, overheating or dead? We'll fix it", d:"PCs, PS5, controllers, iPhone, Mac or anything digital. At your place or remote.", tile:"PC, PS5, controllers, Apple and hacked accounts"},
     items:[
       ["laptop",{es:["Tu computadora lenta, como nueva","Limpieza, optimización y que no se caliente"],en:["Slow computer? Make it fast again","Cleanup, tune-up, no more overheating"]}],
       ["gamepad",{es:["PS5 o Xbox que suena como avión","Limpieza interna, pasta térmica, puerto HDMI"],en:["PS5 or Xbox loud as a jet engine","Deep cleaning, thermal paste, HDMI port repair"]}],
-      ["joy",{es:["Control que se mueve solo","Reparo el drift, botones y batería"],en:["Controller moving on its own?","Stick drift, buttons and battery repair"]}],
-      ["lock",{es:["¿Te hackearon Facebook, Instagram o el correo?","Recupero la cuenta y la blindo"],en:["Hacked Facebook, Instagram or email?","I recover it and lock it down"]}],
+      ["joy",{es:["Control que se mueve solo","Reparamos el drift, botones y batería"],en:["Controller moving on its own?","Stick drift, buttons and battery repair"]}],
+      ["lock",{es:["¿Te hackearon Facebook, Instagram o el correo?","Recuperamos la cuenta y la blindamos"],en:["Hacked Facebook, Instagram or email?","We recover it and lock it down"]}],
       ["phone",{es:["iPhone y Mac sin espacio o sin respaldo","iCloud, fotos, configuración y optimización"],en:["iPhone or Mac out of space or not backed up","iCloud, photos, setup and tune-up"]}],
       ["bolt",{es:["Más velocidad sin comprar otra PC","SSD, memoria RAM, tarjeta de video"],en:["More speed without buying a new PC","SSD, RAM and graphics upgrades"]}],
-      ["db",{es:["Recupero tus fotos y archivos",""],en:["Get your photos and files back",""]}],
+      ["db",{es:["Recuperamos tus fotos y archivos",""],en:["Get your photos and files back",""]}],
       ["bug",{es:["Virus, anuncios raros y ventanas que se abren solas",""],en:["Viruses, pop-ups and weird ads, gone",""]}],
       ["tablet",{es:["Tablet o teléfono nuevo, listo para usar","Pasar datos, control parental, configuración"],en:["New phone or tablet, ready to go","Data transfer, parental controls, setup"]}],
-      ["headset",{es:["Soporte técnico a distancia","Te lo arreglo en línea, sin salir de casa"],en:["Remote tech support","Fixed online, no need to go anywhere"]}],
-      ["cpu",{es:["Te armo tu PC gamer o de trabajo",""],en:["Custom gaming or work PC build",""]}]
+      ["headset",{es:["Soporte técnico a distancia","Te lo arreglamos en línea, sin salir de casa"],en:["Remote tech support","Fixed online, no need to go anywhere"]}],
+      ["cpu",{es:["Te armamos tu PC gamer o de trabajo",""],en:["Custom gaming or work PC build",""]}]
     ]
   },
   tramites:{
-    es:{t:"Tus trámites, resueltos", d:"Taxes, LLC, seguros, pagos, citas y paquetería. Tú me dices qué necesitas y lo hacemos juntos.", tile:"Taxes, LLC, seguro de auto, pagos de USCIS, citas y paquetería"},
-    en:{t:"Paperwork, handled", d:"Taxes, LLCs, insurance, payments, appointments and shipping. Tell me what you need and we get it done together.", tile:"Taxes, LLCs, car insurance, USCIS payments, appointments and shipping"},
+    es:{t:"Tus trámites, resueltos", d:"Taxes, LLC, seguros, pagos, citas y paquetería. Tú nos dices qué necesitas y nosotros nos encargamos.", tile:"Taxes, LLC, seguro de auto, pagos de USCIS, citas y paquetería"},
+    en:{t:"Paperwork, handled", d:"Taxes, LLCs, insurance, payments, appointments and shipping. Tell us what you need and we take care of it.", tile:"Taxes, LLCs, car insurance, USCIS payments, appointments and shipping"},
     items:[
-      ["receipt",{es:["Preparo tus taxes","En español, con Social o ITIN, y te explico todo"],en:["Tax preparation","In Spanish or English, with SSN or ITIN, explained clearly"],kw:"impuestos income tax declaracion reembolso refund w2 w-2 1099 irs"}],
-      ["file",{es:["Creo tu LLC o negocio","Registro en el estado, número EIN y todo en orden"],en:["Set up your LLC or business","State filing, EIN number and everything in order"]}],
-      ["shield",{es:["Seguro de auto más barato","Comparo varias aseguradoras y te conecto con un agente en español"],en:["Cheaper car insurance","I compare several insurers and connect you with an agent"],kw:"aseguranza seguro carro auto vin insurance"}],
+      ["receipt",{es:["Preparamos tus taxes","En español, con Social o ITIN, y te explicamos todo"],en:["Tax preparation","In Spanish or English, with SSN or ITIN, explained clearly"],kw:"impuestos income tax declaracion reembolso refund w2 w-2 1099 irs"}],
+      ["file",{es:["Creamos tu LLC o negocio","Registro en el estado, número EIN y todo en orden"],en:["Set up your LLC or business","State filing, EIN number and everything in order"]}],
+      ["shield",{es:["Seguro de auto más barato","Comparamos varias aseguradoras y te conectamos con un agente en español"],en:["Cheaper car insurance","We compare several insurers and connect you with an agent"],kw:"aseguranza seguro carro auto vin insurance"}],
       ["card",{es:["Pagos en línea sin enredos","USCIS, multas, facturas y más"],en:["Online payments, no hassle","USCIS, tickets, bills and more"],kw:"migracion inmigracion asilo tasa immigration asylum fee"}],
       ["form",{es:["Citas, formularios y cuentas en línea","Cita de licencia, consulado o pasaporte, correo y contraseñas"],en:["Appointments, forms and online accounts","Driver's license, consulate or passport appointments, email and passwords"],kw:"dmv alea licencia de conducir driver license matricula"}],
       ["box",{es:["Envío de paquetes a tu país","México y Latinoamérica"],en:["Ship packages home","Mexico and Latin America"],kw:"paqueteria paquete caja envio encomienda guatemala honduras salvador"}]
     ]
   },
   negocio:{
-    es:{t:"Más clientes, sin quitarte tiempo", d:"Te pongo en Google, en redes y en anuncios. Tú atiendes, yo traigo gente.", tile:"Google Maps, anuncios, página web y respuestas con IA"},
-    en:{t:"More customers, less of your time", d:"Google, social media and ads handled. You run the business, I bring the people.", tile:"Google Maps, ads, websites and AI replies"},
+    es:{t:"Más clientes, sin quitarte tiempo", d:"Te ponemos en Google, en redes y en anuncios. Tú atiendes, nosotros traemos la gente.", tile:"Google Maps, anuncios, página web y respuestas con IA"},
+    en:{t:"More customers, less of your time", d:"Google, social media and ads handled. You run the business, we bring the people.", tile:"Google Maps, ads, websites and AI replies"},
     items:[
       ["pin",{es:["Que te encuentren en Google Maps","Perfil de Google optimizado con fotos y reseñas"],en:["Get found on Google Maps","Optimized Google Business Profile, photos and reviews"]}],
       ["mega",{es:["Anuncios en Facebook e Instagram que traen mensajes","Meta Ads con presupuesto que tú controlas"],en:["Facebook and Instagram ads that bring in messages","Meta Ads on a budget you control"]}],
@@ -385,13 +385,13 @@ const S = {
     ]
   },
   viajes:{
-    es:{t:"Te llevo, te espero y te traigo", d:"Viajes personalizados con alguien que habla tu idioma y te acompaña.", tile:"Consulado en Atlanta, aeropuerto y citas"},
-    en:{t:"I drive you, wait, and bring you back", d:"Personal rides with a bilingual driver who goes with you.", tile:"Atlanta trips, airport rides and appointments"},
+    es:{t:"Te llevamos, te esperamos y te traemos", d:"Viajes personalizados con un chofer que habla tu idioma y te acompaña.", tile:"Consulado en Atlanta, aeropuerto y citas"},
+    en:{t:"We drive you, wait, and bring you back", d:"Personal rides with a bilingual driver who goes with you.", tile:"Atlanta trips, airport rides and appointments"},
     items:[
-      ["car",{es:["Consulado o trámites en Atlanta, sin estrés","Salimos temprano, te espero y regresamos"],en:["Atlanta appointments, stress-free","Early start, I wait, we come back together"]}],
+      ["car",{es:["Consulado o trámites en Atlanta, sin estrés","Salimos temprano, te esperamos y regresamos"],en:["Atlanta appointments, stress-free","Early start, we wait, we come back together"]}],
       ["plane",{es:["Al aeropuerto a tiempo","Birmingham y Atlanta"],en:["To the airport on time","Birmingham and Atlanta"]}],
-      ["heart",{es:["Citas médicas: no vas solo","Te llevo, te espero y te regreso"],en:["Medical appointments, you're not alone","I take you, wait, and bring you home"]}],
-      ["translate",{es:["¿No hablas inglés? Yo te ayudo","Te acompaño hasta la puerta y traduzco en vivo con mi app"],en:["Need help with English or Spanish?","Door-to-door, with live translation on my app"]}],
+      ["heart",{es:["Citas médicas: no vas solo","Te llevamos, te esperamos y te regresamos"],en:["Medical appointments, you're not alone","We take you, wait, and bring you home"]}],
+      ["translate",{es:["¿No hablas inglés? Te ayudamos","Te acompañamos hasta la puerta y traducimos en vivo"],en:["Need help with English or Spanish?","Door-to-door, with live translation"]}],
       ["repeat",{es:["Viajes fijos con descuento","Trabajo, escuela o citas cada semana"],en:["Discount on recurring rides","Work, school or weekly appointments"]}],
       ["bag",{es:["Diligencias locales",""],en:["Local errands",""]}]
     ]
