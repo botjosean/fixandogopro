@@ -1,6 +1,7 @@
 /**
  * Fix & Go — backend de tickets (Google Apps Script)
- * Recibe: 1) mensajes y notas de voz de la página web, 2) buzones y SMS de Google Voice.
+ * Recibe: 1) mensajes y notas de voz de la página web, 2) buzones y SMS de Google Voice,
+ *         3) correos que llegan a info@fixandgopro.com (Cloudflare Email Routing → tu Gmail).
  * Todo se convierte en un ticket con IA que llega a tu Gmail, con botón para llamar y para responder.
  *
  * INSTALAR (una sola vez):
@@ -12,11 +13,14 @@
  * 4. Implementar → Nueva implementación → Tipo: App web → Ejecutar como: Yo → Acceso: Cualquier usuario.
  *    Copia la URL que termina en /exec y pégala en index.html en CONFIG.ENDPOINT.
  * 5. Google Voice → Configuración: buzón por correo con transcripción + reenviar mensajes al correo.
+ * 6. Correo de empresa: sigue la sección "Correo de empresa" del README (Cloudflare Email Routing +
+ *    Gmail "Enviar como" info@). Si ya habías ejecutado setup(), ejecútalo otra vez para crear el trigger.
  */
 const CFG = {
   MODEL: 'google/gemini-2.5-flash',
   SIGNATURE: 'Equipo Fix & Go',   // firma de las respuestas: siempre como empresa
   BRAND: 'Fix & Go',
+  SUPPORT: 'info@fixandgopro.com',  // correo de empresa; llega a tu Gmail por Cloudflare Email Routing
   LABEL: 'Tickets',
   FOLDER: 'Fix & Go - notas de voz',
   VOICE_QUERY: 'from:voice-noreply@google.com -label:Tickets newer_than:3d',
@@ -36,7 +40,9 @@ function setup() {
   label_(); folder_();
   ScriptApp.getProjectTriggers().forEach(t => ScriptApp.deleteTrigger(t));
   ScriptApp.newTrigger('processVoice').timeBased().everyMinutes(5).create();
+  ScriptApp.newTrigger('processEmail').timeBased().everyMinutes(5).create();
   processVoice();
+  processEmail();
 }
 
 /* ---------- 1) mensajes de la página web ---------- */
@@ -93,6 +99,61 @@ function processVoice() {
   });
 }
 
+/* ---------- 3) correos a info@ ---------- */
+function processEmail() {
+  const lab = label_(), me = Session.getEffectiveUser().getEmail().toLowerCase(), sup = CFG.SUPPORT.toLowerCase();
+  const alias = hasAlias_();
+  const q = `(to:${CFG.SUPPORT} OR cc:${CFG.SUPPORT} OR deliveredto:${CFG.SUPPORT}) -label:${CFG.LABEL} -in:sent -in:drafts newer_than:3d`;
+  GmailApp.search(q, 0, 15).forEach(th => {
+    try {
+      // último mensaje que no mandamos nosotros
+      const m = th.getMessages().filter(x => { const f = addr_(x.getFrom()); return f !== me && f !== sup; }).pop();
+      if (!m || isAutomated_(m)) { th.addLabel(lab); return; }
+      const from = m.getFrom(), email = addr_(from), name = from.replace(/<[^>]*>/, '').replace(/"/g, '').trim();
+      const subject = m.getSubject(), body = m.getPlainBody().slice(0, 6000);
+      const ph = (subject + ' ' + body).match(/\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}/);
+      const t = ticket_(`Origen: correo a ${CFG.SUPPORT}\nDe: ${from}\nAsunto: ${subject}\n\n${body}`,
+        { nombre: name && name !== email ? name : '', telefono: ph ? ph[0] : '' });
+      t.origen = 'Correo';
+      t.email = email;
+
+      // borrador de respuesta en el mismo hilo (desde info@ si el alias existe)
+      const opts = alias ? { from: CFG.SUPPORT, name: CFG.BRAND } : {};
+      m.createDraftReply(t.respuesta_sms || ack_(t), opts);
+      t.draft = `https://mail.google.com/mail/?authuser=${encodeURIComponent(me)}#all/${th.getId()}`;
+      t.alias = alias;
+
+      email_(t);
+      th.addLabel(lab);   // etiquetar ANTES del acuse: si algo falla después, nunca se le escribe dos veces al cliente
+
+      // acuse automático, solo desde info@ para no revelar el Gmail personal
+      if (alias) m.reply(ack_(t), { from: CFG.SUPPORT, name: CFG.BRAND });
+    } catch (e) { console.error(e); }
+  });
+}
+
+function hasAlias_() {
+  try { return GmailApp.getAliases().some(a => a.toLowerCase() === CFG.SUPPORT.toLowerCase()); }
+  catch (e) { console.error('getAliases', e); return false; }
+}
+
+function isAutomated_(m) {
+  const from = String(m.getFrom()).toLowerCase();
+  if (/(no-?reply|do-?not-?reply|mailer-daemon|postmaster|bounces?[@+.-]|notifications?@|notify@|alerts?@)/.test(from)) return true;
+  const h = n => { try { return String(m.getHeader(n) || '').toLowerCase(); } catch (e) { return ''; } };
+  const auto = h('Auto-Submitted');
+  if (auto && auto !== 'no') return true;
+  if (/bulk|list|junk|auto_reply/.test(h('Precedence'))) return true;
+  return !!(h('List-Unsubscribe') || h('List-Id') || h('X-Autoreply') || h('X-Autorespond'));
+}
+
+function ack_(t) {
+  const first = String(t.nombre || '').trim().split(/\s+/)[0];
+  return t.idioma === 'en'
+    ? `Hi${first ? ' ' + first : ''},\n\nWe got your message. We'll get back to you today.\n\n${CFG.BRAND} Team\nfixandgopro.com`
+    : `Hola${first ? ' ' + first : ''}:\n\nRecibimos tu mensaje. Te respondemos hoy mismo.\n\n${CFG.SIGNATURE}\nfixandgopro.com`;
+}
+
 /* ---------- IA ---------- */
 function ticket_(input, base) {
   base = base || {};
@@ -147,14 +208,16 @@ function email_(t) {
   <div style="background:#0E7C86;color:#fff;border-radius:18px;padding:18px 20px">
     <div style="font-size:13px;opacity:.9">${U_[t.urgencia] || ''} · ${esc_(t.origen)} · ${esc_(t.linea)} · ${esc_((t.idioma || '').toUpperCase())}</div>
     <div style="font-size:22px;font-weight:800;margin:4px 0">${esc_(t.servicio || 'Nuevo contacto')}</div>
-    <div style="font-size:15px">${esc_(t.nombre || 'Sin nombre')} · ${esc_(t.telefono)} · ${esc_(t.ubicacion)}</div>
+    <div style="font-size:15px">${esc_(t.nombre || 'Sin nombre')} · ${esc_(t.telefono)}${t.email ? ' · ' + esc_(t.email) : ''} · ${esc_(t.ubicacion)}</div>
   </div>
   <div style="margin:14px 0">
     ${n ? btn('tel:+' + n, '📞 Llamar', '#14213D') : ''}
     ${n ? btn('sms:+' + n + '?&body=' + encodeURIComponent(t.respuesta_sms || ''), '💬 Enviar respuesta', '#2FB344') : ''}
     ${n ? btn('https://wa.me/' + n + '?text=' + encodeURIComponent(t.respuesta_sms || ''), 'WhatsApp', '#1FA855') : ''}
     ${t.audio ? btn(t.audio, '🎧 Escuchar nota', '#F2A541') : ''}
+    ${t.draft ? btn(t.draft, '✉️ Ver borrador de respuesta', '#0E7C86') : ''}
   </div>
+  ${t.draft && !t.alias ? `<p style="background:#FDF0DC;padding:10px 12px;border-radius:10px;font-size:13px">⚠️ Gmail no tiene el alias ${esc_(CFG.SUPPORT)} en "Enviar como": no se mandó acuse al cliente y el borrador saldría desde tu Gmail personal. Configúralo (README → Correo de empresa).</p>` : ''}
   <p><b>Resumen:</b> ${esc_(t.resumen)}</p>
   <p><b>Disponibilidad:</b> ${esc_(t.disponibilidad || '—')} &nbsp; <b>Precio:</b> ${esc_(t.precio || 'a cotizar')}</p>
   <p><b>Posibles soluciones</b></p><ul>${li(t.soluciones)}</ul>
@@ -162,7 +225,7 @@ function email_(t) {
   <p><b>Preguntar</b></p><ul>${li(t.preguntas)}</ul>
   <p><b>Respuesta sugerida:</b><br><span style="background:#E6EEF0;display:block;padding:10px 12px;border-radius:10px">${esc_(t.respuesta_sms)}</span></p>
   <p style="color:#4A5873;font-size:13px"><b>Lo que dijo:</b> ${esc_(t.pedido_original)}</p></div>`;
-  const subject = `${U_[t.urgencia] || '⚪'} ${t.servicio || 'Nuevo contacto'} · ${t.ubicacion || 'sin zona'} · ${t.telefono || ''}`;
+  const subject = `${U_[t.urgencia] || '⚪'} ${t.servicio || 'Nuevo contacto'} · ${t.ubicacion || 'sin zona'} · ${t.telefono || t.email || ''}`;
   const text = `${t.servicio} | ${t.nombre} ${t.telefono} | ${t.ubicacion}\n${t.resumen}\nPrecio: ${t.precio}\nRespuesta: ${t.respuesta_sms}`;
   GmailApp.sendEmail(Session.getEffectiveUser().getEmail(), subject, text, { htmlBody: html, name: 'Tickets ' + CFG.BRAND });
 }
@@ -172,6 +235,7 @@ function out_(o) { return ContentService.createTextOutput(JSON.stringify(o)).set
 function prop_(k) { return PropertiesService.getScriptProperties().getProperty(k); }
 function label_() { return GmailApp.getUserLabelByName(CFG.LABEL) || GmailApp.createLabel(CFG.LABEL); }
 function folder_() { const it = DriveApp.getFoldersByName(CFG.FOLDER); return it.hasNext() ? it.next() : DriveApp.createFolder(CFG.FOLDER); }
+function addr_(from) { const m = String(from || '').match(/<([^>]+)>/); return (m ? m[1] : String(from || '')).trim().toLowerCase(); }
 function fmtPhone_(d) { return `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}`; }
 function throttle_() {  // máximo 30 mensajes cada 10 minutos, para frenar spam
   const c = CacheService.getScriptCache(), k = 'n' + Math.floor(Date.now() / 600000), n = +(c.get(k) || 0);

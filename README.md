@@ -16,7 +16,7 @@ logo/                         Logos (los usa index.html y las tarjetas)
   logo-mark-180.png           Ícono 180 con esquinas redondeadas transparentes
   logo-mark-192.png           Ícono de Android
   logo-mark-512.png           Ícono grande (redes, perfiles)
-backend/fixandgo-backend.gs   Google Apps Script: web + Google Voice → ticket con IA a Gmail
+backend/fixandgo-backend.gs   Google Apps Script: web + Google Voice + correo info@ → ticket con IA a Gmail
 tarjetas/build_cards.py       Genera la placa del carro (5x7") y las tarjetas EN/ES en PDF
 docs/LINEA-JOSE.md            Plan futuro: recepcionista IA e intérprete de llamadas
 ```
@@ -24,7 +24,7 @@ docs/LINEA-JOSE.md            Plan futuro: recepcionista IA e intérprete de lla
 Si cambias un logo, reemplaza el archivo en `logo/` con el **mismo nombre** y la web y las tarjetas lo usan solos.
 La imagen para compartir usa la URL absoluta `https://fixandgopro.com/logo/og-image.png`.
 
-## Cambiar PHONE, FB_PAGE y ENDPOINT
+## Cambiar PHONE, FB_PAGE, EMAIL y ENDPOINT
 
 Abre `index.html` y busca el bloque `CONFIGURA AQUÍ` (justo al empezar el `<script>`, cerca de la línea 200):
 
@@ -32,6 +32,7 @@ Abre `index.html` y busca el bloque `CONFIGURA AQUÍ` (justo al empezar el `<scr
 const CONFIG = {
   PHONE:    "12054908033",   // tu número con código de país, sin + ni espacios
   FB_PAGE:  "fixandgo",      // usuario de tu página de Facebook (m.me/usuario)
+  EMAIL:    "info@fixandgopro.com",   // correo de empresa
   ENDPOINT: ""               // URL de la App web de Apps Script. Vacío = sin notas de voz
 };
 ```
@@ -40,6 +41,7 @@ const CONFIG = {
 |---|---|---|---|
 | `PHONE` | Tu número de Google Voice **con el 1 delante**, solo dígitos (sin `+`, espacios ni guiones). | `"12055551234"` | Botón de llamar, Texto (SMS) y WhatsApp. |
 | `FB_PAGE` | El usuario de tu página de Facebook, lo que va después de `facebook.com/`. | `"fixandgo"` | Botón Messenger (`m.me/fixandgo`). |
+| `EMAIL` | El correo de empresa (ver *Correo de empresa*). | `"info@fixandgopro.com"` | Botón Correo (abre el correo del cliente con el mensaje ya escrito). |
 | `ENDPOINT` | La URL `/exec` de la App web del backend (ver *Backend de tickets*). | `"https://script.google.com/macros/s/AKfy.../exec"` | Enviar notas de voz y mensajes escritos como ticket. |
 
 Con `ENDPOINT` vacío la página sigue funcionando: se oculta la nota de voz y “Enviar mensaje”
@@ -85,7 +87,72 @@ Cada push a `main` se publica automáticamente; otras ramas generan una vista pr
 4. Copiar la URL `/exec` a `ENDPOINT` en index.html.
 5. Cambiar los precios de ejemplo en `PRICES`.
 
+Cada 5 minutos el script revisa los buzones y SMS de Google Voice (`processVoice`) y los correos que llegan a
+info@ (`processEmail`). Si instalaste el backend antes de agregar el correo, ejecuta `setup()` otra vez para
+crear el trigger nuevo.
+
 La grabación de voz necesita HTTPS (Cloudflare ya lo da) y que el cliente acepte el permiso de micrófono.
+
+## Correo de empresa (info@fixandgopro.com)
+
+Los clientes escriben a **info@fixandgopro.com**. Cloudflare reenvía ese correo a tu Gmail y el backend lo
+convierte en ticket:
+- Se ignoran no-reply, mailer-daemon, boletines y respuestas automáticas.
+- Te llega el ticket con la IA (origen **Correo**) y el botón **✉️ Ver borrador de respuesta**.
+- En el mismo hilo queda un **borrador** con la respuesta sugerida. Lo revisas y lo mandas tú.
+- Si Gmail ya tiene info@ en "Enviar como", el cliente recibe al momento un acuse en su idioma
+  ("Recibimos tu mensaje. Te respondemos hoy mismo.") **enviado desde info@**. Si el alias no existe,
+  no se le manda nada, para no mostrar tu Gmail personal, y el ticket te avisa.
+- El hilo queda con la etiqueta **Tickets** para no procesarlo dos veces. Si el cliente vuelve a
+  responder en ese hilo, lo ves en Gmail, pero no se crea otro ticket.
+
+### 1. Cloudflare Email Routing (recibir en info@)
+1. Entra a dash.cloudflare.com y elige el dominio **fixandgopro.com**.
+2. Menú **Email** → **Email Routing** → **Get started** / **Enable Email Routing**.
+3. Cloudflare te muestra los registros **MX** y **TXT (SPF)** que va a crear → **Add records and enable**.
+4. Pestaña **Destination addresses** → **Add destination address** → escribe tu Gmail → **Save**.
+   Te llega un correo de Cloudflare a tu Gmail: ábrelo y pulsa **Verify email address**.
+5. Pestaña **Routing rules** → **Custom addresses** → **Create address**:
+   - Custom address: `info`
+   - Action: **Send to an email**
+   - Destination: tu Gmail (ya verificado)
+   - **Save**. La regla debe quedar en **Active**.
+6. Prueba: desde otro correo escribe a info@fixandgopro.com. Debe llegarte a tu Gmail en segundos.
+
+### 2. Gmail "Enviar como" info@ (responder desde info@)
+1. Activa la **verificación en 2 pasos** de tu cuenta de Google: myaccount.google.com → Seguridad.
+2. Crea una **contraseña de aplicación** en myaccount.google.com/apppasswords con el nombre
+   `Fix & Go correo`. Copia las 16 letras; solo se muestran una vez.
+3. Gmail → ⚙️ **Ver toda la configuración** → **Cuentas e importación** → **Enviar como** →
+   **Añadir otra dirección de correo electrónico**:
+   - Nombre: `Fix & Go`
+   - Dirección: `info@fixandgopro.com`
+   - Deja marcado **Tratar como un alias** → **Siguiente paso**.
+4. Servidor SMTP:
+   - Servidor SMTP: `smtp.gmail.com`
+   - Puerto: `587`
+   - Nombre de usuario: tu Gmail completo
+   - Contraseña: la **contraseña de aplicación** del paso 2
+   - Marca **Conexión segura con TLS** → **Añadir cuenta**.
+5. Gmail manda un código de confirmación a info@, que te llega a tu Gmail gracias a Cloudflare.
+   Ábrelo y pulsa el enlace (o pega el código).
+6. Recomendado: en **Enviar como**, marca **Responder desde la misma dirección a la que se envió el mensaje**.
+   Así, cuando respondas a un cliente que escribió a info@, sale desde info@.
+
+### 3. Registro SPF final (para que tus correos no caigan en spam)
+En Cloudflare → **DNS** → **Records**, edita el registro **TXT** del dominio raíz (`fixandgopro.com`) que
+empieza con `v=spf1` (lo creó Email Routing) y déjalo exactamente así:
+
+```
+v=spf1 include:_spf.mx.cloudflare.net include:_spf.google.com ~all
+```
+
+Solo puede haber **un** registro SPF. Si hay otro `v=spf1`, bórralo. El primer `include` es de Cloudflare
+(recibir) y el segundo de Google (enviar desde info@ con Gmail).
+
+### 4. Activar el backend
+Si el backend ya estaba instalado, abre el proyecto en script.google.com, pega la versión nueva de
+`backend/fixandgo-backend.gs` y ejecuta `setup()` una vez. Eso crea el trigger de `processEmail`.
 
 ## Regenerar tarjetas e impresión
 
