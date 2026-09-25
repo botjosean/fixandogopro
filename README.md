@@ -118,6 +118,15 @@ convierte en ticket:
    - **Save**. La regla debe quedar en **Active**.
 6. Prueba: desde otro correo escribe a info@fixandgopro.com. Debe llegarte a tu Gmail en segundos.
 
+### 1b. Filtro de Gmail: que info@ nunca caiga en Spam
+Gmail a veces manda a **Spam** los correos que reenvía Cloudflare, y el backend **no revisa Spam**:
+sin este filtro esos correos no se convierten en ticket.
+1. Desde la computadora (la app del celular no crea filtros), abre
+   https://mail.google.com/mail/u/0/#settings/filters → **Crear un filtro nuevo**.
+2. En **Para** escribe `info@fixandgopro.com` → **Crear filtro**.
+3. Marca **Nunca enviarlo a Spam** y **Marcar siempre como importante** → **Crear filtro**.
+4. Si ya hay correos de info@ en Spam, ábrelos y pulsa **Informar que no es spam**.
+
 ### 2. Gmail "Enviar como" info@ (responder desde info@)
 1. Activa la **verificación en 2 pasos** de tu cuenta de Google: myaccount.google.com → Seguridad.
 2. Crea una **contraseña de aplicación** en myaccount.google.com/apppasswords con el nombre
