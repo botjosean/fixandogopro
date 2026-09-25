@@ -1,0 +1,15 @@
+# Archivos que Cloudflare NO debe publicar en fixandgopro.com (solo se publica la página y los logos)
+.git
+.github
+.gitignore
+.assetsignore
+README.md
+backend/
+tarjetas/
+docs/
+print/
+*.py
+*.gs
+*.md
+wrangler.*
+node_modules/
