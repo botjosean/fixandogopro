@@ -13,3 +13,4 @@ print/
 *.md
 wrangler.*
 node_modules/
+.wrangler/
