@@ -5,6 +5,7 @@ Landing bilingüe (ES/EN) con QR/NFC, mensajes de voz o texto y tickets automát
 ## Estructura
 ```
 index.html                    La página completa (HTML + CSS + JS). Se publica tal cual, sin build.
+.assetsignore                 Lo que Cloudflare NO publica (todo menos index.html y logo/)
 logo/                         Logos (los usa index.html y las tarjetas)
   logo-mark.svg               Ícono F& (azul marino): header de la web y reverso de la tarjeta
   logo-mark-teal.svg          Ícono F& verde azulado: header en modo oscuro
@@ -63,22 +64,20 @@ git push
 
 Ejemplo: `https://fixandgopro.com/?s=tech&lang=es&z=atl`
 
-## Publicar en Cloudflare Pages (sin build)
+## Publicar en Cloudflare (sin build)
 
-1. Cloudflare → **Workers & Pages** → **Create** → pestaña **Pages** → **Connect to Git**.
-2. Autoriza GitHub y elige el repo `botjosean/fixandogopro` → **Begin setup**.
-3. Configuración:
-   - Project name: `fixandgopro`
-   - Production branch: `main`
-   - Framework preset: **None**
-   - Build command: *(vacío)*
-   - Build output directory: `/`
-4. **Save and Deploy**. Queda en `https://fixandgopro.pages.dev`.
-5. En el proyecto → **Custom domains** → **Set up a custom domain** → `fixandgopro.com` → **Activate domain**.
-6. Repite con `www.fixandgopro.com`.
+La página está publicada como **Worker** `fixandogopro`, conectado a este repo:
+`https://fixandogopro.glowstudios.workers.dev`. Cada push a `main` se vuelve a publicar solo.
 
-Como el dominio ya está en tu Cloudflare, los registros DNS (CNAME) y el certificado SSL se crean solos.
-Cada push a `main` se publica automáticamente; otras ramas generan una vista previa.
+Conectar el dominio (una sola vez):
+1. Cloudflare → **Workers & Pages** → abre `fixandogopro` → **Settings** → **Domains & Routes** → **+ Add**.
+2. **Custom domain** → `fixandgopro.com` → **Add domain**.
+3. Repite con `www.fixandgopro.com`.
+
+Cloudflare crea solo los registros DNS y el certificado SSL. Puede tardar unos minutos.
+
+`.assetsignore` evita que se publiquen los archivos internos (README, backend, tarjetas, docs). Solo se
+publican `index.html` y `logo/`. Si agregas archivos privados nuevos, ponlos también en `.assetsignore`.
 
 ## Backend de tickets
 1. script.google.com → nuevo proyecto → pegar `backend/fixandgo-backend.gs`.
