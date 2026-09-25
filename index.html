@@ -108,7 +108,6 @@ header{display:flex;justify-content:space-between;align-items:center;padding:14p
 .row small{display:block;color:var(--muted);font-size:.86rem;line-height:1.3;margin-top:2px}
 .row .tag{display:block;font-size:.72rem;font-weight:700;color:var(--sea);margin-bottom:1px}
 .go{width:30px;height:30px;padding:6px;border-radius:50%;background:var(--mango);color:#14213D;stroke-width:2.4}
-.note{margin:0;padding:2px 16px 14px;color:var(--muted);font-size:.8rem;line-height:1.35}
 .results{background:var(--card);border:1.5px solid var(--line);border-radius:22px}
 .empty{color:var(--muted);padding:6px 4px}
 
@@ -357,10 +356,8 @@ const S = {
     ]
   },
   tramites:{
-    es:{t:"Tus trámites en línea, resueltos", d:"LLC, pagos, citas y formularios. Tú me dices qué necesitas y lo hacemos juntos.", tile:"LLC, pagos de USCIS, citas y cuentas en línea",
-        note:"No soy abogado: hago el trámite contigo, no doy asesoría legal, migratoria ni de impuestos."},
-    en:{t:"Online paperwork, handled", d:"LLCs, payments, appointments and forms. Tell me what you need and we get it done together.", tile:"LLCs, USCIS payments, appointments and online accounts",
-        note:"I'm not a lawyer: I help you file and pay, but I don't give legal, immigration or tax advice."},
+    es:{t:"Tus trámites en línea, resueltos", d:"LLC, pagos, citas y formularios. Tú me dices qué necesitas y lo hacemos juntos.", tile:"LLC, pagos de USCIS, citas y cuentas en línea"},
+    en:{t:"Online paperwork, handled", d:"LLCs, payments, appointments and forms. Tell me what you need and we get it done together.", tile:"LLCs, USCIS payments, appointments and online accounts"},
     items:[
       ["file",{es:["Creo tu LLC o negocio","Registro en el estado, número EIN y todo en orden"],en:["Set up your LLC or business","State filing, EIN number and everything in order"]}],
       ["card",{es:["Pagos en línea sin enredos","USCIS, multas, facturas y más"],en:["Online payments, no hassle","USCIS, tickets, bills and more"],kw:"migracion inmigracion asilo tasa immigration asylum fee"}],
@@ -446,7 +443,7 @@ function render(){
           <span class="ct"><b>${esc(c.t)}</b><small>${esc(c.tile)}</small></span>
           <span class="n">${S[k].items.length}</span>${ico("down","chev")}
         </button>
-        <div class="cat-b" id="cb-${k}" ${o?"":"inert"}><div><ul class="list">${S[k].items.map((_,i)=>row(k,i,false)).join("")}</ul>${c.note?`<p class="note">${esc(c.note)}</p>`:""}</div></div>
+        <div class="cat-b" id="cb-${k}" ${o?"":"inert"}><div><ul class="list">${S[k].items.map((_,i)=>row(k,i,false)).join("")}</ul></div></div>
       </section>`;}).join("")}</div>
     <ul class="list results" id="results" hidden>${Object.keys(S).flatMap(k=>S[k].items.map((_,i)=>row(k,i,true))).join("")}</ul>
     <p class="empty" id="empty" hidden>${t.none}</p>`;
