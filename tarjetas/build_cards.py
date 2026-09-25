@@ -3,7 +3,7 @@
 Genera tarjetas de presentación (3.5x2" con sangrado) y la placa del carro (5x7") en PDF.
 Uso:
   pip install "qrcode[pil]" playwright && playwright install chromium
-  python3 tarjetas/build_cards.py --domain fixandgopro.com --phone 2055550000 [--zone atl] --out print
+  python3 tarjetas/build_cards.py --domain fixandgopro.com --phone 2054908033 [--zone atl] --out print
 Los logos se leen de logo/ en la raíz del repo.
 """
 import argparse, io, os
@@ -12,7 +12,7 @@ from playwright.sync_api import sync_playwright
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--domain", default="fixandgopro.com")
-ap.add_argument("--phone", default="2055550000", help="10 dígitos, sin +1")
+ap.add_argument("--phone", default="2054908033", help="10 dígitos, sin +1")
 ap.add_argument("--name", default="", help="nombre en el reverso; vacío = solo la marca Fix & Go")
 ap.add_argument("--zone", default="", help="atl para tarjetas de Chamblee/Atlanta")
 ap.add_argument("--out", default=".")
@@ -157,7 +157,8 @@ PHONE_SVG = """<svg viewBox="0 0 120 120" width="100%" height="100%" fill="none"
   </g></svg>"""
 
 def plate():
-    url = f"https://{a.domain}/?lang=en{Z}"
+    # la placa es bilingüe: sin lang, así la página sale en el idioma del teléfono
+    url = f"https://{a.domain}/" + (f"?z={a.zone}" if a.zone else "")
     return f'''<div class="pg plate"><div class="tx">
       <div class="logo">{logo_white()}</div><h1>Need a hand at home?</h1><h2>¿Necesitas una mano en casa?</h2>
       <p class="sv">TV mounting, cameras, ceiling fans, PS5 and PC repair, rides to Atlanta.</p></div>
