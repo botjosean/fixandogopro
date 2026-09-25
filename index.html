@@ -274,7 +274,6 @@ const I = {
   check:'<path d="m5 12.5 4.5 4.5L19 7.5"/>',
   file:'<path d="M14 2.5H7A2.5 2.5 0 0 0 4.5 5v14A2.5 2.5 0 0 0 7 21.5h10a2.5 2.5 0 0 0 2.5-2.5V8z"/><path d="M14 2.5V8h5.5M8.5 13h7M8.5 17h5"/>',
   card:'<rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M2.5 10h19M6.5 15h4"/>',
-  cart:'<circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2.5 3.5h2.8l2.4 11.5h11l2-8H6.3"/>',
   form:'<rect x="4.5" y="3.5" width="15" height="18" rx="2.2"/><path d="M9 2.5h6v3H9zM8.5 11l1.5 1.5 3-3M8.5 16.5h7"/>'
 };
 const ico = (k, c="") => `<svg class="i ${c}" viewBox="0 0 24 24" aria-hidden="true">${I[k]||I.msg}</svg>`;
@@ -358,15 +357,14 @@ const S = {
     ]
   },
   tramites:{
-    es:{t:"Tus trámites en línea, resueltos", d:"LLC, pagos, compras y formularios. Tú me dices qué necesitas y lo hacemos juntos.", tile:"LLC, pagos de USCIS, compras en eBay y formularios",
+    es:{t:"Tus trámites en línea, resueltos", d:"LLC, pagos, citas y formularios. Tú me dices qué necesitas y lo hacemos juntos.", tile:"LLC, pagos de USCIS, citas y cuentas en línea",
         note:"No soy abogado: hago el trámite contigo, no doy asesoría legal, migratoria ni de impuestos."},
-    en:{t:"Online paperwork, handled", d:"LLCs, payments, purchases and forms. Tell me what you need and we get it done together.", tile:"LLCs, USCIS fees, eBay orders and online forms",
+    en:{t:"Online paperwork, handled", d:"LLCs, payments, appointments and forms. Tell me what you need and we get it done together.", tile:"LLCs, USCIS payments, appointments and online accounts",
         note:"I'm not a lawyer: I help you file and pay, but I don't give legal, immigration or tax advice."},
     items:[
       ["file",{es:["Creo tu LLC o negocio","Registro en el estado, número EIN y todo en orden"],en:["Set up your LLC or business","State filing, EIN number and everything in order"]}],
-      ["card",{es:["Pagos en línea sin enredos","Tasa anual de asilo de USCIS con tu código, multas, facturas"],en:["Online payments, no hassle","USCIS annual asylum fee with your code, tickets, bills"]}],
-      ["cart",{es:["Compro en línea por ti","eBay, Amazon y otras tiendas: pedido, pago y envío"],en:["Online shopping, done for you","eBay, Amazon and other stores: order, pay, track"]}],
-      ["form",{es:["Formularios, citas y cuentas en línea","Solicitudes, citas, correos y contraseñas"],en:["Online forms, appointments and accounts","Applications, bookings, email and passwords"]}]
+      ["card",{es:["Pagos en línea sin enredos","USCIS, multas, facturas y más"],en:["Online payments, no hassle","USCIS, tickets, bills and more"],kw:"migracion inmigracion asilo tasa immigration asylum fee"}],
+      ["form",{es:["Citas, formularios y cuentas en línea","Cita de licencia, consulado o pasaporte, correo y contraseñas"],en:["Appointments, forms and online accounts","Driver's license, consulate or passport appointments, email and passwords"],kw:"dmv alea licencia de conducir driver license matricula"}]
     ]
   },
   negocio:{
@@ -485,7 +483,7 @@ function filter(q){
   let c = 0;
   res.querySelectorAll("li").forEach(li=>{
     const k = li.dataset.k, v = S[k].items[li.dataset.i][1];
-    const hay = norm([...v.es, ...v.en, T.es.tag[k], T.en.tag[k]].join(" "));
+    const hay = norm([...v.es, ...v.en, v.kw||"", T.es.tag[k], T.en.tag[k]].join(" "));
     const ok = !n || n.split(/\s+/).every(w=>hay.includes(w));
     li.hidden = !ok; if (ok) c++;
   });
