@@ -3,12 +3,24 @@
 Landing bilingüe (ES/EN) con QR/NFC, mensajes de voz o texto y tickets automáticos por correo.
 
 ## Estructura
-| Archivo | Qué es |
-|---|---|
-| `index.html` | La página completa (HTML + CSS + JS en un solo archivo). Se publica tal cual, sin build. |
-| `backend/fixandgo-backend.gs` | Google Apps Script: web + Google Voice → ticket con IA a Gmail. |
-| `tarjetas/build_cards.py` | Genera la placa del carro (5x7") y las tarjetas EN/ES en PDF. |
-| `docs/LINEA-JOSE.md` | Plan futuro: recepcionista IA e intérprete de llamadas. |
+```
+index.html                    La página completa (HTML + CSS + JS). Se publica tal cual, sin build.
+logo/                         Logos (los usa index.html y las tarjetas)
+  logo-mark.svg               Ícono F& (azul marino): header de la web y reverso de la tarjeta
+  logo-mark-teal.svg          Ícono F& verde azulado: header en modo oscuro
+  logo-horizontal.svg         Ícono + "Fix & Go": base de la placa del carro (versión blanca)
+  logo-horizontal.png         Imagen al compartir el link (og:image)
+  logo-mark-32.png            Favicon
+  logo-mark-180.png           Ícono de iPhone (apple-touch-icon)
+  logo-mark-192.png           Ícono de Android
+  logo-mark-512.png           Ícono grande (redes, perfiles)
+backend/fixandgo-backend.gs   Google Apps Script: web + Google Voice → ticket con IA a Gmail
+tarjetas/build_cards.py       Genera la placa del carro (5x7") y las tarjetas EN/ES en PDF
+docs/LINEA-JOSE.md            Plan futuro: recepcionista IA e intérprete de llamadas
+```
+
+Si cambias un logo, reemplaza el archivo en `logo/` con el **mismo nombre** y la web y las tarjetas lo usan solos.
+La imagen para compartir usa la URL absoluta `https://fixandgopro.com/logo/logo-horizontal.png`.
 
 ## Cambiar PHONE, FB_PAGE y ENDPOINT
 
@@ -86,7 +98,10 @@ python3 tarjetas/build_cards.py --domain fixandgopro.com --phone NUMERO --out pr
 python3 tarjetas/build_cards.py --domain fixandgopro.com --phone NUMERO --zone atl --out print   # Chamblee/Atlanta
 ```
 
-Salida en `print/`: `placa-carro.pdf`, `tarjeta-en.pdf`, `tarjeta-es.pdf`.
+Córrelo desde la raíz del repo. Toma los logos de `logo/` (`logo-mark.svg` en el reverso de la tarjeta y
+`logo-horizontal.svg` en blanco arriba de la placa).
+
+Salida en `print/`: `placa-carro.pdf`, `tarjeta-en.pdf`, `tarjeta-es.pdf` (con `--zone atl` llevan `-atl` al final).
 La carpeta `print/` está en `.gitignore`, no se sube al repo.
 
 Regenera las tarjetas cada vez que cambies de número o de dominio, porque los QR llevan el enlace impreso.

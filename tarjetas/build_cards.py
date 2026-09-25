@@ -3,7 +3,8 @@
 Genera tarjetas de presentación (3.5x2" con sangrado) y la placa del carro (5x7") en PDF.
 Uso:
   pip install "qrcode[pil]" playwright && playwright install chromium
-  python3 build_cards.py --domain fixandgopro.com --phone 2055550000 [--zone atl]
+  python3 tarjetas/build_cards.py --domain fixandgopro.com --phone 2055550000 [--zone atl] --out print
+Los logos se leen de logo/ en la raíz del repo.
 """
 import argparse, io, os
 import qrcode, qrcode.image.svg
@@ -22,6 +23,22 @@ PHONE_FMT = f"({P[:3]}) {P[3:6]}-{P[6:]}"
 Z = f"&z={a.zone}" if a.zone else ""
 AREA = {"": {"en": "Birmingham area", "es": "Birmingham y alrededores"},
         "atl": {"en": "Chamblee, Doraville & Atlanta", "es": "Chamblee, Doraville y Atlanta"}}[a.zone]
+
+LOGO_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "logo")
+
+def logo_svg(name, uid):
+    """SVG del logo en línea, con ids únicos por uso (varios logos en la misma página)."""
+    with open(os.path.join(LOGO_DIR, name), encoding="utf-8") as f:
+        svg = f.read().strip()
+    svg = svg.replace('id="r"', f'id="{uid}"').replace("url(#r)", f"url(#{uid})")
+    return svg
+
+def logo_white():
+    """Logo horizontal en blanco para fondo verde azulado: sin cuadro, F, círculo y letras en blanco, & en mango."""
+    svg = logo_svg("logo-horizontal.svg", "lw")
+    svg = svg.replace('<rect width="200" height="200" fill="#14213D"/>', "")    # quita el cuadro azul marino
+    svg = svg.replace('<g fill="#14213D"><path', '<g fill="#F2A541"><path')      # & dentro del círculo
+    return svg.replace('fill="#14213D"', 'fill="#ffffff"')                      # letras "Fix" y "Go"
 
 def qr(url):
     img = qrcode.make(url, image_factory=qrcode.image.svg.SvgPathImage, box_size=10, border=0,
@@ -64,12 +81,13 @@ h1,h2,.b{font-family:'Bricolage Grotesque','Arial Narrow',Arial,sans-serif}
 .qrbox svg{width:100%;height:auto;display:block}
 .qrbox span{display:block;color:var(--navy);font-size:6.2pt;font-weight:700;margin-top:.04in}
 .back{background:var(--paper);color:var(--navy)}
-.back .tx{position:absolute;left:.22in;top:.24in;right:.22in}
+.back .tx{position:absolute;left:.22in;top:.24in;right:.22in;display:flex;align-items:center;gap:.09in}
+.back .mk{width:.45in;height:.45in;flex:none}
+.back .mk>svg,.plate .logo>svg{display:block;width:100%;height:100%}
 .back .nm{font-weight:800;font-size:22pt;line-height:1}
 .back .br{font-family:'Bricolage Grotesque',Arial;font-size:11pt;color:var(--sea);font-weight:800;margin-top:.04in}
 .back .br i{font-style:normal;color:var(--mango)}
-.plate .logo{font-family:'Bricolage Grotesque',Arial;font-weight:800;font-size:15pt;margin-bottom:.18in}
-.plate .logo i{font-style:normal;color:var(--mango)}
+.plate .logo{height:.5in;width:1.48in;margin-bottom:.2in}
 .back .ph{position:absolute;left:.22in;bottom:.42in;font-family:'Bricolage Grotesque',Arial;font-weight:800;font-size:17pt;letter-spacing:-.01em}
 .back .ln{position:absolute;left:.22in;bottom:.22in;font-size:7.2pt;color:var(--muted)}
 .back .dot{position:absolute;right:-.35in;top:-.35in;width:1in;height:1in;border-radius:50%;background:var(--mango)}
@@ -118,7 +136,8 @@ def front_general(lang):
 def back(lang):
     l1, l2 = BACK[lang]
     return f'''<div class="pg card back"><div class="dot"></div><div class="tx">
-      <div class="nm b">{a.name}</div><div class="br">Fix <i>&amp;</i> Go</div></div>
+      <div class="mk">{logo_svg("logo-mark.svg", "lm-" + lang)}</div>
+      <div><div class="nm b">{a.name}</div><div class="br">Fix <i>&amp;</i> Go</div></div></div>
       <div class="ph">{PHONE_FMT}</div><div class="ln">{l1}. {l2}.</div></div>'''
 
 PHONE_SVG = """<svg viewBox="0 0 120 120" width="100%" height="100%" fill="none">
@@ -134,7 +153,7 @@ PHONE_SVG = """<svg viewBox="0 0 120 120" width="100%" height="100%" fill="none"
 def plate():
     url = f"https://{a.domain}/?lang=en{Z}"
     return f'''<div class="pg plate"><div class="tx">
-      <div class="logo">Fix <i>&amp;</i> Go</div><h1>Need a hand at home?</h1><h2>¿Necesitas una mano en casa?</h2>
+      <div class="logo">{logo_white()}</div><h1>Need a hand at home?</h1><h2>¿Necesitas una mano en casa?</h2>
       <p class="sv">TV mounting, cameras, ceiling fans, PS5 and PC repair, rides to Atlanta.</p></div>
       <div class="duo">
         <div class="col"><div class="qrbig">{qr(url)}</div><b>Scan</b><span>Escanea con la cámara</span></div>
