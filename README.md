@@ -1,12 +1,22 @@
 # Fix & Go — fixandgopro.com
 
-Landing bilingüe (ES/EN) con QR/NFC, mensajes de voz o texto y tickets automáticos por correo.
+Sitio bilingüe (ES/EN) con dos páginas:
+
+| Dirección | Archivo | Para qué |
+|---|---|---|
+| **fixandgopro.com** | `index.html` | Página principal: moderna, animada, con todos los servicios, zonas y preguntas. |
+| **fixandgopro.com/go/** | `go/index.html` | Página del **QR / NFC** (placa del carro y tarjetas): elegir servicio, llamar, escribir o mandar nota de voz en 3 toques. |
+
+Los dos leen el teléfono, el correo y la lista de servicios de **`config.js`**. Se cambia ahí una sola vez.
+Los enlaces viejos del QR (`fixandgopro.com/?s=…`, `?lang=…`, `?z=…`) se redirigen solos a `/go/`.
 
 ## Estructura
 ```
-index.html                    La página completa (HTML + CSS + JS). Se publica tal cual, sin build.
-.assetsignore                 Lo que Cloudflare NO publica (todo menos index.html y logo/)
-logo/                         Logos (los usa index.html y las tarjetas)
+index.html                    Página principal (HTML + CSS + JS). Se publica tal cual, sin build.
+go/index.html                 Página del QR/NFC (la que abren la placa y las tarjetas)
+config.js                     Teléfono, correo, Facebook, ENDPOINT y la lista de servicios (compartido)
+.assetsignore                 Lo que Cloudflare NO publica (solo se publican index.html, go/, config.js y logo/)
+logo/                         Logos (los usan las dos páginas y las tarjetas)
   logo-mark.svg               Ícono F& (azul marino): header de la web y reverso de la tarjeta
   logo-mark-teal.svg          Ícono F& verde azulado: header en modo oscuro
   logo-horizontal.svg         Ícono + "Fix & Go": base de la placa del carro (versión blanca)
@@ -17,6 +27,7 @@ logo/                         Logos (los usa index.html y las tarjetas)
   logo-mark-180.png           Ícono 180 con esquinas redondeadas transparentes
   logo-mark-192.png           Ícono de Android
   logo-mark-512.png           Ícono grande (redes, perfiles)
+  qr-go.svg                   QR a fixandgopro.com/go/ (pie de la página principal)
 backend/fixandgo-backend.gs   Google Apps Script: web + Google Voice + correo info@ → ticket con IA a Gmail
 tarjetas/build_cards.py       Genera la placa del carro (5x7") y las tarjetas EN/ES en PDF
 docs/LINEA-JOSE.md            Plan futuro: recepcionista IA e intérprete de llamadas
@@ -27,7 +38,7 @@ La imagen para compartir usa la URL absoluta `https://fixandgopro.com/logo/og-im
 
 ## Cambiar PHONE, FB_PAGE, EMAIL y ENDPOINT
 
-Abre `index.html` y busca el bloque `CONFIGURA AQUÍ` (justo al empezar el `<script>`, cerca de la línea 200):
+Abre **`config.js`** (en la raíz) y cambia el bloque `CONFIGURA AQUÍ`. Lo usan las dos páginas:
 
 ```js
 const CONFIG = {
@@ -51,18 +62,19 @@ abre WhatsApp (en español) o SMS (en inglés) con el mensaje ya escrito.
 Guarda, haz commit y push: Cloudflare Pages publica solo en ~1 minuto.
 
 ```bash
-git add index.html
+git add config.js
 git commit -m "Actualizar teléfono / endpoint"
 git push
 ```
 
 ## Enlaces para QR / NFC
-- General: `https://fixandgopro.com/`
+- General: `https://fixandgopro.com/go/`
+- Abrir directo "Déjanos un mensaje": `?m=1`
 - Por categoría: `?s=casa`, `?s=tech`, `?s=tramites`, `?s=negocio`, `?s=viajes`
 - Idioma: `&lang=es` o `&lang=en` (si no, detecta el teléfono)
 - Zona Atlanta: `&z=atl`
 
-Ejemplo: `https://fixandgopro.com/?s=tech&lang=es&z=atl`
+Ejemplo: `https://fixandgopro.com/go/?s=tech&lang=es&z=atl`
 
 ## Publicar en Cloudflare (sin build)
 
@@ -77,13 +89,13 @@ Conectar el dominio (una sola vez):
 Cloudflare crea solo los registros DNS y el certificado SSL. Puede tardar unos minutos.
 
 `.assetsignore` evita que se publiquen los archivos internos (README, backend, tarjetas, docs). Solo se
-publican `index.html` y `logo/`. Si agregas archivos privados nuevos, ponlos también en `.assetsignore`.
+publican `index.html`, `go/`, `config.js` y `logo/`. Si agregas archivos privados nuevos, ponlos también en `.assetsignore`.
 
 ## Backend de tickets
 1. script.google.com → nuevo proyecto → pegar `backend/fixandgo-backend.gs`.
 2. Propiedades del script: `OPENROUTER_KEY`, `DEEPGRAM_KEY`.
 3. Ejecutar `setup()` → Implementar → App web → Ejecutar como: Yo → Acceso: Cualquier usuario.
-4. Copiar la URL `/exec` a `ENDPOINT` en index.html.
+4. Copiar la URL `/exec` a `ENDPOINT` en `config.js`.
 5. Cambiar los precios de ejemplo en `PRICES`.
 
 Cada 5 minutos el script revisa los buzones y SMS de Google Voice (`processVoice`) y los correos que llegan a

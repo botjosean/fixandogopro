@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0E7C86">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<title>Fix &amp; Go</title>
+<meta name="description" content="TV mounting, cameras, PS5 and PC repair, taxes and paperwork, business marketing and rides. Birmingham, AL. English and Spanish.">
+<link rel="icon" type="image/png" sizes="32x32" href="/logo/logo-mark-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/logo/logo-mark-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/logo/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Fix &amp; Go">
+<meta property="og:title" content="Fix &amp; Go">
+<meta property="og:description" content="TV mounting, cameras, PS5 and PC repair, taxes and paperwork, business marketing and rides. Birmingham, AL. English and Spanish.">
+<meta property="og:url" content="https://fixandgopro.com/go/">
+<link rel="canonical" href="https://fixandgopro.com/go/">
+<meta property="og:image" content="https://fixandgopro.com/logo/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Fix &amp; Go">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#14213D; --sea:#0E7C86; --sea-d:#0A5E66; --tint:#E3F2F3; --mango:#F2A541; --mango-t:#FDF0DC;
+  --paper:#F6F9FA; --card:#FFFFFF; --line:#E3EAEE; --text:#14213D; --muted:#56637A;
+  --sms:#2FB344; --wa:#1FA855; --fb:#0866FF; --rec:#E5484D;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#0D1728; --card:#15223A; --line:#24365A; --text:#EEF3F7; --muted:#A6B4C9;
+    --tint:#123B45; --mango-t:#3A2C14; --navy:#EEF3F7;
+  }
+}
+*,*::before,*::after{box-sizing:inherit}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 12px)}
+html.lock{overflow:hidden}
+body{margin:0;background:var(--paper);color:var(--text);font-family:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  font-size:17px;line-height:1.5;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+h1,h2,h3,.brand,.disp{font-family:"Bricolage Grotesque","Arial Narrow",system-ui,sans-serif}
+a{color:inherit}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:left}
+input,textarea{font:inherit;font-size:16px;color:var(--text)}
+:focus-visible{outline:3px solid var(--mango);outline-offset:2px;border-radius:12px}
+.i{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.wrap{max-width:640px;margin:0 auto;padding:0 18px}
+@media (min-width:820px){.wrap{max-width:760px}}
+
+header{display:flex;justify-content:space-between;align-items:center;padding:14px 0}
+.brand{display:inline-flex;align-items:center;gap:9px;font-weight:800;font-size:1.4rem;line-height:1;text-decoration:none;letter-spacing:-.02em;white-space:nowrap}
+.brand img{display:block;height:32px;width:32px;flex:none}
+.brand picture{display:block;flex:none}
+.brand .bt span{color:var(--mango)}
+.lang{display:flex;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:3px}
+.lang button{color:var(--muted);font-weight:700;font-size:.82rem;padding:7px 12px;border-radius:999px}
+.lang button[aria-pressed="true"]{background:var(--sea);color:#fff}
+
+.hero{background:var(--sea);color:#fff;border-radius:26px 26px 26px 6px;padding:28px 22px 26px;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-56px;bottom:-66px;width:170px;height:170px;border-radius:50%;background:var(--mango)}
+.hero h1{font-weight:800;font-size:clamp(2rem,8.2vw,3.1rem);line-height:.98;letter-spacing:-.03em;margin:0 0 10px;max-width:12ch;position:relative;z-index:1}
+.hero p{margin:0;max-width:30ch;position:relative;z-index:1}
+.zone{display:flex;gap:10px;align-items:center;margin:12px 0 0;padding:12px 14px;border-radius:16px;background:var(--mango-t);font-weight:700;font-size:.93rem}
+.zone .i{color:var(--mango);width:22px;height:22px}
+
+.search{display:flex;align-items:center;gap:10px;margin:16px 0 14px;background:var(--card);border:1.5px solid var(--line);
+  border-radius:16px;padding:0 14px;transition:border-color .15s}
+.search:focus-within{border-color:var(--sea)}
+.search .i{color:var(--muted);width:20px;height:20px}
+.search input{flex:1;border:0;background:none;padding:14px 0;outline:none;-webkit-appearance:none;appearance:none;min-width:0}
+
+/* categorías desplegables */
+.cats{display:flex;flex-direction:column;gap:10px}
+.cat{background:var(--card);border:1.5px solid var(--line);border-radius:22px;overflow:hidden;transition:border-color .2s}
+.cat-h{display:flex;align-items:center;gap:14px;width:100%;padding:16px;scroll-margin-top:12px}
+.ib{width:48px;height:48px;border-radius:15px;background:var(--tint);color:var(--sea);display:grid;place-items:center;flex:none;transition:background .2s,color .2s}
+.ct{flex:1;min-width:0}
+.ct b{display:block;font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:1.12rem;line-height:1.15;letter-spacing:-.01em}
+.ct small{display:block;color:var(--muted);font-size:.88rem;margin-top:3px;line-height:1.3}
+.n{font-size:.78rem;font-weight:700;color:var(--muted);background:var(--paper);border-radius:999px;padding:3px 9px;flex:none}
+.chev{color:var(--muted);transition:transform .25s;width:22px;height:22px}
+.cat.open{border-color:var(--sea)}
+.cat.open .cat-h{background:var(--sea);color:#fff}
+.cat.open .ct small{color:rgba(255,255,255,.85)}
+.cat.open .ib{background:var(--mango);color:#14213D}
+.cat.open .n{background:rgba(255,255,255,.18);color:#fff}
+.cat.open .chev{transform:rotate(180deg);color:#fff}
+.cat-b{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s cubic-bezier(.2,.8,.2,1)}
+.cat.open .cat-b{grid-template-rows:1fr}
+.cat-b>div{overflow:hidden;min-height:0}
+
+.list{list-style:none;margin:0;padding:6px 8px 8px}
+.list li:not([hidden])~li{border-top:1px solid var(--line)}
+.row{display:flex;align-items:center;gap:12px;width:100%;padding:12px 8px;border-radius:14px;min-height:60px;transition:background .12s}
+.row:active{background:var(--tint)}
+@media (hover:hover){.row:hover{background:var(--tint)}}
+.ri{color:var(--sea);width:22px;height:22px}
+.row span{flex:1;min-width:0}
+.row b{display:block;font-size:.99rem;line-height:1.3}
+.row small{display:block;color:var(--muted);font-size:.86rem;line-height:1.3;margin-top:2px}
+.row .tag{display:block;font-size:.72rem;font-weight:700;color:var(--sea);margin-bottom:1px}
+.go{width:30px;height:30px;padding:6px;border-radius:50%;background:var(--mango);color:#14213D;stroke-width:2.4}
+.results{background:var(--card);border:1.5px solid var(--line);border-radius:22px}
+.empty{color:var(--muted);padding:6px 4px}
+
+.bar{position:sticky;bottom:0;z-index:5;padding:14px 0 calc(12px + env(safe-area-inset-bottom,0px));margin-top:18px;
+  background:linear-gradient(to top,var(--paper) 70%,transparent)}
+.bar .row2{display:flex;gap:10px}
+.btn{display:flex;justify-content:center;align-items:center;gap:10px;text-decoration:none;font-weight:700;border-radius:18px;
+  min-height:58px;padding:0 18px;font-size:1.03rem;transition:transform .12s ease,opacity .15s}
+.btn:active{transform:scale(.97)}
+.btn[disabled]{opacity:.6;pointer-events:none}
+.main{flex:1;background:var(--navy);color:var(--paper)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .main{background:var(--mango);color:#14213D}}
+.round{width:58px;padding:0;background:var(--sea);color:#fff}
+footer{color:var(--muted);font-size:.8rem;text-align:center;padding:4px 0 20px}
+
+/* hoja */
+.scrim{position:fixed;inset:0;background:rgba(8,16,30,.5);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .25s;z-index:20}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:21;background:var(--card);border-radius:28px 28px 0 0;max-height:92vh;max-height:92dvh;
+  overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;transform:translateY(105%);visibility:hidden;
+  transition:transform .34s cubic-bezier(.2,.8,.2,1);padding:0 0 calc(20px + env(safe-area-inset-bottom,0px));box-shadow:0 -12px 40px rgba(8,16,30,.2)}
+.open .scrim{opacity:1;pointer-events:auto}
+.open .sheet{transform:none;visibility:visible}
+@media (min-width:820px){
+  .sheet{left:50%;right:auto;bottom:50%;width:560px;border-radius:28px;transform:translate(-50%,calc(50% + 40px));opacity:0;transition:transform .28s cubic-bezier(.2,.8,.2,1),opacity .2s}
+  .open .sheet{transform:translate(-50%,50%);opacity:1}
+  .grab{display:none!important}
+}
+.grab{display:block;width:44px;height:5px;border-radius:3px;background:var(--line);margin:10px auto 0}
+.sh-top{display:flex;gap:14px;align-items:flex-start;padding:16px 20px 4px}
+.sh-top .ib{width:56px;height:56px;border-radius:18px;background:var(--mango);color:#14213D}
+.sh-top .ib .i{width:28px;height:28px}
+.sh-top h3{margin:2px 0 2px;font-size:1.38rem;line-height:1.1;letter-spacing:-.02em}
+.sh-top p{margin:0;color:var(--muted);font-size:.93rem;line-height:1.35}
+.x{margin-left:auto;flex:none;width:38px;height:38px;border-radius:50%;background:var(--paper);display:grid;place-items:center}
+.x .i{width:20px;height:20px}
+.sh-body{padding:14px 20px 0}
+.lbl{display:block;font-weight:700;font-size:.9rem;margin:0 0 8px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.chip{padding:9px 14px;border-radius:999px;border:1.5px solid var(--line);font-weight:700;font-size:.9rem;min-height:42px}
+.chip[aria-pressed="true"]{background:var(--sea);border-color:var(--sea);color:#fff}
+.segc{display:grid;grid-template-columns:1fr 1fr;background:var(--paper);border-radius:16px;padding:4px;margin-bottom:12px}
+.segc button{display:flex;align-items:center;justify-content:center;gap:8px;min-height:46px;border-radius:12px;font-weight:700;font-size:.95rem;color:var(--muted)}
+.segc button .i{width:20px;height:20px}
+.segc button[aria-selected="true"]{background:var(--card);color:var(--text);box-shadow:0 1px 3px rgba(8,16,30,.12)}
+.recbox{display:flex;align-items:center;gap:16px;background:var(--paper);border-radius:18px;padding:16px;margin-bottom:12px}
+.recbtn{width:72px;height:72px;border-radius:50%;background:var(--mango);color:#14213D;display:grid;place-items:center;flex:none;position:relative;transition:transform .12s}
+.recbtn:active{transform:scale(.95)}
+.recbtn .i{width:30px;height:30px}
+.recbtn.on{background:var(--rec);color:#fff}
+.recbtn.on::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:3px solid var(--rec);opacity:.5;animation:pulse 1.2s ease-out infinite}
+@keyframes pulse{from{transform:scale(.9);opacity:.6}to{transform:scale(1.25);opacity:0}}
+.recinfo{flex:1;min-width:0}
+.recinfo b{display:block;font-family:"Bricolage Grotesque",system-ui;font-size:1.5rem;line-height:1}
+.recinfo small{display:block;color:var(--muted);font-size:.86rem;margin-top:4px}
+.recinfo audio{width:100%;height:36px;margin-top:6px}
+.link{color:var(--sea);font-weight:700;font-size:.88rem;text-decoration:underline;margin-top:6px}
+textarea,.in{width:100%;background:var(--paper);border:1.5px solid var(--line);border-radius:16px;padding:13px 14px;-webkit-appearance:none;appearance:none}
+textarea{min-height:104px;resize:vertical;margin-bottom:12px}
+textarea:focus,.in:focus{outline:none;border-color:var(--sea)}
+.two{display:grid;grid-template-columns:1fr 1.2fr;gap:10px;margin-bottom:14px}
+.send{width:100%;background:var(--sea);color:#fff}
+.status{font-size:.88rem;margin:10px 0 0;text-align:center}
+.status.err{color:var(--rec)}
+.or{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:.85rem;font-weight:700;margin:20px 0 12px}
+.or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
+.direct{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.direct.n4{grid-template-columns:repeat(4,1fr)}
+@media (max-width:359px){.direct.n5{grid-template-columns:repeat(6,1fr);row-gap:12px}.direct.n5 a{grid-column:span 2}.direct.n5 a:nth-child(4){grid-column:2/span 2}}
+.direct a{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0;text-decoration:none;font-size:.7rem;font-weight:700;color:var(--muted);text-align:center;line-height:1.2}
+.direct a span{width:100%;max-width:54px;aspect-ratio:1;border-radius:18px;display:grid;place-items:center;color:#fff;transition:transform .12s}
+.direct a:active span{transform:scale(.94)}
+.direct a small{font-size:inherit;white-space:nowrap}
+.d-sms span{background:var(--sms)} .d-tel span{background:var(--navy);color:var(--paper)!important} .d-wa span{background:var(--wa)} .d-fb span{background:var(--fb)} .d-mail span{background:var(--sea)}
+.done{text-align:center;padding:26px 20px 10px}
+.done .ok{width:72px;height:72px;border-radius:50%;background:var(--sea);color:#fff;display:grid;place-items:center;margin:0 auto 14px}
+.done .ok .i{width:34px;height:34px;stroke-width:2.6}
+.done h3{margin:0 0 6px;font-size:1.5rem;letter-spacing:-.02em}
+.done p{margin:0 0 18px;color:var(--muted)}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media (prefers-reduced-motion:no-preference){.hero{animation:rise .45s ease-out both}@keyframes rise{from{transform:translateY(10px);opacity:0}to{transform:none;opacity:1}}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="brand" href="?" id="brand"><picture><source srcset="/logo/logo-mark-teal.svg" media="(prefers-color-scheme: dark)"><img src="/logo/logo-mark.svg" width="32" height="32" alt=""></picture><span class="bt">Fix <span>&amp;</span> Go</span></a>
+    <div class="lang" role="group" aria-label="Idioma / Language">
+      <button type="button" data-l="es">ES</button><button type="button" data-l="en">EN</button>
+    </div>
+  </header>
+  <main id="app"></main>
+  <div class="bar"><div class="row2">
+    <button class="btn main" id="leave" type="button"></button>
+    <a class="btn round" id="call"></a>
+  </div></div>
+  <footer id="foot"></footer>
+</div>
+<div id="sheetRoot">
+  <div class="scrim" id="scrim"></div>
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="shTitle" tabindex="-1"></div>
+</div>
+
+<script src="/config.js"></script>
+<script>
+const T = {
+  es:{
+    menuTitle:"¿En qué te ayudamos?", menuSub:"Toca una categoría, elige tu servicio y déjanos un mensaje.",
+    search:"Busca: TV, PS5, cámaras, Atlanta…", none:"No aparece aquí, pero déjanos un mensaje y lo vemos.",
+    services:n=>`${n}`, tag:{casa:"Casa",tech:"Tecnología",tramites:"Trámites",negocio:"Negocios",viajes:"Viajes"},
+    leave:"Déjanos un mensaje", leaveTitle:"Déjanos un mensaje", leaveSub:"Nota de voz o escrito. Te respondemos hoy.",
+    when:"¿Para cuándo?", chips:["Hoy","Esta semana","Sin apuro"],
+    voice:"Nota de voz", write:"Escribir",
+    recIdle:"Toca para grabar (hasta 90 s)", recOn:"Grabando… toca para parar", recDone:"Lista. Escúchala o envíala.", redo:"Grabar de nuevo",
+    micErr:"No se pudo usar el micrófono. Escríbenos aquí abajo.",
+    ph:"Cuéntanos qué necesitas. Ej: TV de 65\" en pared de drywall, en Hoover.",
+    name:"Tu nombre", phone:"Tu teléfono",
+    send:"Enviar mensaje", sending:"Enviando…",
+    needPhone:"Pon tu teléfono para poder responderte.", needMsg:"Graba una nota o escribe tu mensaje.",
+    fail:"No se pudo enviar. Escríbenos directo abajo.",
+    or:"o escríbenos directo", sms:"Texto", tel:"Llamar", wa:"WhatsApp", fb:"Messenger", mail:"Correo", subj:s=>`Consulta: ${s}`,
+    doneT:n=>`¡Listo${n?`, ${n}`:""}!`, doneP:"Recibimos tu mensaje. Te respondemos hoy mismo.", close:"Cerrar",
+    msg:(s,w,d)=>`Hola, vi la tarjeta de Fix & Go. Me interesa: ${s}.`+(w?` Para: ${w.toLowerCase()}.`:"")+(d?` ${d}`:""),
+    generic:"Hola, vi la tarjeta de Fix & Go y quiero información.", general:"Consulta general",
+    foot:a=>`Fix & Go · ${a} · Español e inglés`
+  },
+  en:{
+    menuTitle:"How can we help?", menuSub:"Tap a category, pick your service and leave us a message.",
+    search:"Search: TV, PS5, cameras, Atlanta…", none:"Not listed? Leave us a message anyway.",
+    services:n=>`${n}`, tag:{casa:"Home",tech:"Tech",tramites:"Paperwork",negocio:"Business",viajes:"Rides"},
+    leave:"Leave us a message", leaveTitle:"Leave us a message", leaveSub:"Voice note or text. We'll get back to you today.",
+    when:"When do you need it?", chips:["Today","This week","No rush"],
+    voice:"Voice note", write:"Type it",
+    recIdle:"Tap to record (up to 90s)", recOn:"Recording… tap to stop", recDone:"Ready. Play it back or send it.", redo:"Record again",
+    micErr:"Couldn't use the microphone. Type your message below.",
+    ph:"Tell us what you need. E.g. 65\" TV on drywall, in Hoover.",
+    name:"Your name", phone:"Your phone",
+    send:"Send message", sending:"Sending…",
+    needPhone:"Add your phone so we can get back to you.", needMsg:"Record a voice note or type your message.",
+    fail:"Couldn't send. Reach us directly below.",
+    or:"or reach us directly", sms:"Text", tel:"Call", wa:"WhatsApp", fb:"Messenger", mail:"Email", subj:s=>`Inquiry: ${s}`,
+    doneT:n=>`Got it${n?`, ${n}`:""}!`, doneP:"Your message is in. We'll get back to you today.", close:"Close",
+    msg:(s,w,d)=>`Hi, I got the Fix & Go card. I'm interested in: ${s}.`+(w?` Needed: ${w.toLowerCase()}.`:"")+(d?` ${d}`:""),
+    generic:"Hi, I got the Fix & Go card and I'd like some info.", general:"General question",
+    foot:a=>`Fix & Go · ${a} · English and Spanish`
+  }
+};
+
+
+
+
+
+
+const qs = new URLSearchParams(location.search);
+const seg = S[qs.get("s")] ? qs.get("s") : null;
+const zk = ZONES[qs.get("z")] ? qs.get("z") : "bham", Z = ZONES[zk];
+function detectLang(){
+  const p = qs.get("lang"); if (p==="es"||p==="en") return p;
+  try{ const v = localStorage.getItem("lang"); if (v==="es"||v==="en") return v; }catch(e){}
+  const f = (navigator.languages && navigator.languages[0]) || navigator.language || "en";
+  return /^es/i.test(f) ? "es" : "en";
+}
+let lang = detectLang(), openCat = seg;
+const U = s => "?" + [s?`s=${s}`:"", `lang=${lang}`, zk!=="bham"?`z=${zk}`:""].filter(Boolean).join("&");
+const esc = s => String(s??"").replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const norm = s => String(s).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+const enc = encodeURIComponent;
+const links = {
+  sms: m => `sms:+${CONFIG.PHONE}?&body=${enc(m)}`,
+  wa:  m => `https://wa.me/${CONFIG.PHONE}?text=${enc(m)}`,
+  fb:  m => `https://m.me/${CONFIG.FB_PAGE}?text=${enc(m)}`,
+  tel: () => `tel:+${CONFIG.PHONE}`,
+  mail: m => `mailto:${CONFIG.EMAIL}?subject=${enc(T[lang].subj(svc() ? svc().name : T[lang].general))}&body=${enc(m)}`
+};
+const order = () => (lang==="es" ? ["wa","tel","sms","fb","mail"] : ["sms","tel","fb","wa","mail"]).filter(k => k!=="fb" || CONFIG.FB_PAGE);
+const canVoice = () => !!(CONFIG.ENDPOINT && navigator.mediaDevices && window.MediaRecorder);
+
+/* ---------- página ---------- */
+function row(k,i,tag){
+  const [ic,v] = S[k].items[i], [n,s] = v[lang];
+  return `<li data-k="${k}" data-i="${i}"><button type="button" class="row" data-k="${k}" data-i="${i}">
+    ${ico(ic,"ri")}<span>${tag?`<span class="tag">${T[lang].tag[k]}</span>`:""}<b>${esc(n)}</b>${s?`<small>${esc(s)}</small>`:""}</span>${ico("right","go")}</button></li>`;
+}
+function render(){
+  const t = T[lang], app = document.getElementById("app");
+  document.documentElement.lang = lang;
+  document.querySelectorAll(".lang button").forEach(b=>b.setAttribute("aria-pressed", String(b.dataset.l===lang)));
+  const heroT = seg ? S[seg][lang].t : t.menuTitle, heroP = seg ? S[seg][lang].d : t.menuSub;
+  app.innerHTML = `
+    <section class="hero"><h1>${esc(heroT)}</h1><p>${esc(heroP)}</p></section>
+    ${Z.note?`<p class="zone">${ico("pin")}<span>${esc(Z.note[lang])}</span></p>`:""}
+    <label class="search">${ico("search")}<input id="q" type="search" inputmode="search" autocomplete="off" enterkeyhint="search" placeholder="${esc(t.search)}" aria-label="${esc(t.search)}"></label>
+    <div class="cats" id="cats">${Object.keys(S).map(k=>{
+      const o = k===openCat, c = S[k][lang];
+      return `<section class="cat${o?" open":""}" data-k="${k}">
+        <button type="button" class="cat-h" aria-expanded="${o}" aria-controls="cb-${k}">
+          <span class="ib">${ico(CAT_ICON[k])}</span>
+          <span class="ct"><b>${esc(c.t)}</b><small>${esc(c.tile)}</small></span>
+          <span class="n">${S[k].items.length}</span>${ico("down","chev")}
+        </button>
+        <div class="cat-b" id="cb-${k}" ${o?"":"inert"}><div><ul class="list">${S[k].items.map((_,i)=>row(k,i,false)).join("")}</ul></div></div>
+      </section>`;}).join("")}</div>
+    <ul class="list results" id="results" hidden>${Object.keys(S).flatMap(k=>S[k].items.map((_,i)=>row(k,i,true))).join("")}</ul>
+    <p class="empty" id="empty" hidden>${t.none}</p>`;
+  document.title = seg ? `${S[seg][lang].t} | Fix & Go` : "Fix & Go";
+  document.getElementById("brand").href = U();
+  document.getElementById("leave").innerHTML = `${ico("mic")}<span>${t.leave}</span>`;
+  const call = document.getElementById("call"); call.href = links.tel(); call.innerHTML = ico("call"); call.setAttribute("aria-label", t.tel);
+  document.getElementById("foot").textContent = t.foot(Z.area);
+  const q = document.getElementById("q");
+  q.addEventListener("input", e=>filter(e.target.value));
+  q.addEventListener("keydown", e=>{ if (e.key==="Enter"){ e.preventDefault(); q.blur(); } });
+  app.addEventListener("click", onClick);
+  if (st) fillSheet();
+}
+function onClick(e){
+  const h = e.target.closest(".cat-h");
+  if (h){ toggleCat(h.parentElement.dataset.k); return; }
+  const r = e.target.closest(".row");
+  if (r) openSheet(r.dataset.k, +r.dataset.i, r);
+}
+function toggleCat(k){
+  openCat = openCat===k ? null : k;
+  document.querySelectorAll(".cat").forEach(c=>{
+    const o = c.dataset.k===openCat;
+    c.classList.toggle("open", o);
+    c.querySelector(".cat-h").setAttribute("aria-expanded", String(o));
+    c.querySelector(".cat-b").inert = !o;
+  });
+  if (openCat) setTimeout(()=>document.querySelector(`.cat[data-k="${openCat}"] .cat-h`).scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth",block:"start"}), 120);
+}
+function filter(q){
+  const n = norm(q.trim()), res = document.getElementById("results");
+  document.getElementById("cats").hidden = !!n; res.hidden = !n;
+  let c = 0;
+  res.querySelectorAll("li").forEach(li=>{
+    const k = li.dataset.k, v = S[k].items[li.dataset.i][1];
+    const hay = norm([...v.es, ...v.en, v.kw||"", T.es.tag[k], T.en.tag[k]].join(" "));
+    const ok = !n || n.split(/\s+/).every(w=>hay.includes(w));
+    li.hidden = !ok; if (ok) c++;
+  });
+  document.getElementById("empty").hidden = !n || c>0;
+}
+
+/* ---------- hoja ---------- */
+let st = null, lastFocus = null, rec = null, stream = null, tick = null, micBusy = false;
+const root = document.getElementById("sheetRoot"), sheet = document.getElementById("sheet");
+
+function svc(){ if (!st || st.k==null) return null; const [ic,v] = S[st.k].items[st.i]; return {ic, name:v[lang][0], sub:v[lang][1]}; }
+function textMsg(){ const t = T[lang], s = svc(); return t.msg(s?s.name:t.general, st.when>=0?t.chips[st.when]:"", (st.text||"").trim()); }
+const fmt = s => `${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,"0")}`;
+
+function fillSheet(){
+  const t = T[lang], s = svc();
+  const head = `<span class="grab" aria-hidden="true"></span>
+    <div class="sh-top"><span class="ib">${ico(s?s.ic:"msg")}</span>
+      <div><h3 id="shTitle">${esc(s?s.name:t.leaveTitle)}</h3><p>${esc(s?(s.sub||t.leaveSub):t.leaveSub)}</p></div>
+      <button type="button" class="x" id="x" aria-label="${t.close}">${ico("close")}</button></div>`;
+  if (st.sent){
+    sheet.innerHTML = head + `<div class="done"><div class="ok">${ico("check")}</div><h3>${esc(t.doneT(st.name))}</h3><p>${t.doneP}</p>
+      <button type="button" class="btn send" id="doneBtn">${t.close}</button></div>`;
+    sheet.querySelector("#x").onclick = closeSheet; sheet.querySelector("#doneBtn").onclick = closeSheet; return;
+  }
+  const voice = canVoice(), mode = voice ? st.mode : "text";
+  sheet.innerHTML = head + `<div class="sh-body">
+    <p class="lbl">${t.when}</p>
+    <div class="chips">${t.chips.map((c,j)=>`<button type="button" class="chip" data-j="${j}" aria-pressed="${j===st.when}">${c}</button>`).join("")}</div>
+    ${voice?`<div class="segc" role="tablist">
+      <button type="button" role="tab" data-m="voice" aria-selected="${mode==="voice"}">${ico("mic")}${t.voice}</button>
+      <button type="button" role="tab" data-m="text" aria-selected="${mode==="text"}">${ico("pen")}${t.write}</button></div>`:""}
+    <div id="pVoice" ${mode==="voice"?"":"hidden"}>
+      <div class="recbox"><button type="button" class="recbtn" id="rec" aria-label="${t.voice}">${ico("mic")}</button>
+        <div class="recinfo"><b id="recT">0:00</b><small id="recS">${t.recIdle}</small><div id="recP"></div></div></div>
+    </div>
+    <div id="pText" ${mode==="text"?"":"hidden"}><textarea id="txt" placeholder="${esc(t.ph)}" aria-label="${esc(t.write)}">${esc(st.text)}</textarea></div>
+    <div class="two">
+      <input class="in" id="nm" type="text" autocomplete="given-name" placeholder="${esc(t.name)}" aria-label="${esc(t.name)}" value="${esc(st.name)}">
+      <input class="in" id="ph" type="tel" inputmode="tel" autocomplete="tel" placeholder="${esc(t.phone)}" aria-label="${esc(t.phone)}" value="${esc(st.phone)}">
+    </div>
+    <input class="hp" id="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <button type="button" class="btn send" id="send">${ico("msg")}<span>${t.send}</span></button>
+    <p class="status" id="status" role="status"></p>
+    <p class="or">${t.or}</p>
+    <div class="direct n${order().length}" id="direct">${order().map(k=>`<a class="d-${k}" data-c="${k}"${k==="wa"||k==="fb"?' target="_blank" rel="noopener"':""}><span>${ico(k==="tel"?"call":k)}</span><small>${t[k]}</small></a>`).join("")}</div>
+  </div>`;
+  if (st.audio) showRecDone();
+  updateLinks();
+  const $ = id => sheet.querySelector(id);
+  $("#x").onclick = closeSheet;
+  $(".chips").onclick = e=>{ const c = e.target.closest(".chip"); if (!c) return;
+    st.when = st.when===+c.dataset.j ? -1 : +c.dataset.j;
+    sheet.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed", String(+x.dataset.j===st.when))); updateLinks(); };
+  if (voice) $(".segc").onclick = e=>{ const b = e.target.closest("[data-m]"); if (!b) return; setMode(b.dataset.m); };
+  $("#rec").onclick = toggleRec;
+  $("#txt").oninput = e=>{ st.text = e.target.value; updateLinks(); };
+  $("#nm").oninput = e=>{ st.name = e.target.value; };
+  $("#ph").oninput = e=>{ st.phone = e.target.value; };
+  $("#send").onclick = send;
+}
+function setMode(m){
+  st.mode = m;
+  sheet.querySelectorAll(".segc [data-m]").forEach(b=>b.setAttribute("aria-selected", String(b.dataset.m===m)));
+  sheet.querySelector("#pVoice").hidden = m!=="voice"; sheet.querySelector("#pText").hidden = m!=="text";
+}
+function updateLinks(){ const m = textMsg(); sheet.querySelectorAll("#direct a").forEach(a=>a.href = links[a.dataset.c](m)); }
+function status(msg, err){ const s = sheet.querySelector("#status"); if (s){ s.textContent = msg||""; s.className = "status"+(err?" err":""); } }
+
+async function toggleRec(){
+  const t = T[lang], b = sheet.querySelector("#rec");
+  if (rec && rec.state==="recording"){ rec.stop(); return; }
+  if (micBusy) return;  // ya se está pidiendo el micrófono (doble toque)
+  if (st.audio){ URL.revokeObjectURL(st.audio.url); st.audio = null; sheet.querySelector("#recP").innerHTML = ""; }
+  const owner = st; micBusy = true;
+  try{ stream = await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}}); }
+  catch(e){ micBusy = false; if (st===owner){ status(t.micErr, true); setMode("text"); } return; }
+  micBusy = false;
+  if (st!==owner){ stream.getTracks().forEach(x=>x.stop()); return; }  // la hoja se cerró mientras pedía permiso
+  const mime = ["audio/webm;codecs=opus","audio/mp4","audio/webm"].find(m=>window.MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(m)) || "";
+  const chunks = [], mr = rec = new MediaRecorder(stream, mime?{mimeType:mime}:undefined), ms = stream;
+  const t0 = Date.now(); let secs = 0;
+  rec.ondataavailable = e=>{ if (e.data.size) chunks.push(e.data); };
+  rec.onstop = ()=>{
+    clearInterval(tick); ms.getTracks().forEach(x=>x.stop());
+    if (st!==owner) return;  // la hoja se cerró mientras grababa: descartar
+    const blob = new Blob(chunks, {type: mr.mimeType || mime || "audio/webm"});
+    st.audio = {blob, url:URL.createObjectURL(blob), mime:blob.type, dur:Math.round(secs)};
+    b.classList.remove("on"); b.innerHTML = ico("mic"); showRecDone();
+  };
+  rec.start(250); status("");
+  b.classList.add("on"); b.innerHTML = ico("stop");
+  sheet.querySelector("#recS").textContent = t.recOn;
+  tick = setInterval(()=>{ secs = (Date.now()-t0)/1000; sheet.querySelector("#recT").textContent = fmt(secs); if (secs>=90 && mr.state==="recording") mr.stop(); }, 200);
+}
+function showRecDone(){
+  const t = T[lang];
+  sheet.querySelector("#recT").textContent = fmt(st.audio.dur);
+  sheet.querySelector("#recS").textContent = t.recDone;
+  sheet.querySelector("#recP").innerHTML = `<audio controls src="${st.audio.url}"></audio><button type="button" class="link" id="redo">${t.redo}</button>`;
+  sheet.querySelector("#redo").onclick = toggleRec;
+}
+const b64 = blob => new Promise((ok,ko)=>{ const r = new FileReader(); r.onload = ()=>ok(String(r.result).split(",")[1]); r.onerror = ko; r.readAsDataURL(blob); });
+
+async function send(){
+  const t = T[lang], s = svc(), btn = sheet.querySelector("#send");
+  const phone = (st.phone||"").replace(/\D/g,""), mode = canVoice() ? st.mode : "text";
+  const hasMsg = mode==="voice" ? !!st.audio : !!(st.text||"").trim();
+  if (phone.length<10){ status(t.needPhone, true); sheet.querySelector("#ph").focus(); return; }
+  if (!hasMsg){ status(t.needMsg, true); return; }
+  if (!CONFIG.ENDPOINT){ location.href = links[order()[0]](textMsg() + (st.name?` — ${st.name}`:"") + ` (${st.phone})`); return; }
+  btn.disabled = true; btn.lastElementChild.textContent = t.sending; status("");
+  try{
+    const payload = { v:1, lang, zone:zk, service: s?s.name:t.general, line: st.k??"", when: st.when>=0?t.chips[st.when]:"",
+      name:(st.name||"").trim().slice(0,80), phone, text:(st.text||"").trim().slice(0,2000),
+      hp: sheet.querySelector("#hp").value, mime: mode==="voice"?st.audio.mime:"", dur: mode==="voice"?st.audio.dur:0,
+      audio: mode==="voice" ? await b64(st.audio.blob) : "" };
+    const r = await fetch(CONFIG.ENDPOINT, {method:"POST", body:JSON.stringify(payload)});
+    const j = await r.json(); if (!j.ok) throw new Error(j.error||"fail");
+    st.sent = true; fillSheet();
+  }catch(e){
+    btn.disabled = false; btn.lastElementChild.textContent = t.send; status(t.fail, true);
+  }
+}
+
+function openSheet(k,i,from){
+  st = {k, i, when:-1, mode:"voice", text:"", name:"", phone:"", audio:null, sent:false};
+  lastFocus = from || document.activeElement;
+  fillSheet(); sheet.scrollTop = 0;
+  root.classList.add("open"); document.documentElement.classList.add("lock");
+  history.pushState({sheet:1}, "", location.search + "#mensaje");
+  setTimeout(()=>sheet.focus({preventScroll:true}), 60);
+}
+function closeSheet(fromPop){
+  if (!st) return;
+  if (rec && rec.state==="recording") rec.stop();
+  root.classList.remove("open"); document.documentElement.classList.remove("lock");
+  st = null;
+  if (fromPop!==true && location.hash==="#mensaje") history.back();
+  if (lastFocus) lastFocus.focus({preventScroll:true});
+}
+document.getElementById("leave").onclick = e=>openSheet(null, null, e.currentTarget);
+document.getElementById("scrim").onclick = closeSheet;
+addEventListener("popstate", ()=>closeSheet(true));
+addEventListener("keydown", e=>{ if (e.key==="Escape") closeSheet(); });
+let y0 = null, dy = 0;
+sheet.addEventListener("touchstart", e=>{ if (sheet.scrollTop<=0 && !e.target.closest("textarea,input,audio")) { y0 = e.touches[0].clientY; dy = 0; } }, {passive:true});
+sheet.addEventListener("touchmove", e=>{ if (y0===null || matchMedia("(min-width:820px)").matches) return;
+  dy = Math.max(0, e.touches[0].clientY - y0); if (dy>0){ sheet.style.transition="none"; sheet.style.transform=`translateY(${dy}px)`; } }, {passive:true});
+sheet.addEventListener("touchend", ()=>{ if (y0===null) return; sheet.style.transition=""; sheet.style.transform=""; if (dy>110) closeSheet(); y0 = null; dy = 0; });
+
+document.querySelectorAll(".lang button").forEach(b=>b.addEventListener("click",()=>{
+  lang = b.dataset.l; try{ localStorage.setItem("lang",lang); }catch(e){}
+  const app = document.getElementById("app"); app.replaceWith(app.cloneNode(false)); render();
+}));
+if (location.hash==="#mensaje") history.replaceState(null,"",location.search);
+render();
+if (qs.has("m")) openSheet(null, null);   // /go/?m=1 abre directo "Déjanos un mensaje" (lo usa la página principal)
+</script>
+</body>
+</html>

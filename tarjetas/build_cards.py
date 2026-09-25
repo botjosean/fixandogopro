@@ -4,7 +4,7 @@ Genera tarjetas de presentación (3.5x2" con sangrado) y la placa del carro (5x7
 Uso:
   pip install "qrcode[pil]" playwright && playwright install chromium
   python3 tarjetas/build_cards.py --domain fixandgopro.com --phone 2054908033 [--zone atl] --out print
-Los logos se leen de logo/ en la raíz del repo.
+Los logos se leen de logo/ en la raíz del repo. Los QR apuntan a /go/ (la página del QR).
 """
 import argparse, io, os
 import qrcode, qrcode.image.svg
@@ -113,7 +113,7 @@ NFC = '<svg class="nfc" viewBox="0 0 48 48" fill="none" stroke="#fff" stroke-wid
 
 def front(k, lang):
     h, s = CARDS[k][lang]
-    url = f"https://{a.domain}/?s={k}&lang={lang}{Z}"
+    url = f"https://{a.domain}/go/?s={k}&lang={lang}{Z}"
     scan = "Escanea" if lang == "es" else "Scan me"
     return f'''<div class="pg card front"><div class="tx"><h1>{h}</h1><p>{s}</p></div>
       <div class="ar">{AREA[lang]}</div>
@@ -128,7 +128,7 @@ GEN = {
 
 def front_general(lang):
     h, items = GEN[lang]
-    url = f"https://{a.domain}/?lang={lang}{Z}"
+    url = f"https://{a.domain}/go/?lang={lang}{Z}"
     scan = "Escanea" if lang == "es" else "Scan me"
     lis = "".join(f"<li>{x}</li>" for x in items)
     return f'''<div class="pg card front gen"><div class="tx"><h1>{h}</h1><ul>{lis}</ul></div>
@@ -158,7 +158,7 @@ PHONE_SVG = """<svg viewBox="0 0 120 120" width="100%" height="100%" fill="none"
 
 def plate():
     # la placa es bilingüe: sin lang, así la página sale en el idioma del teléfono
-    url = f"https://{a.domain}/" + (f"?z={a.zone}" if a.zone else "")
+    url = f"https://{a.domain}/go/" + (f"?z={a.zone}" if a.zone else "")
     return f'''<div class="pg plate"><div class="tx">
       <div class="logo">{logo_white()}</div><h1>Need a hand at home?</h1><h2>¿Necesitas una mano en casa?</h2>
       <p class="sv">TV mounting, cameras, ceiling fans, PS5 and PC repair, rides to Atlanta.</p></div>
