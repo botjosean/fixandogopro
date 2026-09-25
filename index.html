@@ -452,8 +452,9 @@ footer{background:var(--ink);color:rgba(255,255,255,.65);border-top:1px solid rg
   <a class="btn btn-wa" id="dockWa" aria-label="WhatsApp"><svg class="i" viewBox="0 0 24 24"><path d="M3.5 20.5 5 16a8.5 8.5 0 1 1 3.3 3.3z"/><path d="M9 8.5c0 3.5 2.9 6.5 6.5 6.5l1-1.6-2-1-1 .8a4.3 4.3 0 0 1-2.2-2.2l.8-1-1-2z"/></svg></a>
 </div>
 
-<script src="/config.js?v=3"></script>
+<script src="/config.js?v=4"></script>
 <script>
+if (typeof HOT === "undefined") { window.HOT = []; window.hotIndex = (k, ic) => S[k].items.findIndex(x => x[0] === ic); }
 const L = {
   es:{
     nServ:"Servicios", nHow:"Cómo funciona", nZones:"Zonas", nFaq:"Preguntas", navCta:"Escríbenos",
@@ -568,6 +569,7 @@ function apply(){
   ].map(([h,a,b,ic,bg,fg,x]) => `<a href="${h}"${x}><span class="ic" style="background:${bg};color:${fg}">${ico(ic)}</span><span>${esc(a)}<small>${esc(b)}</small></span>${ico("right","go")}</a>`).join("");
   $("#faq").innerHTML = t.faq.map(([q,a]) => `<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join("");
   $("#marq").innerHTML = (() => { const w = Object.keys(S).flatMap(k => S[k].items.slice(0,3).map(x => x[1][lang][0])); const one = w.map(x=>`<span>${esc(x)}</span>`).join(""); return one + one; })();
+  $("#hot").parentElement.hidden = !HOT.length;
   $("#hot").innerHTML = HOT.map(([k,ic,n]) => `<a href="${go(`&s=${k}&i=${ic}`)}">${ico(ic)}<span>${esc(n[lang])}</span></a>`).join("");
   renderBento(); startRot();
   const f = $("#demo"); if (f.src && !f.src.endsWith(go())) f.src = go();

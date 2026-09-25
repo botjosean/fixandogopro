@@ -11,6 +11,7 @@ Los dos leen el teléfono, el correo y la lista de servicios de **`config.js`**.
 En `config.js` también está **`HOT`**, la lista "Lo más pedido": los botones que salen primero en las dos páginas.
 Las categorías y los servicios salen en el orden en que están escritos en `S`, **ordenados por demanda** (lo que más se busca va primero).
 Cuando cambies `config.js`, sube el número de versión en las dos páginas (`/config.js?v=2` → `?v=3`) para que nadie vea la copia vieja guardada en caché.
+Si después de publicar ves algo viejo, en Cloudflare → **Caching** → **Configuration** → **Purge Everything** se borra la copia guardada. Las páginas siguen funcionando aunque llegue un `config.js` viejo (solo no sale "Lo más pedido").
 Los enlaces viejos del QR (`fixandgopro.com/?s=…`, `?lang=…`, `?z=…`) se redirigen solos a `/go/`.
 
 ## Estructura
