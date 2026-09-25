@@ -32,7 +32,7 @@ Abre `index.html` y busca el bloque `CONFIGURA AQUÍ` (justo al empezar el `<scr
 ```js
 const CONFIG = {
   PHONE:    "12054908033",   // tu número con código de país, sin + ni espacios
-  FB_PAGE:  "fixandgo",      // usuario de tu página de Facebook (m.me/usuario)
+  FB_PAGE:  "",              // usuario de tu página de Facebook. Vacío = sin botón Messenger
   EMAIL:    "info@fixandgopro.com",   // correo de empresa
   ENDPOINT: ""               // URL de la App web de Apps Script. Vacío = sin notas de voz
 };
@@ -41,7 +41,7 @@ const CONFIG = {
 | Campo | Qué poner | Ejemplo | Dónde se usa |
 |---|---|---|---|
 | `PHONE` | Tu número de Google Voice **con el 1 delante**, solo dígitos (sin `+`, espacios ni guiones). | `"12055551234"` | Botón de llamar, Texto (SMS) y WhatsApp. |
-| `FB_PAGE` | El usuario de tu página de Facebook, lo que va después de `facebook.com/`. | `"fixandgo"` | Botón Messenger (`m.me/fixandgo`). |
+| `FB_PAGE` | El usuario de tu página de Facebook, lo que va después de `facebook.com/`. **Vacío = no sale el botón Messenger** (así está hasta crear la página). | `"fixandgo"` | Botón Messenger (`m.me/fixandgo`). |
 | `EMAIL` | El correo de empresa (ver *Correo de empresa*). | `"info@fixandgopro.com"` | Botón Correo (abre el correo del cliente con el mensaje ya escrito). |
 | `ENDPOINT` | La URL `/exec` de la App web del backend (ver *Backend de tickets*). | `"https://script.google.com/macros/s/AKfy.../exec"` | Enviar notas de voz y mensajes escritos como ticket. |
 
