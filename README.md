@@ -55,7 +55,7 @@ git push
 
 ## Enlaces para QR / NFC
 - General: `https://fixandgopro.com/`
-- Por categoría: `?s=casa`, `?s=tech`, `?s=negocio`, `?s=viajes`
+- Por categoría: `?s=casa`, `?s=tech`, `?s=tramites`, `?s=negocio`, `?s=viajes`
 - Idioma: `&lang=es` o `&lang=en` (si no, detecta el teléfono)
 - Zona Atlanta: `&z=atl`
 

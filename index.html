@@ -7,14 +7,14 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="format-detection" content="telephone=no">
 <title>Fix &amp; Go</title>
-<meta name="description" content="TV mounting, cameras, PS5 and PC repair, business marketing and rides. Birmingham, AL. English and Spanish.">
+<meta name="description" content="TV mounting, cameras, PS5 and PC repair, online paperwork, business marketing and rides. Birmingham, AL. English and Spanish.">
 <link rel="icon" type="image/png" sizes="32x32" href="logo/logo-mark-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="logo/logo-mark-192.png">
 <link rel="apple-touch-icon" sizes="180x180" href="logo/apple-touch-icon.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Fix &amp; Go">
 <meta property="og:title" content="Fix &amp; Go">
-<meta property="og:description" content="TV mounting, cameras, PS5 and PC repair, business marketing and rides. Birmingham, AL. English and Spanish.">
+<meta property="og:description" content="TV mounting, cameras, PS5 and PC repair, online paperwork, business marketing and rides. Birmingham, AL. English and Spanish.">
 <meta property="og:url" content="https://fixandgopro.com/">
 <meta property="og:image" content="https://fixandgopro.com/logo/og-image.png">
 <meta property="og:image:width" content="1200">
@@ -108,6 +108,7 @@ header{display:flex;justify-content:space-between;align-items:center;padding:14p
 .row small{display:block;color:var(--muted);font-size:.86rem;line-height:1.3;margin-top:2px}
 .row .tag{display:block;font-size:.72rem;font-weight:700;color:var(--sea);margin-bottom:1px}
 .go{width:30px;height:30px;padding:6px;border-radius:50%;background:var(--mango);color:#14213D;stroke-width:2.4}
+.note{margin:0;padding:2px 16px 14px;color:var(--muted);font-size:.8rem;line-height:1.35}
 .results{background:var(--card);border:1.5px solid var(--line);border-radius:22px}
 .empty{color:var(--muted);padding:6px 4px}
 
@@ -270,16 +271,20 @@ const I = {
   sms:'<path d="M4 4.5h16a1.5 1.5 0 0 1 1.5 1.5v10a1.5 1.5 0 0 1-1.5 1.5H9l-4.5 3.5v-3.5H4A1.5 1.5 0 0 1 2.5 16V6A1.5 1.5 0 0 1 4 4.5z"/><path d="M7 10h.01M12 10h.01M17 10h.01"/>',
   fb:'<path d="M12 2.5C6.6 2.5 2.5 6.4 2.5 11.4c0 2.7 1.2 5 3.2 6.6v3.5l3.1-1.7c1 .3 2.1.4 3.2.4 5.4 0 9.5-3.9 9.5-8.8S17.4 2.5 12 2.5z"/><path d="m6.5 13.5 3.5-3.7 2.4 2.1 3.6-2.2-3.5 3.8-2.4-2.1z"/>',
   wa:'<path d="M3.5 20.5 5 16a8.5 8.5 0 1 1 3.3 3.3z"/><path d="M9 8.5c0 3.5 2.9 6.5 6.5 6.5l1-1.6-2-1-1 .8a4.3 4.3 0 0 1-2.2-2.2l.8-1-1-2z"/>',
-  check:'<path d="m5 12.5 4.5 4.5L19 7.5"/>'
+  check:'<path d="m5 12.5 4.5 4.5L19 7.5"/>',
+  file:'<path d="M14 2.5H7A2.5 2.5 0 0 0 4.5 5v14A2.5 2.5 0 0 0 7 21.5h10a2.5 2.5 0 0 0 2.5-2.5V8z"/><path d="M14 2.5V8h5.5M8.5 13h7M8.5 17h5"/>',
+  card:'<rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M2.5 10h19M6.5 15h4"/>',
+  cart:'<circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2.5 3.5h2.8l2.4 11.5h11l2-8H6.3"/>',
+  form:'<rect x="4.5" y="3.5" width="15" height="18" rx="2.2"/><path d="M9 2.5h6v3H9zM8.5 11l1.5 1.5 3-3M8.5 16.5h7"/>'
 };
 const ico = (k, c="") => `<svg class="i ${c}" viewBox="0 0 24 24" aria-hidden="true">${I[k]||I.msg}</svg>`;
-const CAT_ICON = {casa:"home", tech:"gamepad", negocio:"trend", viajes:"car"};
+const CAT_ICON = {casa:"home", tech:"gamepad", tramites:"file", negocio:"trend", viajes:"car"};
 
 const T = {
   es:{
     menuTitle:"¿En qué te ayudo?", menuSub:"Toca una categoría, elige tu servicio y déjame un mensaje.",
     search:"Busca: TV, PS5, cámaras, Atlanta…", none:"No lo encontré, pero déjame un mensaje y lo vemos.",
-    services:n=>`${n}`, tag:{casa:"Casa",tech:"Tecnología",negocio:"Negocios",viajes:"Viajes"},
+    services:n=>`${n}`, tag:{casa:"Casa",tech:"Tecnología",tramites:"Trámites",negocio:"Negocios",viajes:"Viajes"},
     leave:"Déjame un mensaje", leaveTitle:"Déjame un mensaje", leaveSub:"Nota de voz o escrito. Te respondo hoy.",
     when:"¿Para cuándo?", chips:["Hoy","Esta semana","Sin apuro"],
     voice:"Nota de voz", write:"Escribir",
@@ -299,7 +304,7 @@ const T = {
   en:{
     menuTitle:"How can I help?", menuSub:"Tap a category, pick your service and leave me a message.",
     search:"Search: TV, PS5, cameras, Atlanta…", none:"Not listed? Leave me a message anyway.",
-    services:n=>`${n}`, tag:{casa:"Home",tech:"Tech",negocio:"Business",viajes:"Rides"},
+    services:n=>`${n}`, tag:{casa:"Home",tech:"Tech",tramites:"Paperwork",negocio:"Business",viajes:"Rides"},
     leave:"Leave me a message", leaveTitle:"Leave me a message", leaveSub:"Voice note or text. I'll get back to you today.",
     when:"When do you need it?", chips:["Today","This week","No rush"],
     voice:"Voice note", write:"Type it",
@@ -336,8 +341,8 @@ const S = {
     ]
   },
   tech:{
-    es:{t:"¿Lenta, caliente o no prende? La arreglo", d:"PC, PS5, controles, iPhone y Mac. En tu casa o a distancia.", tile:"PC, PS5, controles, Apple y cuentas hackeadas"},
-    en:{t:"Slow, overheating or dead? I'll fix it", d:"PCs, PS5, controllers, iPhone and Mac. At your place or remote.", tile:"PC, PS5, controllers, Apple and hacked accounts"},
+    es:{t:"¿Lenta, caliente o no prende? La arreglo", d:"PC, PS5, controles, iPhone, Mac o cualquier cosa digital. En tu casa o a distancia.", tile:"PC, PS5, controles, Apple y cuentas hackeadas"},
+    en:{t:"Slow, overheating or dead? I'll fix it", d:"PCs, PS5, controllers, iPhone, Mac or anything digital. At your place or remote.", tile:"PC, PS5, controllers, Apple and hacked accounts"},
     items:[
       ["laptop",{es:["Tu computadora lenta, como nueva","Limpieza, optimización y que no se caliente"],en:["Slow computer? Make it fast again","Cleanup, tune-up, no more overheating"]}],
       ["gamepad",{es:["PS5 o Xbox que suena como avión","Limpieza interna, pasta térmica, puerto HDMI"],en:["PS5 or Xbox loud as a jet engine","Deep cleaning, thermal paste, HDMI port repair"]}],
@@ -350,6 +355,18 @@ const S = {
       ["tablet",{es:["Tablet o teléfono nuevo, listo para usar","Pasar datos, control parental, configuración"],en:["New phone or tablet, ready to go","Data transfer, parental controls, setup"]}],
       ["headset",{es:["Soporte técnico a distancia","Te lo arreglo en línea, sin salir de casa"],en:["Remote tech support","Fixed online, no need to go anywhere"]}],
       ["cpu",{es:["Te armo tu PC gamer o de trabajo",""],en:["Custom gaming or work PC build",""]}]
+    ]
+  },
+  tramites:{
+    es:{t:"Tus trámites en línea, resueltos", d:"LLC, pagos, compras y formularios. Tú me dices qué necesitas y lo hacemos juntos.", tile:"LLC, pagos de USCIS, compras en eBay y formularios",
+        note:"No soy abogado: hago el trámite contigo, no doy asesoría legal, migratoria ni de impuestos."},
+    en:{t:"Online paperwork, handled", d:"LLCs, payments, purchases and forms. Tell me what you need and we get it done together.", tile:"LLCs, USCIS fees, eBay orders and online forms",
+        note:"I'm not a lawyer: I help you file and pay, but I don't give legal, immigration or tax advice."},
+    items:[
+      ["file",{es:["Creo tu LLC o negocio","Registro en el estado, número EIN y todo en orden"],en:["Set up your LLC or business","State filing, EIN number and everything in order"]}],
+      ["card",{es:["Pagos en línea sin enredos","Tasa anual de asilo de USCIS con tu código, multas, facturas"],en:["Online payments, no hassle","USCIS annual asylum fee with your code, tickets, bills"]}],
+      ["cart",{es:["Compro en línea por ti","eBay, Amazon y otras tiendas: pedido, pago y envío"],en:["Online shopping, done for you","eBay, Amazon and other stores: order, pay, track"]}],
+      ["form",{es:["Formularios, citas y cuentas en línea","Solicitudes, citas, correos y contraseñas"],en:["Online forms, appointments and accounts","Applications, bookings, email and passwords"]}]
     ]
   },
   negocio:{
@@ -431,7 +448,7 @@ function render(){
           <span class="ct"><b>${esc(c.t)}</b><small>${esc(c.tile)}</small></span>
           <span class="n">${S[k].items.length}</span>${ico("down","chev")}
         </button>
-        <div class="cat-b" id="cb-${k}" ${o?"":"inert"}><div><ul class="list">${S[k].items.map((_,i)=>row(k,i,false)).join("")}</ul></div></div>
+        <div class="cat-b" id="cb-${k}" ${o?"":"inert"}><div><ul class="list">${S[k].items.map((_,i)=>row(k,i,false)).join("")}</ul>${c.note?`<p class="note">${esc(c.note)}</p>`:""}</div></div>
       </section>`;}).join("")}</div>
     <ul class="list results" id="results" hidden>${Object.keys(S).flatMap(k=>S[k].items.map((_,i)=>row(k,i,true))).join("")}</ul>
     <p class="empty" id="empty" hidden>${t.none}</p>`;
