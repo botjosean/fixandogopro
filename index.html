@@ -174,7 +174,8 @@ textarea:focus,.in:focus{outline:none;border-color:var(--sea)}
 .or{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:.85rem;font-weight:700;margin:20px 0 12px}
 .or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
 .direct{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
-@media (max-width:359px){.direct{grid-template-columns:repeat(6,1fr);row-gap:12px}.direct a{grid-column:span 2}.direct a:nth-child(4){grid-column:2/span 2}}
+.direct.n4{grid-template-columns:repeat(4,1fr)}
+@media (max-width:359px){.direct.n5{grid-template-columns:repeat(6,1fr);row-gap:12px}.direct.n5 a{grid-column:span 2}.direct.n5 a:nth-child(4){grid-column:2/span 2}}
 .direct a{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0;text-decoration:none;font-size:.7rem;font-weight:700;color:var(--muted);text-align:center;line-height:1.2}
 .direct a span{width:100%;max-width:54px;aspect-ratio:1;border-radius:18px;display:grid;place-items:center;color:#fff;transition:transform .12s}
 .direct a:active span{transform:scale(.94)}
@@ -215,7 +216,7 @@ textarea:focus,.in:focus{outline:none;border-color:var(--sea)}
 /* ================= CONFIGURA AQUÍ ================= */
 const CONFIG = {
   PHONE:    "12054908033",   // tu número con código de país, sin + ni espacios
-  FB_PAGE:  "fixandgo",      // usuario de tu página de Facebook (m.me/usuario)
+  FB_PAGE:  "",              // usuario de tu página de Facebook (m.me/usuario). Vacío = sin botón Messenger
   EMAIL:    "info@fixandgopro.com",   // correo de empresa (Cloudflare Email Routing → tu Gmail)
   ENDPOINT: ""               // URL de la App web de Apps Script (fixandgo-backend.gs). Vacío = sin notas de voz
 };
@@ -427,7 +428,7 @@ const links = {
   tel: () => `tel:+${CONFIG.PHONE}`,
   mail: m => `mailto:${CONFIG.EMAIL}?subject=${enc(T[lang].subj(svc() ? svc().name : T[lang].general))}&body=${enc(m)}`
 };
-const order = () => lang==="es" ? ["wa","tel","sms","fb","mail"] : ["sms","tel","fb","wa","mail"];
+const order = () => (lang==="es" ? ["wa","tel","sms","fb","mail"] : ["sms","tel","fb","wa","mail"]).filter(k => k!=="fb" || CONFIG.FB_PAGE);
 const canVoice = () => !!(CONFIG.ENDPOINT && navigator.mediaDevices && window.MediaRecorder);
 
 /* ---------- página ---------- */
@@ -536,7 +537,7 @@ function fillSheet(){
     <button type="button" class="btn send" id="send">${ico("msg")}<span>${t.send}</span></button>
     <p class="status" id="status" role="status"></p>
     <p class="or">${t.or}</p>
-    <div class="direct" id="direct">${order().map(k=>`<a class="d-${k}" data-c="${k}"${k==="wa"||k==="fb"?' target="_blank" rel="noopener"':""}><span>${ico(k==="tel"?"call":k)}</span><small>${t[k]}</small></a>`).join("")}</div>
+    <div class="direct n${order().length}" id="direct">${order().map(k=>`<a class="d-${k}" data-c="${k}"${k==="wa"||k==="fb"?' target="_blank" rel="noopener"':""}><span>${ico(k==="tel"?"call":k)}</span><small>${t[k]}</small></a>`).join("")}</div>
   </div>`;
   if (st.audio) showRecDone();
   updateLinks();
