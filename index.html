@@ -173,11 +173,13 @@ textarea:focus,.in:focus{outline:none;border-color:var(--sea)}
 .status.err{color:var(--rec)}
 .or{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:.85rem;font-weight:700;margin:20px 0 12px}
 .or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
-.direct{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.direct a{display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none;font-size:.78rem;font-weight:700;color:var(--muted)}
-.direct a span{width:54px;height:54px;border-radius:18px;display:grid;place-items:center;color:#fff;transition:transform .12s}
+.direct{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+@media (max-width:359px){.direct{grid-template-columns:repeat(6,1fr);row-gap:12px}.direct a{grid-column:span 2}.direct a:nth-child(4){grid-column:2/span 2}}
+.direct a{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0;text-decoration:none;font-size:.7rem;font-weight:700;color:var(--muted);text-align:center;line-height:1.2}
+.direct a span{width:100%;max-width:54px;aspect-ratio:1;border-radius:18px;display:grid;place-items:center;color:#fff;transition:transform .12s}
 .direct a:active span{transform:scale(.94)}
-.d-sms span{background:var(--sms)} .d-tel span{background:var(--navy);color:var(--paper)!important} .d-wa span{background:var(--wa)} .d-fb span{background:var(--fb)}
+.direct a small{font-size:inherit;white-space:nowrap}
+.d-sms span{background:var(--sms)} .d-tel span{background:var(--navy);color:var(--paper)!important} .d-wa span{background:var(--wa)} .d-fb span{background:var(--fb)} .d-mail span{background:var(--sea)}
 .done{text-align:center;padding:26px 20px 10px}
 .done .ok{width:72px;height:72px;border-radius:50%;background:var(--sea);color:#fff;display:grid;place-items:center;margin:0 auto 14px}
 .done .ok .i{width:34px;height:34px;stroke-width:2.6}
@@ -214,6 +216,7 @@ textarea:focus,.in:focus{outline:none;border-color:var(--sea)}
 const CONFIG = {
   PHONE:    "12054908033",   // tu número con código de país, sin + ni espacios
   FB_PAGE:  "fixandgo",      // usuario de tu página de Facebook (m.me/usuario)
+  EMAIL:    "info@fixandgopro.com",   // correo de empresa (Cloudflare Email Routing → tu Gmail)
   ENDPOINT: ""               // URL de la App web de Apps Script (fixandgo-backend.gs). Vacío = sin notas de voz
 };
 const ZONES = {
@@ -271,6 +274,7 @@ const I = {
   fb:'<path d="M12 2.5C6.6 2.5 2.5 6.4 2.5 11.4c0 2.7 1.2 5 3.2 6.6v3.5l3.1-1.7c1 .3 2.1.4 3.2.4 5.4 0 9.5-3.9 9.5-8.8S17.4 2.5 12 2.5z"/><path d="m6.5 13.5 3.5-3.7 2.4 2.1 3.6-2.2-3.5 3.8-2.4-2.1z"/>',
   wa:'<path d="M3.5 20.5 5 16a8.5 8.5 0 1 1 3.3 3.3z"/><path d="M9 8.5c0 3.5 2.9 6.5 6.5 6.5l1-1.6-2-1-1 .8a4.3 4.3 0 0 1-2.2-2.2l.8-1-1-2z"/>',
   check:'<path d="m5 12.5 4.5 4.5L19 7.5"/>',
+  mail:'<rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5"/>',
   receipt:'<path d="M5.5 2.5h13v19l-2.2-1.5-2.1 1.5-2.2-1.5-2.2 1.5-2.1-1.5-2.2 1.5z"/><path d="M9 7.5h6M9 11h6M9 14.5h4"/>',
   box:'<path d="M12 2.5 20.5 7v10L12 21.5 3.5 17V7z"/><path d="M3.5 7 12 11.5 20.5 7M12 11.5v10M7.8 4.8l8.4 4.5"/>',
   file:'<path d="M14 2.5H7A2.5 2.5 0 0 0 4.5 5v14A2.5 2.5 0 0 0 7 21.5h10a2.5 2.5 0 0 0 2.5-2.5V8z"/><path d="M14 2.5V8h5.5M8.5 13h7M8.5 17h5"/>',
@@ -295,7 +299,7 @@ const T = {
     send:"Enviar mensaje", sending:"Enviando…",
     needPhone:"Pon tu teléfono para poder responderte.", needMsg:"Graba una nota o escribe tu mensaje.",
     fail:"No se pudo enviar. Escríbenos directo abajo.",
-    or:"o escríbenos directo", sms:"Texto", tel:"Llamar", wa:"WhatsApp", fb:"Messenger",
+    or:"o escríbenos directo", sms:"Texto", tel:"Llamar", wa:"WhatsApp", fb:"Messenger", mail:"Correo", subj:s=>`Consulta: ${s}`,
     doneT:n=>`¡Listo${n?`, ${n}`:""}!`, doneP:"Recibimos tu mensaje. Te respondemos hoy mismo.", close:"Cerrar",
     msg:(s,w,d)=>`Hola, vi la tarjeta de Fix & Go. Me interesa: ${s}.`+(w?` Para: ${w.toLowerCase()}.`:"")+(d?` ${d}`:""),
     generic:"Hola, vi la tarjeta de Fix & Go y quiero información.", general:"Consulta general",
@@ -315,7 +319,7 @@ const T = {
     send:"Send message", sending:"Sending…",
     needPhone:"Add your phone so we can get back to you.", needMsg:"Record a voice note or type your message.",
     fail:"Couldn't send. Reach us directly below.",
-    or:"or reach us directly", sms:"Text", tel:"Call", wa:"WhatsApp", fb:"Messenger",
+    or:"or reach us directly", sms:"Text", tel:"Call", wa:"WhatsApp", fb:"Messenger", mail:"Email", subj:s=>`Inquiry: ${s}`,
     doneT:n=>`Got it${n?`, ${n}`:""}!`, doneP:"Your message is in. We'll get back to you today.", close:"Close",
     msg:(s,w,d)=>`Hi, I got the Fix & Go card. I'm interested in: ${s}.`+(w?` Needed: ${w.toLowerCase()}.`:"")+(d?` ${d}`:""),
     generic:"Hi, I got the Fix & Go card and I'd like some info.", general:"General question",
@@ -420,9 +424,10 @@ const links = {
   sms: m => `sms:+${CONFIG.PHONE}?&body=${enc(m)}`,
   wa:  m => `https://wa.me/${CONFIG.PHONE}?text=${enc(m)}`,
   fb:  m => `https://m.me/${CONFIG.FB_PAGE}?text=${enc(m)}`,
-  tel: () => `tel:+${CONFIG.PHONE}`
+  tel: () => `tel:+${CONFIG.PHONE}`,
+  mail: m => `mailto:${CONFIG.EMAIL}?subject=${enc(T[lang].subj(svc() ? svc().name : T[lang].general))}&body=${enc(m)}`
 };
-const order = () => lang==="es" ? ["wa","tel","sms","fb"] : ["sms","tel","fb","wa"];
+const order = () => lang==="es" ? ["wa","tel","sms","fb","mail"] : ["sms","tel","fb","wa","mail"];
 const canVoice = () => !!(CONFIG.ENDPOINT && navigator.mediaDevices && window.MediaRecorder);
 
 /* ---------- página ---------- */
@@ -531,7 +536,7 @@ function fillSheet(){
     <button type="button" class="btn send" id="send">${ico("msg")}<span>${t.send}</span></button>
     <p class="status" id="status" role="status"></p>
     <p class="or">${t.or}</p>
-    <div class="direct" id="direct">${order().map(k=>`<a class="d-${k}" data-c="${k}"${k==="wa"||k==="fb"?' target="_blank" rel="noopener"':""}><span>${ico(k==="tel"?"call":k)}</span>${t[k]}</a>`).join("")}</div>
+    <div class="direct" id="direct">${order().map(k=>`<a class="d-${k}" data-c="${k}"${k==="wa"||k==="fb"?' target="_blank" rel="noopener"':""}><span>${ico(k==="tel"?"call":k)}</span><small>${t[k]}</small></a>`).join("")}</div>
   </div>`;
   if (st.audio) showRecDone();
   updateLinks();
