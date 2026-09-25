@@ -7,14 +7,14 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="format-detection" content="telephone=no">
 <title>Fix &amp; Go</title>
-<meta name="description" content="TV mounting, cameras, PS5 and PC repair, online paperwork, business marketing and rides. Birmingham, AL. English and Spanish.">
+<meta name="description" content="TV mounting, cameras, PS5 and PC repair, taxes and paperwork, business marketing and rides. Birmingham, AL. English and Spanish.">
 <link rel="icon" type="image/png" sizes="32x32" href="logo/logo-mark-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="logo/logo-mark-192.png">
 <link rel="apple-touch-icon" sizes="180x180" href="logo/apple-touch-icon.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Fix &amp; Go">
 <meta property="og:title" content="Fix &amp; Go">
-<meta property="og:description" content="TV mounting, cameras, PS5 and PC repair, online paperwork, business marketing and rides. Birmingham, AL. English and Spanish.">
+<meta property="og:description" content="TV mounting, cameras, PS5 and PC repair, taxes and paperwork, business marketing and rides. Birmingham, AL. English and Spanish.">
 <meta property="og:url" content="https://fixandgopro.com/">
 <meta property="og:image" content="https://fixandgopro.com/logo/og-image.png">
 <meta property="og:image:width" content="1200">
@@ -271,6 +271,8 @@ const I = {
   fb:'<path d="M12 2.5C6.6 2.5 2.5 6.4 2.5 11.4c0 2.7 1.2 5 3.2 6.6v3.5l3.1-1.7c1 .3 2.1.4 3.2.4 5.4 0 9.5-3.9 9.5-8.8S17.4 2.5 12 2.5z"/><path d="m6.5 13.5 3.5-3.7 2.4 2.1 3.6-2.2-3.5 3.8-2.4-2.1z"/>',
   wa:'<path d="M3.5 20.5 5 16a8.5 8.5 0 1 1 3.3 3.3z"/><path d="M9 8.5c0 3.5 2.9 6.5 6.5 6.5l1-1.6-2-1-1 .8a4.3 4.3 0 0 1-2.2-2.2l.8-1-1-2z"/>',
   check:'<path d="m5 12.5 4.5 4.5L19 7.5"/>',
+  receipt:'<path d="M5.5 2.5h13v19l-2.2-1.5-2.1 1.5-2.2-1.5-2.2 1.5-2.1-1.5-2.2 1.5z"/><path d="M9 7.5h6M9 11h6M9 14.5h4"/>',
+  box:'<path d="M12 2.5 20.5 7v10L12 21.5 3.5 17V7z"/><path d="M3.5 7 12 11.5 20.5 7M12 11.5v10M7.8 4.8l8.4 4.5"/>',
   file:'<path d="M14 2.5H7A2.5 2.5 0 0 0 4.5 5v14A2.5 2.5 0 0 0 7 21.5h10a2.5 2.5 0 0 0 2.5-2.5V8z"/><path d="M14 2.5V8h5.5M8.5 13h7M8.5 17h5"/>',
   card:'<rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M2.5 10h19M6.5 15h4"/>',
   form:'<rect x="4.5" y="3.5" width="15" height="18" rx="2.2"/><path d="M9 2.5h6v3H9zM8.5 11l1.5 1.5 3-3M8.5 16.5h7"/>'
@@ -356,12 +358,15 @@ const S = {
     ]
   },
   tramites:{
-    es:{t:"Tus trámites en línea, resueltos", d:"LLC, pagos, citas y formularios. Tú me dices qué necesitas y lo hacemos juntos.", tile:"LLC, pagos de USCIS, citas y cuentas en línea"},
-    en:{t:"Online paperwork, handled", d:"LLCs, payments, appointments and forms. Tell me what you need and we get it done together.", tile:"LLCs, USCIS payments, appointments and online accounts"},
+    es:{t:"Tus trámites, resueltos", d:"Taxes, LLC, seguros, pagos, citas y paquetería. Tú me dices qué necesitas y lo hacemos juntos.", tile:"Taxes, LLC, seguro de auto, pagos de USCIS, citas y paquetería"},
+    en:{t:"Paperwork, handled", d:"Taxes, LLCs, insurance, payments, appointments and shipping. Tell me what you need and we get it done together.", tile:"Taxes, LLCs, car insurance, USCIS payments, appointments and shipping"},
     items:[
+      ["receipt",{es:["Preparo tus taxes","En español, con Social o ITIN, y te explico todo"],en:["Tax preparation","In Spanish or English, with SSN or ITIN, explained clearly"],kw:"impuestos income tax declaracion reembolso refund w2 w-2 1099 irs"}],
       ["file",{es:["Creo tu LLC o negocio","Registro en el estado, número EIN y todo en orden"],en:["Set up your LLC or business","State filing, EIN number and everything in order"]}],
+      ["shield",{es:["Seguro de auto más barato","Comparo varias aseguradoras y te conecto con un agente en español"],en:["Cheaper car insurance","I compare several insurers and connect you with an agent"],kw:"aseguranza seguro carro auto vin insurance"}],
       ["card",{es:["Pagos en línea sin enredos","USCIS, multas, facturas y más"],en:["Online payments, no hassle","USCIS, tickets, bills and more"],kw:"migracion inmigracion asilo tasa immigration asylum fee"}],
-      ["form",{es:["Citas, formularios y cuentas en línea","Cita de licencia, consulado o pasaporte, correo y contraseñas"],en:["Appointments, forms and online accounts","Driver's license, consulate or passport appointments, email and passwords"],kw:"dmv alea licencia de conducir driver license matricula"}]
+      ["form",{es:["Citas, formularios y cuentas en línea","Cita de licencia, consulado o pasaporte, correo y contraseñas"],en:["Appointments, forms and online accounts","Driver's license, consulate or passport appointments, email and passwords"],kw:"dmv alea licencia de conducir driver license matricula"}],
+      ["box",{es:["Envío de paquetes a tu país","México y Latinoamérica"],en:["Ship packages home","Mexico and Latin America"],kw:"paqueteria paquete caja envio encomienda guatemala honduras salvador"}]
     ]
   },
   negocio:{
