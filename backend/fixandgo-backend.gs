@@ -15,7 +15,7 @@
  */
 const CFG = {
   MODEL: 'google/gemini-2.5-flash',
-  NAME: 'José',
+  SIGNATURE: 'Equipo Fix & Go',   // firma de las respuestas: siempre como empresa
   BRAND: 'Fix & Go',
   LABEL: 'Tickets',
   FOLDER: 'Fix & Go - notas de voz',
@@ -96,12 +96,12 @@ function processVoice() {
 /* ---------- IA ---------- */
 function ticket_(input, base) {
   base = base || {};
-  const sys = `Eres el asistente de ${CFG.NAME} (${CFG.BRAND}), técnico, handyman, gestor de trámites en línea y chofer bilingüe en Birmingham y Atlanta.
+  const sys = `Eres el asistente de ${CFG.BRAND}, una empresa bilingüe de servicios para el hogar, tecnología, trámites y viajes en Birmingham y Atlanta.
 Recibes un contacto de un cliente (puede venir de una transcripción con errores). Devuelve SOLO JSON válido con:
 nombre, telefono, idioma ("es"|"en"), linea ("casa"|"tech"|"tramites"|"negocio"|"viajes"|"otro"), servicio (corto, en español),
 pedido_original (lo que dijo, en su idioma), resumen (2-3 líneas en español), urgencia ("hoy"|"semana"|"flexible"),
 ubicacion, disponibilidad, soluciones (array, español), materiales (array), precio (SOLO un rango de esta lista o "a cotizar": ${JSON.stringify(CFG.PRICES)}),
-preguntas (array de lo que falta saber), respuesta_sms (mensaje corto listo para enviarle, en SU idioma, cálido y directo, firmado ${CFG.NAME}, sin precio exacto).
+preguntas (array de lo que falta saber), respuesta_sms (mensaje corto listo para enviarle, en SU idioma, cálido y directo, hablando como empresa en plural ("nosotros", nunca "yo"), firmado "${CFG.SIGNATURE}", sin precio exacto).
 Si un dato no aparece, usa "". No inventes.`;
   let t = {};
   try {

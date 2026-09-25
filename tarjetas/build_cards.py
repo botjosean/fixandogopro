@@ -13,7 +13,7 @@ from playwright.sync_api import sync_playwright
 ap = argparse.ArgumentParser()
 ap.add_argument("--domain", default="fixandgopro.com")
 ap.add_argument("--phone", default="2055550000", help="10 dígitos, sin +1")
-ap.add_argument("--name", default="José")
+ap.add_argument("--name", default="", help="nombre en el reverso; vacío = solo la marca Fix & Go")
 ap.add_argument("--zone", default="", help="atl para tarjetas de Chamblee/Atlanta")
 ap.add_argument("--out", default=".")
 a = ap.parse_args()
@@ -51,13 +51,14 @@ CARDS = {
   "casa":   {"en": ("TV mounting, cameras & ceiling fans", "Lights, furniture, Wi-Fi. Same week."),
              "es": ("TV en la pared, cámaras y ventiladores", "Lámparas, muebles y WiFi. Esta misma semana.")},
   "tech":   {"en": ("PS5, PC & controller repair", "Slow, loud or dead? Fixed fast."),
-             "es": ("Reparo PS5, PC y controles", "¿Lento, ruidoso o no prende? Lo arreglo.")},
+             "es": ("Reparamos PS5, PC y controles", "¿Lento, ruidoso o no prende? Lo arreglamos.")},
   "negocio":{"en": ("More customers for your business", "Google Maps, ads, websites and AI."),
              "es": ("Más clientes para tu negocio", "Google Maps, anuncios, web e IA.")},
-  "viajes": {"en": ("Rides to Atlanta & the airport", "I drive you, wait and bring you back."),
-             "es": ("Te llevo, te espero y te traigo", "Atlanta, aeropuerto y citas médicas.")},
+  "viajes": {"en": ("Rides to Atlanta & the airport", "We drive you, wait and bring you back."),
+             "es": ("Te llevamos, te esperamos y te traemos", "Atlanta, aeropuerto y citas médicas.")},
 }
-BACK = {"en": ("Text or call", "English and Spanish"), "es": ("Escríbeme o llámame", "Español e inglés")}
+BACK = {"en": ("Text or call", "English and Spanish"), "es": ("Escríbenos o llámanos", "Español e inglés")}
+TAG = {"en": "Home · Tech · Paperwork · Rides", "es": "Casa · Tecnología · Trámites · Viajes"}
 
 CSS = """
 @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&display=swap');
@@ -86,7 +87,8 @@ h1,h2,.b{font-family:'Bricolage Grotesque','Arial Narrow',Arial,sans-serif}
 .back .mk>svg,.plate .logo>svg{display:block;width:100%;height:100%}
 .back .nm{font-weight:800;font-size:22pt;line-height:1}
 .back .br{font-family:'Bricolage Grotesque',Arial;font-size:11pt;color:var(--sea);font-weight:800;margin-top:.04in}
-.back .br i{font-style:normal;color:var(--mango)}
+.back .br i,.back .nm i{font-style:normal;color:var(--mango)}
+.back .tg{font-size:7.6pt;font-weight:700;color:var(--sea);margin-top:.05in}
 .plate .logo{height:.5in;width:1.48in;margin-bottom:.2in}
 .back .ph{position:absolute;left:.22in;bottom:.42in;font-family:'Bricolage Grotesque',Arial;font-weight:800;font-size:17pt;letter-spacing:-.01em}
 .back .ln{position:absolute;left:.22in;bottom:.22in;font-size:7.2pt;color:var(--muted)}
@@ -118,10 +120,10 @@ def front(k, lang):
       <div class="qrbox">{qr(url)}<span>{scan}</span></div></div>'''
 
 GEN = {
-  "en": ("I mount it, fix it, and drive you.",
+  "en": ("We mount it, fix it, and drive you.",
          ["TV mounting and security cameras", "PS5, PC and Apple repair", "More customers for your business", "Rides to Atlanta and the airport"]),
-  "es": ("Lo instalo, lo arreglo y te llevo.",
-         ["TV en la pared y cámaras", "Reparo PS5, PC y Apple", "Más clientes para tu negocio", "Viajes a Atlanta y al aeropuerto"]),
+  "es": ("Lo instalamos, lo arreglamos y te llevamos.",
+         ["TV en la pared y cámaras", "Reparamos PS5, PC y Apple", "Más clientes para tu negocio", "Viajes a Atlanta y al aeropuerto"]),
 }
 
 def front_general(lang):
@@ -135,9 +137,13 @@ def front_general(lang):
 
 def back(lang):
     l1, l2 = BACK[lang]
+    if a.name:   # tarjeta personal: nombre + marca
+        top = f'<div class="nm b">{a.name}</div><div class="br">Fix <i>&amp;</i> Go</div>'
+    else:        # tarjeta de empresa: marca + lo que hacemos
+        top = f'<div class="nm b">Fix <i>&amp;</i> Go</div><div class="tg">{TAG[lang]}</div>'
     return f'''<div class="pg card back"><div class="dot"></div><div class="tx">
       <div class="mk">{logo_svg("logo-mark.svg", "lm-" + lang)}</div>
-      <div><div class="nm b">{a.name}</div><div class="br">Fix <i>&amp;</i> Go</div></div></div>
+      <div>{top}</div></div>
       <div class="ph">{PHONE_FMT}</div><div class="ln">{l1}. {l2}.</div></div>'''
 
 PHONE_SVG = """<svg viewBox="0 0 120 120" width="100%" height="100%" fill="none">

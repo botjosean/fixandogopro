@@ -100,6 +100,9 @@ python3 tarjetas/build_cards.py --domain fixandgopro.com --phone NUMERO --out pr
 python3 tarjetas/build_cards.py --domain fixandgopro.com --phone NUMERO --zone atl --out print   # Chamblee/Atlanta
 ```
 
+El reverso sale como tarjeta de empresa (logo, "Fix & Go" y los servicios). Para una tarjeta con nombre de una
+persona del equipo agrega `--name "Nombre"`.
+
 Córrelo desde la raíz del repo. Toma los logos de `logo/` (`logo-mark.svg` en el reverso de la tarjeta y
 `logo-horizontal.svg` en blanco arriba de la placa).
 
