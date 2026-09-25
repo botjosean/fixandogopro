@@ -84,7 +84,7 @@ header{display:flex;justify-content:space-between;align-items:center;padding:14p
 .cat-b>div{overflow:hidden;min-height:0}
 
 .list{list-style:none;margin:0;padding:6px 8px 8px}
-.list li+li{border-top:1px solid var(--line)}
+.list li:not([hidden])~li{border-top:1px solid var(--line)}
 .row{display:flex;align-items:center;gap:12px;width:100%;padding:12px 8px;border-radius:14px;min-height:60px;transition:background .12s}
 .row:active{background:var(--tint)}
 @media (hover:hover){.row:hover{background:var(--tint)}}
@@ -426,7 +426,9 @@ function render(){
   document.getElementById("leave").innerHTML = `${ico("mic")}<span>${t.leave}</span>`;
   const call = document.getElementById("call"); call.href = links.tel(); call.innerHTML = ico("call"); call.setAttribute("aria-label", t.tel);
   document.getElementById("foot").textContent = t.foot(Z.area);
-  document.getElementById("q").addEventListener("input", e=>filter(e.target.value));
+  const q = document.getElementById("q");
+  q.addEventListener("input", e=>filter(e.target.value));
+  q.addEventListener("keydown", e=>{ if (e.key==="Enter"){ e.preventDefault(); q.blur(); } });
   app.addEventListener("click", onClick);
   if (st) fillSheet();
 }
@@ -460,7 +462,7 @@ function filter(q){
 }
 
 /* ---------- hoja ---------- */
-let st = null, lastFocus = null, rec = null, stream = null, tick = null;
+let st = null, lastFocus = null, rec = null, stream = null, tick = null, micBusy = false;
 const root = document.getElementById("sheetRoot"), sheet = document.getElementById("sheet");
 
 function svc(){ if (!st || st.k==null) return null; const [ic,v] = S[st.k].items[st.i]; return {ic, name:v[lang][0], sub:v[lang][1]}; }
@@ -525,23 +527,28 @@ function status(msg, err){ const s = sheet.querySelector("#status"); if (s){ s.t
 async function toggleRec(){
   const t = T[lang], b = sheet.querySelector("#rec");
   if (rec && rec.state==="recording"){ rec.stop(); return; }
+  if (micBusy) return;  // ya se está pidiendo el micrófono (doble toque)
   if (st.audio){ URL.revokeObjectURL(st.audio.url); st.audio = null; sheet.querySelector("#recP").innerHTML = ""; }
+  const owner = st; micBusy = true;
   try{ stream = await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}}); }
-  catch(e){ status(t.micErr, true); setMode("text"); return; }
+  catch(e){ micBusy = false; if (st===owner){ status(t.micErr, true); setMode("text"); } return; }
+  micBusy = false;
+  if (st!==owner){ stream.getTracks().forEach(x=>x.stop()); return; }  // la hoja se cerró mientras pedía permiso
   const mime = ["audio/webm;codecs=opus","audio/mp4","audio/webm"].find(m=>window.MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(m)) || "";
-  const chunks = []; rec = new MediaRecorder(stream, mime?{mimeType:mime}:undefined);
+  const chunks = [], mr = rec = new MediaRecorder(stream, mime?{mimeType:mime}:undefined), ms = stream;
   const t0 = Date.now(); let secs = 0;
   rec.ondataavailable = e=>{ if (e.data.size) chunks.push(e.data); };
   rec.onstop = ()=>{
-    clearInterval(tick); stream.getTracks().forEach(x=>x.stop());
-    const blob = new Blob(chunks, {type: rec.mimeType || mime || "audio/webm"});
+    clearInterval(tick); ms.getTracks().forEach(x=>x.stop());
+    if (st!==owner) return;  // la hoja se cerró mientras grababa: descartar
+    const blob = new Blob(chunks, {type: mr.mimeType || mime || "audio/webm"});
     st.audio = {blob, url:URL.createObjectURL(blob), mime:blob.type, dur:Math.round(secs)};
     b.classList.remove("on"); b.innerHTML = ico("mic"); showRecDone();
   };
   rec.start(250); status("");
   b.classList.add("on"); b.innerHTML = ico("stop");
   sheet.querySelector("#recS").textContent = t.recOn;
-  tick = setInterval(()=>{ secs = (Date.now()-t0)/1000; sheet.querySelector("#recT").textContent = fmt(secs); if (secs>=90) rec.stop(); }, 200);
+  tick = setInterval(()=>{ secs = (Date.now()-t0)/1000; sheet.querySelector("#recT").textContent = fmt(secs); if (secs>=90 && mr.state==="recording") mr.stop(); }, 200);
 }
 function showRecDone(){
   const t = T[lang];
