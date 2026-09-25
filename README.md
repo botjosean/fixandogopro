@@ -8,6 +8,7 @@ Sitio bilingüe (ES/EN) con dos páginas:
 | **fixandgopro.com/go/** | `go/index.html` | Página del **QR / NFC** (placa del carro y tarjetas): elegir servicio, llamar, escribir o mandar nota de voz en 3 toques. |
 
 Los dos leen el teléfono, el correo y la lista de servicios de **`config.js`**. Se cambia ahí una sola vez.
+Cuando cambies `config.js`, sube el número de versión en las dos páginas (`/config.js?v=2` → `?v=3`) para que nadie vea la copia vieja guardada en caché.
 Los enlaces viejos del QR (`fixandgopro.com/?s=…`, `?lang=…`, `?z=…`) se redirigen solos a `/go/`.
 
 ## Estructura
