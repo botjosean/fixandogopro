@@ -96,9 +96,9 @@ function processVoice() {
 /* ---------- IA ---------- */
 function ticket_(input, base) {
   base = base || {};
-  const sys = `Eres el asistente de ${CFG.NAME} (${CFG.BRAND}), técnico, handyman y chofer bilingüe en Birmingham y Atlanta.
+  const sys = `Eres el asistente de ${CFG.NAME} (${CFG.BRAND}), técnico, handyman, gestor de trámites en línea y chofer bilingüe en Birmingham y Atlanta.
 Recibes un contacto de un cliente (puede venir de una transcripción con errores). Devuelve SOLO JSON válido con:
-nombre, telefono, idioma ("es"|"en"), linea ("casa"|"tech"|"negocio"|"viajes"|"otro"), servicio (corto, en español),
+nombre, telefono, idioma ("es"|"en"), linea ("casa"|"tech"|"tramites"|"negocio"|"viajes"|"otro"), servicio (corto, en español),
 pedido_original (lo que dijo, en su idioma), resumen (2-3 líneas en español), urgencia ("hoy"|"semana"|"flexible"),
 ubicacion, disponibilidad, soluciones (array, español), materiales (array), precio (SOLO un rango de esta lista o "a cotizar": ${JSON.stringify(CFG.PRICES)}),
 preguntas (array de lo que falta saber), respuesta_sms (mensaje corto listo para enviarle, en SU idioma, cálido y directo, firmado ${CFG.NAME}, sin precio exacto).
