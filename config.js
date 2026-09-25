@@ -73,38 +73,35 @@ const I = {
   form:'<rect x="4.5" y="3.5" width="15" height="18" rx="2.2"/><path d="M9 2.5h6v3H9zM8.5 11l1.5 1.5 3-3M8.5 16.5h7"/>'
 };
 const ico = (k, c="") => `<svg class="i ${c}" viewBox="0 0 24 24" aria-hidden="true">${I[k]||I.msg}</svg>`;
-const CAT_ICON = {casa:"home", tech:"gamepad", tramites:"file", negocio:"trend", viajes:"car"};
+const CAT_ICON = {casa:"home", tech:"laptop", tramites:"file", negocio:"trend", viajes:"car"};
 
+
+/* Lo más pedido: accesos directos que salen primero (categoría, ícono del servicio, nombre corto).
+   Ordenados por demanda: cuentas hackeadas, Apple, PC, taxes, Google para negocios, viajes, cámaras. */
+const HOT = [
+  ["tech","lock",{es:"Cuenta hackeada",en:"Hacked account"}],
+  ["tech","phone",{es:"iPhone y Mac",en:"iPhone & Mac"}],
+  ["tech","laptop",{es:"PC lenta",en:"Slow PC"}],
+  ["tramites","receipt",{es:"Taxes",en:"Taxes"}],
+  ["negocio","pin",{es:"Tu negocio en Google",en:"Get on Google"}],
+  ["viajes","car",{es:"Viaje a Atlanta",en:"Ride to Atlanta"}],
+  ["casa","cam",{es:"Cámaras",en:"Cameras"}]
+];
+const hotIndex = (k, ic) => S[k].items.findIndex(x => x[0] === ic);
 
 const S = {
-  casa:{
-    es:{t:"Esa lista de pendientes en casa, resuelta", d:"TV, cámaras, ventiladores, lámparas, muebles. Una visita y listo.", tile:"TV en la pared, cámaras, ventiladores y muebles"},
-    en:{t:"Your home to-do list, handled", d:"TVs, cameras, fans, lights, furniture. One visit, done.", tile:"TV mounting, cameras, ceiling fans and furniture"},
-    items:[
-      ["tv",{es:["Tu TV en la pared, derechito","Cables escondidos y soundbar incluidos"],en:["TV mounted on the wall, perfectly level","Hidden cables and soundbar setup"]}],
-      ["cam",{es:["Mira tu casa desde el teléfono","Cámaras Ring, Wyze, Eufy o sistema con grabador"],en:["See your home from your phone","Ring, Wyze, Eufy or wired camera systems"]}],
-      ["bell",{es:["Sabe quién toca antes de abrir","Timbre con video y cerraduras inteligentes"],en:["Know who's at the door before you open","Video doorbells and smart locks"]}],
-      ["fan",{es:["Ventilador de techo nuevo, instalado hoy",""],en:["New ceiling fan, installed today",""]}],
-      ["bulb",{es:["Lámparas y luces que por fin se ven bien","Cambio de lámparas, LED y dimmers"],en:["Lights that finally look right","Fixture swaps, LED upgrades and dimmers"]}],
-      ["sofa",{es:["Armamos tus muebles para que no pelees con las instrucciones","Camas, closets, escritorios, cunas"],en:["Furniture assembly, no instructions needed","Beds, dressers, desks, cribs"]}],
-      ["frame",{es:["Cuadros, espejos y repisas bien colgados",""],en:["Shelves, mirrors and art hung right",""]}],
-      ["wifi",{es:["WiFi que llega a todos los cuartos","Se acabaron los puntos muertos"],en:["Wi-Fi in every room","No more dead spots"]}],
-      ["home",{es:["Casa inteligente","Alexa, Google Home, luces y enchufes por voz"],en:["Smart home setup","Alexa, Google Home, voice-controlled lights"]}],
-      ["shield",{es:["Que nadie se meta a tus cámaras ni a tu WiFi","Blindaje de tu red y tu router"],en:["Keep strangers out of your cameras and Wi-Fi","Home network and router lockdown"]}]
-    ]
-  },
   tech:{
-    es:{t:"¿Lenta, caliente o no prende? La arreglamos", d:"PC, PS5, controles, iPhone, Mac o cualquier cosa digital. En tu casa o a distancia.", tile:"PC, PS5, controles, Apple y cuentas hackeadas"},
-    en:{t:"Slow, overheating or dead? We'll fix it", d:"PCs, PS5, controllers, iPhone, Mac or anything digital. At your place or remote.", tile:"PC, PS5, controllers, Apple and hacked accounts"},
+    es:{t:"¿Lenta, caliente o no prende? La arreglamos", d:"iPhone, Mac, PC, PS5 o cualquier cosa digital. En tu casa o a distancia.", tile:"Cuentas hackeadas, iPhone y Mac, PC y PS5"},
+    en:{t:"Slow, overheating or dead? We'll fix it", d:"iPhone, Mac, PCs, PS5 or anything digital. At your place or remote.", tile:"Hacked accounts, iPhone & Mac, PC and PS5"},
     items:[
+      ["lock",{es:["¿Te hackearon Facebook, Instagram o el correo?","Recuperamos la cuenta y la blindamos"],en:["Hacked Facebook, Instagram or email?","We recover it and lock it down"]}],
+      ["phone",{es:["Tu iPhone o Mac lento, lleno o sin respaldo","iCloud, fotos, configuración y optimización"],en:["iPhone or Mac slow, full or not backed up","iCloud, photos, setup and tune-up"]}],
       ["laptop",{es:["Tu computadora lenta, como nueva","Limpieza, optimización y que no se caliente"],en:["Slow computer? Make it fast again","Cleanup, tune-up, no more overheating"]}],
       ["gamepad",{es:["PS5 o Xbox que suena como avión","Limpieza interna, pasta térmica, puerto HDMI"],en:["PS5 or Xbox loud as a jet engine","Deep cleaning, thermal paste, HDMI port repair"]}],
-      ["joy",{es:["Control que se mueve solo","Reparamos el drift, botones y batería"],en:["Controller moving on its own?","Stick drift, buttons and battery repair"]}],
-      ["lock",{es:["¿Te hackearon Facebook, Instagram o el correo?","Recuperamos la cuenta y la blindamos"],en:["Hacked Facebook, Instagram or email?","We recover it and lock it down"]}],
-      ["phone",{es:["iPhone y Mac sin espacio o sin respaldo","iCloud, fotos, configuración y optimización"],en:["iPhone or Mac out of space or not backed up","iCloud, photos, setup and tune-up"]}],
-      ["bolt",{es:["Más velocidad sin comprar otra PC","SSD, memoria RAM, tarjeta de video"],en:["More speed without buying a new PC","SSD, RAM and graphics upgrades"]}],
       ["db",{es:["Recuperamos tus fotos y archivos",""],en:["Get your photos and files back",""]}],
+      ["joy",{es:["Control que se mueve solo","Reparamos el drift, botones y batería"],en:["Controller moving on its own?","Stick drift, buttons and battery repair"]}],
       ["bug",{es:["Virus, anuncios raros y ventanas que se abren solas",""],en:["Viruses, pop-ups and weird ads, gone",""]}],
+      ["bolt",{es:["Más velocidad sin comprar otra PC","SSD, memoria RAM, tarjeta de video"],en:["More speed without buying a new PC","SSD, RAM and graphics upgrades"]}],
       ["tablet",{es:["Tablet o teléfono nuevo, listo para usar","Pasar datos, control parental, configuración"],en:["New phone or tablet, ready to go","Data transfer, parental controls, setup"]}],
       ["headset",{es:["Soporte técnico a distancia","Te lo arreglamos en línea, sin salir de casa"],en:["Remote tech support","Fixed online, no need to go anywhere"]}],
       ["cpu",{es:["Te armamos tu PC gamer o de trabajo",""],en:["Custom gaming or work PC build",""]}]
@@ -127,9 +124,9 @@ const S = {
     en:{t:"More customers, less of your time", d:"Google, social media and ads handled. You run the business, we bring the people.", tile:"Google Maps, ads, websites and AI replies"},
     items:[
       ["pin",{es:["Que te encuentren en Google Maps","Perfil de Google optimizado con fotos y reseñas"],en:["Get found on Google Maps","Optimized Google Business Profile, photos and reviews"]}],
+      ["bot",{es:["Que tu WhatsApp conteste solo","Respuestas automáticas, citas y chatbots con IA"],en:["Your WhatsApp answers itself","AI auto-replies, bookings and chatbots"]}],
       ["mega",{es:["Anuncios en Facebook e Instagram que traen mensajes","Meta Ads con presupuesto que tú controlas"],en:["Facebook and Instagram ads that bring in messages","Meta Ads on a budget you control"]}],
       ["globe",{es:["Tu página web con dominio y correo propio","Se ve profesional y la encuentran en Google"],en:["Your own website, domain and business email","Looks professional and shows up on Google"]}],
-      ["bot",{es:["Que tu WhatsApp conteste solo","Respuestas automáticas, citas y chatbots con IA"],en:["Your WhatsApp answers itself","AI auto-replies, bookings and chatbots"]}],
       ["share",{es:["Tus redes activas sin que tú publiques","Contenido y manejo de Instagram y Facebook"],en:["Active social media without you posting","Instagram and Facebook content and management"]}],
       ["search",{es:["Google Ads para salir primero",""],en:["Google Ads to show up first",""]}],
       ["grid",{es:["Un sistema hecho para tu negocio","Inventario, facturación, reservas, adiós a los papeles"],en:["Software built for your business","Inventory, invoicing, bookings, no more paper"]}],
@@ -147,6 +144,22 @@ const S = {
       ["translate",{es:["¿No hablas inglés? Te ayudamos","Te acompañamos hasta la puerta y traducimos en vivo"],en:["Need help with English or Spanish?","Door-to-door, with live translation"]}],
       ["repeat",{es:["Viajes fijos con descuento","Trabajo, escuela o citas cada semana"],en:["Discount on recurring rides","Work, school or weekly appointments"]}],
       ["bag",{es:["Diligencias locales",""],en:["Local errands",""]}]
+    ]
+  },
+  casa:{
+    es:{t:"Tu casa segura, conectada y al día", d:"Cámaras, WiFi, TV, lámparas y muebles. Una visita y listo.", tile:"Cámaras, timbres, WiFi, TV y ventiladores"},
+    en:{t:"Your home: safe, connected, done", d:"Cameras, Wi-Fi, TVs, lights, furniture. One visit, done.", tile:"Cameras, doorbells, Wi-Fi, TVs and ceiling fans"},
+    items:[
+      ["cam",{es:["Mira tu casa desde el teléfono","Cámaras Ring, Wyze, Eufy o sistema con grabador"],en:["See your home from your phone","Ring, Wyze, Eufy or wired camera systems"]}],
+      ["bell",{es:["Sabe quién toca antes de abrir","Timbre con video y cerraduras inteligentes"],en:["Know who's at the door before you open","Video doorbells and smart locks"]}],
+      ["wifi",{es:["WiFi que llega a todos los cuartos","Se acabaron los puntos muertos"],en:["Wi-Fi in every room","No more dead spots"]}],
+      ["shield",{es:["Que nadie se meta a tus cámaras ni a tu WiFi","Blindaje de tu red y tu router"],en:["Keep strangers out of your cameras and Wi-Fi","Home network and router lockdown"]}],
+      ["home",{es:["Casa inteligente","Alexa, Google Home, luces y enchufes por voz"],en:["Smart home setup","Alexa, Google Home, voice-controlled lights"]}],
+      ["tv",{es:["Tu TV en la pared, derechito","Cables escondidos y soundbar incluidos"],en:["TV mounted on the wall, perfectly level","Hidden cables and soundbar setup"]}],
+      ["fan",{es:["Ventilador de techo nuevo, instalado hoy",""],en:["New ceiling fan, installed today",""]}],
+      ["bulb",{es:["Lámparas y luces que por fin se ven bien","Cambio de lámparas, LED y dimmers"],en:["Lights that finally look right","Fixture swaps, LED upgrades and dimmers"]}],
+      ["sofa",{es:["Armamos tus muebles para que no pelees con las instrucciones","Camas, closets, escritorios, cunas"],en:["Furniture assembly, no instructions needed","Beds, dressers, desks, cribs"]}],
+      ["frame",{es:["Cuadros, espejos y repisas bien colgados",""],en:["Shelves, mirrors and art hung right",""]}]
     ]
   }
 };
