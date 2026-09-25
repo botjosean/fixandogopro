@@ -30,7 +30,7 @@ Abre `index.html` y busca el bloque `CONFIGURA AQUÍ` (justo al empezar el `<scr
 
 ```js
 const CONFIG = {
-  PHONE:    "12055550000",   // tu número con código de país, sin + ni espacios
+  PHONE:    "12054908033",   // tu número con código de país, sin + ni espacios
   FB_PAGE:  "fixandgo",      // usuario de tu página de Facebook (m.me/usuario)
   ENDPOINT: ""               // URL de la App web de Apps Script. Vacío = sin notas de voz
 };
