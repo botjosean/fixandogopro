@@ -9,9 +9,11 @@ logo/                         Logos (los usa index.html y las tarjetas)
   logo-mark.svg               Ícono F& (azul marino): header de la web y reverso de la tarjeta
   logo-mark-teal.svg          Ícono F& verde azulado: header en modo oscuro
   logo-horizontal.svg         Ícono + "Fix & Go": base de la placa del carro (versión blanca)
-  logo-horizontal.png         Imagen al compartir el link (og:image)
+  logo-horizontal.png         Logo horizontal en PNG (fondo transparente)
+  og-image.png                Imagen al compartir el link (og:image, 1200x630, fondo sólido)
   logo-mark-32.png            Favicon
-  logo-mark-180.png           Ícono de iPhone (apple-touch-icon)
+  apple-touch-icon.png        Ícono de iPhone en pantalla de inicio (180x180, fondo sólido, sin esquinas)
+  logo-mark-180.png           Ícono 180 con esquinas redondeadas transparentes
   logo-mark-192.png           Ícono de Android
   logo-mark-512.png           Ícono grande (redes, perfiles)
 backend/fixandgo-backend.gs   Google Apps Script: web + Google Voice → ticket con IA a Gmail
@@ -20,7 +22,7 @@ docs/LINEA-JOSE.md            Plan futuro: recepcionista IA e intérprete de lla
 ```
 
 Si cambias un logo, reemplaza el archivo en `logo/` con el **mismo nombre** y la web y las tarjetas lo usan solos.
-La imagen para compartir usa la URL absoluta `https://fixandgopro.com/logo/logo-horizontal.png`.
+La imagen para compartir usa la URL absoluta `https://fixandgopro.com/logo/og-image.png`.
 
 ## Cambiar PHONE, FB_PAGE y ENDPOINT
 
