@@ -102,6 +102,7 @@ const HOT = {
     ["tech","gamepad","PS5"],
     ["tech","laptop","PC lenta"],
     ["tech","mac","Mac"],
+    ["tech","lock","Cuenta hackeada"],
     ["negocio","share","Redes sociales"],
     ["tramites","file","Tu LLC"]
   ],
@@ -112,6 +113,7 @@ const HOT = {
     ["tech","gamepad","PS5"],
     ["tech","laptop","Slow PC"],
     ["tech","mac","Mac tune-up"],
+    ["tech","lock","Hacked account"],
     ["casa","sofa","Furniture assembly"],
     ["negocio","share","Social media"]
   ]
@@ -120,20 +122,22 @@ const hotIndex = (k, ic) => S[k].items.findIndex(x => x[0] === ic);
 
 const S = {
   tech:{
-    es:{t:"¿Lenta, caliente o no prende? La arreglamos", d:"iPhone, PS5, PC y Mac. En tu casa o a distancia.", tile:"iPhone, PS5, limpieza de PC y Mac"},
-    en:{t:"Slow, overheating or dead? We'll fix it", d:"iPhone, PS5, PCs and Macs. At your place or remote.", tile:"iPhone, PS5, PC cleanup and Mac tune-ups"},
+    es:{t:"¿Lenta, caliente o no prende? La arreglamos", d:"iPhone, PS5, PC y Mac, cuentas hackeadas, correos y datos perdidos. En tu casa o a distancia.", tile:"iPhone, PS5, PC y Mac, cuentas hackeadas y datos"},
+    en:{t:"Slow, overheating or dead? We'll fix it", d:"iPhone, PS5, PCs and Macs, hacked accounts, email and lost data. At your place or remote.", tile:"iPhone, PS5, PC and Mac, hacked accounts and data"},
     items:[
       ["phone",{es:["Tu iPhone con fallas, lento o lleno","Reparación, iCloud, fotos, respaldo y optimización"],en:["iPhone acting up, slow or full?","Repair, iCloud, photos, backup and tune-up"],kw:"celular telefono apple ios pantalla bateria"}],
       ["gamepad",{es:["PS5 o Xbox que suena como avión","Limpieza interna, pasta térmica, puerto HDMI"],en:["PS5 or Xbox loud as a jet engine","Deep cleaning, thermal paste, HDMI port repair"],kw:"playstation consola"}],
       ["laptop",{es:["Tu computadora lenta o que no prende","Limpieza, reparación y que no se caliente"],en:["Slow computer or won't turn on?","Cleanup, repair, no more overheating"],kw:"pc laptop windows reparacion limpieza"}],
       ["mac",{es:["Tu Mac como nueva","Optimización, limpieza y actualización de macOS"],en:["Your Mac, like new","Tune-up, cleanup and macOS updates"],kw:"macbook imac apple optimizacion"}],
-      ["lock",{es:["¿Te hackearon Facebook, Instagram o el correo?","Recuperamos la cuenta y la blindamos"],en:["Hacked Facebook, Instagram or email?","We recover it and lock it down"]}],
+      ["lock",{es:["¿Te hackearon Facebook, Instagram o WhatsApp?","Recuperamos la cuenta y la blindamos"],en:["Hacked Facebook, Instagram or WhatsApp?","We recover it and lock it down"],kw:"hackeo hackearon robaron cuenta seguridad hacked"}],
+      ["mail",{es:["Recuperamos tu correo","Gmail, Outlook, iCloud o Yahoo: contraseña olvidada o cuenta robada"],en:["Get your email back","Gmail, Outlook, iCloud or Yahoo: forgotten password or stolen account"],kw:"correo email contraseña password recuperar gmail hotmail outlook"}],
+      ["db",{es:["Recuperamos tus fotos y archivos","De teléfonos, computadoras, discos y memorias USB"],en:["Get your photos and files back","From phones, computers, drives and USB sticks"],kw:"datos recuperar borrados perdidos data recovery disco"}],
+      ["shield",{es:["Ciberseguridad para tu familia y tu negocio","Contraseñas, verificación en dos pasos y cómo no caer en estafas"],en:["Cybersecurity for your family and business","Passwords, two-step verification and avoiding scams"],kw:"ciberseguridad estafa fraude phishing seguridad cybersecurity scam"}],
       ["bug",{es:["Virus, anuncios raros y ventanas que se abren solas",""],en:["Viruses, pop-ups and weird ads, gone",""]}],
-      ["db",{es:["Recuperamos tus fotos y archivos",""],en:["Get your photos and files back",""]}],
       ["joy",{es:["Control que se mueve solo","Reparamos el drift, botones y batería"],en:["Controller moving on its own?","Stick drift, buttons and battery repair"]}],
       ["bolt",{es:["Más velocidad sin comprar otra PC","SSD, memoria RAM, tarjeta de video"],en:["More speed without buying a new PC","SSD, RAM and graphics upgrades"]}],
       ["tablet",{es:["Tablet o teléfono nuevo, listo para usar","Pasar datos, control parental, configuración"],en:["New phone or tablet, ready to go","Data transfer, parental controls, setup"]}],
-      ["headset",{es:["Soporte técnico a distancia","Te lo arreglamos en línea, sin salir de casa"],en:["Remote tech support","Fixed online, no need to go anywhere"]}],
+      ["headset",{es:["Soporte técnico a distancia, en todo Estados Unidos","Te lo arreglamos en línea, estés donde estés"],en:["Remote tech support anywhere in the US","Fixed online, wherever you are"],kw:"remoto online distancia ayuda tecnologica"}],
       ["cpu",{es:["Te armamos tu PC gamer o de trabajo",""],en:["Custom gaming or work PC build",""]}]
     ]
   },
