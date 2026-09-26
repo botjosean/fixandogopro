@@ -10,7 +10,7 @@ if (/[?&](s|z|lang|m)=/.test(location.search)) location.replace("/go/" + locatio
 <meta name="theme-color" content="#0B1526">
 <meta name="format-detection" content="telephone=no">
 <title>Fix &amp; Go · Casa, trámites, tecnología, redes sociales y viajes</title>
-<meta name="description" content="Fix & Go: cámaras y trabajos en casa, taxes y trámites, reparación de iPhone, PS5, PC y Mac, redes sociales y community manager para negocios, y viajes a Atlanta. Birmingham, Chamblee y Atlanta, en español e inglés.">
+<meta name="description" content="Fix & Go: cámaras y trabajos en casa, taxes y trámites, reparación de iPhone, PS5, PC y Mac, cuentas hackeadas y recuperación de datos, redes sociales y community manager para negocios, y viajes a Atlanta. Birmingham, Chamblee y Atlanta, en español e inglés.">
 <link rel="canonical" href="https://fixandgopro.com/">
 <link rel="icon" type="image/png" sizes="32x32" href="/logo/logo-mark-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="/logo/logo-mark-192.png">
@@ -196,6 +196,26 @@ section{position:relative}
 .pill .i{width:18px;height:18px;transition:transform .25s}
 .card.open .pill .chev{transform:rotate(180deg)}
 
+
+/* ---------- seguridad y recuperación ---------- */
+.sos-c{position:relative;display:grid;gap:30px;align-items:center;border-radius:32px;padding:34px 26px;color:#fff;overflow:hidden;isolation:isolate;
+  background:radial-gradient(600px circle at 0% 0%,rgba(229,72,77,.35),transparent 60%),radial-gradient(500px circle at 100% 100%,rgba(25,167,178,.35),transparent 60%),#0F1B31;
+  box-shadow:0 40px 80px -40px rgba(11,21,38,.7)}
+@media (min-width:980px){.sos-c{grid-template-columns:1fr 1.05fr;padding:56px;gap:48px}}
+.sos-c>*{min-width:0}
+.sos-c .eyebrow{color:#FF8A8E}
+.sos-c .eyebrow::before{width:10px;height:10px;border-radius:50%;background:#E5484D;box-shadow:0 0 0 0 rgba(229,72,77,.7);animation:ping 1.8s ease-out infinite}
+@keyframes ping{to{box-shadow:0 0 0 12px rgba(229,72,77,0)}}
+.sos-c h2{font-size:clamp(2rem,4.6vw,3.2rem);font-weight:800;margin-top:12px}
+.sos-c p.l{color:rgba(255,255,255,.75);font-size:1.06rem;margin:14px 0 0;max-width:46ch}
+.sos-t{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.sos-t a{display:block;padding:20px 18px;border-radius:22px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);text-decoration:none;color:#fff;transition:transform .2s,background .2s,border-color .2s}
+.sos-t a:hover{transform:translateY(-4px);background:rgba(255,255,255,.1);border-color:rgba(255,138,142,.6)}
+.sos-t .ib{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:rgba(229,72,77,.18);color:#FF8A8E;margin-bottom:12px}
+.sos-t a:nth-child(2) .ib,.sos-t a:nth-child(4) .ib{background:rgba(25,167,178,.2);color:#6FD6DD}
+.sos-t b{display:block;font-family:"Bricolage Grotesque",system-ui;font-size:1.1rem;line-height:1.15}
+.sos-t small{display:block;color:rgba(255,255,255,.66);font-size:.86rem;margin-top:5px;line-height:1.4}
+@media (max-width:420px){.sos-t{gap:8px}.sos-t a{padding:16px 13px}.sos-t b{font-size:1rem}.sos-t small{font-size:.8rem}}
 
 /* ---------- redes sociales ---------- */
 .social{background:linear-gradient(180deg,#0B1526 0%,#111A33 100%);color:#fff;overflow:hidden;isolation:isolate}
@@ -429,6 +449,21 @@ footer{background:var(--ink);color:rgba(255,255,255,.65);border-top:1px solid rg
   </div>
 </section>
 
+<section class="sec" id="seguridad" style="padding-top:0">
+  <div class="wrap">
+    <div class="sos-c rv">
+      <div>
+        <span class="eyebrow" data-t="sosEye">Seguridad y recuperación</span>
+        <h2 data-t="sosH">¿Te hackearon o perdiste algo importante?</h2>
+        <p class="l" data-t="sosP">Recuperamos cuentas, correos, fotos y archivos, y dejamos todo blindado. A distancia en todo Estados Unidos o en persona en Birmingham y Atlanta.</p>
+        <div class="cta"><a class="btn btn-mango" id="sosAsk"><span data-t="sosCta">Pide ayuda ahora</span></a>
+          <a class="btn btn-ghost" id="sosWa" target="_blank" rel="noopener"><svg class="i" viewBox="0 0 24 24"><path d="M3.5 20.5 5 16a8.5 8.5 0 1 1 3.3 3.3z"/><path d="M9 8.5c0 3.5 2.9 6.5 6.5 6.5l1-1.6-2-1-1 .8a4.3 4.3 0 0 1-2.2-2.2l.8-1-1-2z"/></svg><span>WhatsApp</span></a></div>
+      </div>
+      <div class="sos-t" id="sosT"></div>
+    </div>
+  </div>
+</section>
+
 <section class="sec social" id="redes">
   <div class="blob a"></div><div class="blob b"></div>
   <div class="wrap">
@@ -515,7 +550,7 @@ footer{background:var(--ink);color:rgba(255,255,255,.65);border-top:1px solid rg
       <div class="zlist">
         <div class="zone rv"><div class="top"><span class="dot"></span><h3 data-t="z1">Birmingham y alrededores</h3></div><p data-t="z1p">Toda la semana: instalaciones en casa, reparaciones, soporte técnico y trámites.</p></div>
         <div class="zone atl rv"><div class="top"><span class="dot"></span><h3 data-t="z2">Chamblee, Doraville y Atlanta</h3></div><p data-t="z2p">Los fines de semana. Escríbenos antes y aparta tu día.</p></div>
-        <div class="zone rv"><div class="top"><span class="dot"></span><h3 data-t="z3">En línea, desde donde estés</h3></div><p data-t="z3p">Soporte técnico, taxes, pagos, citas y cuentas sin salir de casa.</p></div>
+        <div class="zone rv"><div class="top"><span class="dot"></span><h3 data-t="z3">En línea, desde donde estés</h3></div><p data-t="z3p">En todo Estados Unidos: soporte técnico, cuentas hackeadas, correos, taxes, pagos y redes sociales.</p></div>
       </div>
     </div>
   </div>
@@ -569,7 +604,7 @@ footer{background:var(--ink);color:rgba(255,255,255,.65);border-top:1px solid rg
   <a class="btn btn-wa" id="dockWa" aria-label="WhatsApp"><svg class="i" viewBox="0 0 24 24"><path d="M3.5 20.5 5 16a8.5 8.5 0 1 1 3.3 3.3z"/><path d="M9 8.5c0 3.5 2.9 6.5 6.5 6.5l1-1.6-2-1-1 .8a4.3 4.3 0 0 1-2.2-2.2l.8-1-1-2z"/></svg></a>
 </div>
 
-<script src="/config.js?v=5"></script>
+<script src="/config.js?v=6"></script>
 <script>
 /* Si Cloudflare entrega un config.js viejo, la página sigue funcionando (sin "Lo más pedido" y con el orden de siempre) */
 if (typeof hotIndex === "undefined") window.hotIndex = (k, ic) => S[k].items.findIndex(x => x[0] === ic);
@@ -595,7 +630,7 @@ const L = {
     mapH:"Viajes Birmingham ⇄ Atlanta", mapP:"Consulado, aeropuerto y citas. Te llevamos, te esperamos y te traemos.",
     z1:"Birmingham y alrededores", z1p:"Toda la semana: instalaciones en casa, reparaciones, soporte técnico y trámites.",
     z2:"Chamblee, Doraville y Atlanta", z2p:"Los fines de semana. Escríbenos antes y aparta tu día.",
-    z3:"En línea, desde donde estés", z3p:"Soporte técnico, taxes, pagos, citas y cuentas sin salir de casa.",
+    z3:"En línea, desde donde estés", z3p:"En todo Estados Unidos: soporte técnico, cuentas hackeadas, correos, taxes, pagos y redes sociales.",
     wEye:"Por qué Fix & Go", wH:"Hecho para nuestra gente.",
     w1:"Hablamos tu idioma", w1p:"Te atendemos en español o en inglés, como te sientas más cómodo.",
     w2:"Un solo contacto", w2p:"Casa, trámites, tecnología, redes sociales y viajes con el mismo equipo.",
@@ -608,8 +643,12 @@ const L = {
       ["¿Cómo pido una cotización?","Toca “Cuéntanos qué necesitas”, graba una nota de voz o escribe tu mensaje, y deja tu teléfono. También puedes escribirnos por WhatsApp o a info@fixandgopro.com. Te respondemos el mismo día."],
       ["¿Qué necesito para hacer mis taxes?","Tu identificación, tu número de Seguro Social o ITIN, y tus formularios W-2 o 1099. Si tienes la declaración del año pasado, tráela también."],
       ["¿Manejan las redes sociales de mi negocio?","Sí. Somos tu community manager: estrategia, diseño, reels, publicaciones, respuestas a comentarios y mensajes, anuncios y reportes. Empezamos desde cero o rescatamos una marca que ya existe."],
-      ["¿Pueden ayudarme a distancia?","Sí. El soporte técnico, los taxes, los pagos en línea, las citas, las cuentas y las redes sociales se pueden hacer sin salir de casa."]
+      ["¿Pueden ayudarme a distancia?","Sí, en cualquier parte de Estados Unidos. El soporte técnico, las cuentas hackeadas, los correos, los taxes, los pagos en línea, las citas y las redes sociales se pueden hacer sin salir de casa."]
     ],
+    sosEye:"Seguridad y recuperación", sosH:"¿Te hackearon o perdiste algo importante?",
+    sosP:"Recuperamos cuentas, correos, fotos y archivos, y dejamos todo blindado. A distancia en todo Estados Unidos o en persona en Birmingham y Atlanta.",
+    sosCta:"Pide ayuda ahora", sosWaMsg:"Hola Fix & Go, necesito ayuda urgente con una cuenta, un correo o mis archivos.",
+    sos:[["lock","Cuenta hackeada","Facebook, Instagram o WhatsApp de vuelta y protegida"],["mail","Correo recuperado","Gmail, Outlook, iCloud o Yahoo"],["db","Fotos y archivos","De teléfonos, computadoras y memorias"],["shield","Estafas y ciberseguridad","Contraseñas y verificación en dos pasos"]],
     rEye:"Redes sociales · Community manager", rH:"Hacemos crecer tu negocio en redes.",
     rP:"Desde cero o para rescatar una marca que ya no vende. Planeamos, creamos, publicamos, contestamos y anunciamos. Tú atiendes a los clientes que llegan.",
     rHint:"Toca una red para ver lo que hacemos ahí.", rCta:"Queremos ver tus redes", rWaMsg:"Hola Fix & Go, quiero ayuda con las redes sociales de mi negocio.",
@@ -664,7 +703,7 @@ const L = {
     mapH:"Rides Birmingham ⇄ Atlanta", mapP:"Consulate, airport and appointments. We drive you, wait, and bring you back.",
     z1:"Birmingham area", z1p:"All week: home installs, repairs, tech support and paperwork.",
     z2:"Chamblee, Doraville & Atlanta", z2p:"On weekends. Message us ahead to book your spot.",
-    z3:"Online, wherever you are", z3p:"Tech support, taxes, payments, appointments and accounts from home.",
+    z3:"Online, wherever you are", z3p:"Anywhere in the US: tech support, hacked accounts, email, taxes, payments and social media.",
     wEye:"Why Fix & Go", wH:"Made for our community.",
     w1:"We speak your language", w1p:"English or Spanish, whatever feels most comfortable.",
     w2:"One contact", w2p:"Home, tech, social media, rides and paperwork with the same team.",
@@ -677,8 +716,12 @@ const L = {
       ["How do I get a quote?","Tap “Tell us what you need”, record a voice note or type your message, and leave your phone number. You can also reach us on WhatsApp or at info@fixandgopro.com. Same-day reply."],
       ["What do I need for my taxes?","Your ID, your Social Security number or ITIN, and your W-2 or 1099 forms. Bring last year's return if you have it."],
       ["Can you run my business's social media?","Yes. We're your community manager: strategy, design, reels, posts, replies to comments and messages, ads and reports. We start from scratch or relaunch an existing brand."],
-      ["Can you help me remotely?","Yes. Tech support, taxes, online payments, appointments, accounts and social media can all be done from home."]
+      ["Can you help me remotely?","Yes, anywhere in the US. Tech support, hacked accounts, email, taxes, online payments, appointments and social media can all be done from home."]
     ],
+    sosEye:"Security and recovery", sosH:"Hacked, or lost something important?",
+    sosP:"We recover accounts, email, photos and files, and lock everything down. Remotely anywhere in the US, or in person in Birmingham and Atlanta.",
+    sosCta:"Get help now", sosWaMsg:"Hi Fix & Go, I need urgent help with an account, an email or my files.",
+    sos:[["lock","Hacked account","Facebook, Instagram or WhatsApp back and secured"],["mail","Email recovered","Gmail, Outlook, iCloud or Yahoo"],["db","Photos and files","From phones, computers and drives"],["shield","Scams and cybersecurity","Passwords and two-step verification"]],
     rEye:"Social media · Community management", rH:"We grow your business on social media.",
     rP:"From scratch or to relaunch a brand that stopped selling. We plan, create, post, reply and advertise. You take care of the customers who show up.",
     rHint:"Tap a network to see what we do there.", rCta:"Let us look at your social media", rWaMsg:"Hi Fix & Go, I'd like help with my business's social media.",
@@ -822,6 +865,9 @@ $("#nets").addEventListener("click", e => { const b = e.target.closest(".net"); 
 if (matchMedia("(hover:hover)").matches) $("#nets").addEventListener("pointerover", e => { const b = e.target.closest(".net"); if (b && b.dataset.n !== netK) { stopNetAuto(); showNet(b.dataset.n, true); } });
 function renderSocial(){
   const t = L[lang];
+  $("#sosT").innerHTML = t.sos.map(([ic,h,p]) => `<a href="${go(`&s=tech&i=${ic}`)}"><span class="ib">${ico(ic)}</span><b>${esc(h)}</b><small>${esc(p)}</small></a>`).join("");
+  $("#sosAsk").href = go("&s=tech&i=lock");
+  $("#sosWa").href = `https://wa.me/${CONFIG.PHONE}?text=${encodeURIComponent(t.sosWaMsg)}`;
   $("#deliv").innerHTML = t.deliv.map(([ic,h,p]) => `<div class="rv in">${ico(ic)}<h4>${esc(h)}</h4><p>${esc(p)}</p></div>`).join("");
   $("#proc").innerHTML = t.proc.map(([h,p]) => `<li class="rv in"><b>${esc(h)}</b><span>${esc(p)}</span></li>`).join("");
   $("#forwho").innerHTML = t.who.map(([h,p]) => `<div class="rv in"><h4>${esc(h)}</h4><p>${esc(p)}</p></div>`).join("");
