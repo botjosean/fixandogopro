@@ -8,10 +8,12 @@ Sitio bilingüe (ES/EN) con dos páginas:
 | **fixandgopro.com/go/** | `go/index.html` | Página del **QR / NFC** (placa del carro y tarjetas): elegir servicio, llamar, escribir o mandar nota de voz en 3 toques. |
 
 Los dos leen el teléfono, el correo y la lista de servicios de **`config.js`**. Se cambia ahí una sola vez.
-En `config.js` también está **`HOT`**, la lista "Lo más pedido": los botones que salen primero en las dos páginas.
-Las categorías y los servicios salen en el orden en que están escritos en `S`, **ordenados por demanda** (lo que más se busca va primero).
+En `config.js` también está **`HOT`**, la lista "Lo más pedido" **por idioma** (`HOT.es` y `HOT.en`): los botones que salen primero en las dos páginas.
+El orden de las categorías también va por idioma en **`ORDER`**: en español primero casa y trámites; en inglés casa y tecnología. Redes sociales (`negocio`) se ve siempre, pero no de primero.
+Dentro de cada categoría, los servicios salen en el orden en que están escritos en `S` (lo que más se pide va primero).
+La sección **Redes sociales / Community manager** de la página principal (rueda de redes, lo que incluye, cómo lo hacemos) tiene sus textos en `index.html` (`L.es` / `L.en`: `deliv`, `proc`, `who`, `nets`).
 Cuando cambies `config.js`, sube el número de versión en las dos páginas (`/config.js?v=2` → `?v=3`) para que nadie vea la copia vieja guardada en caché.
-Si después de publicar ves algo viejo, en Cloudflare → **Caching** → **Configuration** → **Purge Everything** se borra la copia guardada. Las páginas siguen funcionando aunque llegue un `config.js` viejo (solo no sale "Lo más pedido").
+Si después de publicar ves algo viejo, en Cloudflare → **Caching** → **Configuration** → **Purge Everything** se borra la copia guardada. Las páginas siguen funcionando aunque llegue un `config.js` viejo (solo no sale "Lo más pedido" y usa el orden de siempre).
 Los enlaces viejos del QR (`fixandgopro.com/?s=…`, `?lang=…`, `?z=…`) se redirigen solos a `/go/`.
 
 ## Estructura

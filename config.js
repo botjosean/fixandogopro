@@ -54,6 +54,15 @@ const I = {
   translate:'<path d="M3.5 5h9M8 3v2M5.5 5c.6 3 2.6 5.4 5 6.8M10.5 5c-.7 3.3-3 6-6 7.5"/><path d="m13 21 4-9 4 9M14.4 18h5.2"/>',
   repeat:'<path d="m17 2 3 3-3 3"/><path d="M4 11V9a4 4 0 0 1 4-4h12"/><path d="m7 22-3-3 3-3"/><path d="M20 13v2a4 4 0 0 1-4 4H4"/>',
   bag:'<path d="M5 8h14l-1.1 13H6.1z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/>',
+  mac:'<rect x="3" y="3.5" width="18" height="12.5" rx="2"/><path d="M9.5 20.5h5M12 16v4.5"/><path d="M13 7.3c-.5-.2-1 .1-1 .1s-.5-.3-1-.1c-.9.3-1.2 1.4-.8 2.5.3.8.9 1.5 1.3 1.4.2 0 .3-.1.5-.1s.3.1.5.1c.4 0 1-.6 1.3-1.4.4-1.1.1-2.2-.8-2.5zM12 7.4c0-.5.3-1 .8-1.1"/>',
+  ig:'<rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/>',
+  fbk:'<rect x="3" y="3" width="18" height="18" rx="5.5"/><path d="M15.5 7.5h-1.8a2.2 2.2 0 0 0-2.2 2.2V21M9 12.5h5.5"/>',
+  tiktok:'<path d="M14 3v11.8a3.8 3.8 0 1 1-3.8-3.8"/><path d="M14 3c.4 2.6 2.2 4.4 5 4.6"/>',
+  yt:'<rect x="2.5" y="5" width="19" height="14" rx="4.5"/><path d="m10 9 5 3-5 3z" fill="currentColor"/>',
+  gg:'<path d="M20.5 12.2c0 4.8-3.4 8.3-8.5 8.3a8.5 8.5 0 1 1 5.8-14.7"/><path d="M12.5 12h8"/>',
+  li:'<rect x="3" y="3" width="18" height="18" rx="4"/><path d="M7.8 10.5V17M7.8 7.3v.1M11.5 17v-6.5M11.5 13.3a2.6 2.6 0 0 1 5.2 0V17"/>',
+  xx:'<path d="M4 4l16 16M20 4 4 20"/>',
+  th:'<path d="M16.5 10.5c-.5-3-2.4-4.5-4.8-4.5-3.3 0-5.2 2.6-5.2 6s1.8 6 5.4 6c2.6 0 4.9-1.5 4.9-4 0-2.3-2-3.3-4.3-3.3-1.8 0-3 .9-3 2.2 0 1.2 1 2 2.3 2 2.4 0 3.1-2.2 2.7-5.2"/>',
   trend:'<path d="m3 17 6-6 4 4 8-8"/><path d="M14.5 7H21v6.5"/>',
   down:'<path d="m6 9 6 6 6-6"/>', right:'<path d="m9 6 6 6-6 6"/>', close:'<path d="M6 6l12 12M18 6 6 18"/>',
   mic:'<rect x="9" y="2.5" width="6" height="12" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/>',
@@ -73,34 +82,55 @@ const I = {
   form:'<rect x="4.5" y="3.5" width="15" height="18" rx="2.2"/><path d="M9 2.5h6v3H9zM8.5 11l1.5 1.5 3-3M8.5 16.5h7"/>'
 };
 const ico = (k, c="") => `<svg class="i ${c}" viewBox="0 0 24 24" aria-hidden="true">${I[k]||I.msg}</svg>`;
-const CAT_ICON = {casa:"home", tech:"laptop", tramites:"file", negocio:"trend", viajes:"car"};
+const CAT_ICON = {casa:"home", tech:"laptop", tramites:"file", negocio:"share", viajes:"car"};
 
 
-/* Lo más pedido: accesos directos que salen primero (categoría, ícono del servicio, nombre corto).
-   Ordenados por demanda: cuentas hackeadas, Apple, PC, taxes, Google para negocios, viajes, cámaras. */
-const HOT = [
-  ["tech","lock",{es:"Cuenta hackeada",en:"Hacked account"}],
-  ["tech","phone",{es:"iPhone y Mac",en:"iPhone & Mac"}],
-  ["tech","laptop",{es:"PC lenta",en:"Slow PC"}],
-  ["tramites","receipt",{es:"Taxes",en:"Taxes"}],
-  ["negocio","pin",{es:"Tu negocio en Google",en:"Get on Google"}],
-  ["viajes","car",{es:"Viaje a Atlanta",en:"Ride to Atlanta"}],
-  ["casa","cam",{es:"Cámaras",en:"Cameras"}]
-];
+/* Orden de las categorías según el idioma: en español primero casa y trámites; en inglés casa y tecnología.
+   Redes sociales (negocio) siempre visible, pero no de primero. */
+const ORDER = {
+  es:["casa","tramites","tech","negocio","viajes"],
+  en:["casa","tech","negocio","viajes","tramites"]
+};
+const catsFor = l => (ORDER[l] || ORDER.es).filter(k => S[k]).concat(Object.keys(S).filter(k => !(ORDER[l] || ORDER.es).includes(k)));
+
+/* Lo más pedido: accesos directos que salen primero (categoría, ícono del servicio, nombre corto), por idioma. */
+const HOT = {
+  es:[
+    ["casa","cam","Cámaras y timbres"],
+    ["tramites","receipt","Taxes"],
+    ["tech","phone","iPhone"],
+    ["tech","gamepad","PS5"],
+    ["tech","laptop","PC lenta"],
+    ["tech","mac","Mac"],
+    ["negocio","share","Redes sociales"],
+    ["tramites","file","Tu LLC"]
+  ],
+  en:[
+    ["casa","cam","Cameras"],
+    ["casa","tv","TV mounting"],
+    ["tech","phone","iPhone"],
+    ["tech","gamepad","PS5"],
+    ["tech","laptop","Slow PC"],
+    ["tech","mac","Mac tune-up"],
+    ["casa","sofa","Furniture assembly"],
+    ["negocio","share","Social media"]
+  ]
+};
 const hotIndex = (k, ic) => S[k].items.findIndex(x => x[0] === ic);
 
 const S = {
   tech:{
-    es:{t:"¿Lenta, caliente o no prende? La arreglamos", d:"iPhone, Mac, PC, PS5 o cualquier cosa digital. En tu casa o a distancia.", tile:"Cuentas hackeadas, iPhone y Mac, PC y PS5"},
-    en:{t:"Slow, overheating or dead? We'll fix it", d:"iPhone, Mac, PCs, PS5 or anything digital. At your place or remote.", tile:"Hacked accounts, iPhone & Mac, PC and PS5"},
+    es:{t:"¿Lenta, caliente o no prende? La arreglamos", d:"iPhone, PS5, PC y Mac. En tu casa o a distancia.", tile:"iPhone, PS5, limpieza de PC y Mac"},
+    en:{t:"Slow, overheating or dead? We'll fix it", d:"iPhone, PS5, PCs and Macs. At your place or remote.", tile:"iPhone, PS5, PC cleanup and Mac tune-ups"},
     items:[
+      ["phone",{es:["Tu iPhone con fallas, lento o lleno","Reparación, iCloud, fotos, respaldo y optimización"],en:["iPhone acting up, slow or full?","Repair, iCloud, photos, backup and tune-up"],kw:"celular telefono apple ios pantalla bateria"}],
+      ["gamepad",{es:["PS5 o Xbox que suena como avión","Limpieza interna, pasta térmica, puerto HDMI"],en:["PS5 or Xbox loud as a jet engine","Deep cleaning, thermal paste, HDMI port repair"],kw:"playstation consola"}],
+      ["laptop",{es:["Tu computadora lenta o que no prende","Limpieza, reparación y que no se caliente"],en:["Slow computer or won't turn on?","Cleanup, repair, no more overheating"],kw:"pc laptop windows reparacion limpieza"}],
+      ["mac",{es:["Tu Mac como nueva","Optimización, limpieza y actualización de macOS"],en:["Your Mac, like new","Tune-up, cleanup and macOS updates"],kw:"macbook imac apple optimizacion"}],
       ["lock",{es:["¿Te hackearon Facebook, Instagram o el correo?","Recuperamos la cuenta y la blindamos"],en:["Hacked Facebook, Instagram or email?","We recover it and lock it down"]}],
-      ["phone",{es:["Tu iPhone o Mac lento, lleno o sin respaldo","iCloud, fotos, configuración y optimización"],en:["iPhone or Mac slow, full or not backed up","iCloud, photos, setup and tune-up"]}],
-      ["laptop",{es:["Tu computadora lenta, como nueva","Limpieza, optimización y que no se caliente"],en:["Slow computer? Make it fast again","Cleanup, tune-up, no more overheating"]}],
-      ["gamepad",{es:["PS5 o Xbox que suena como avión","Limpieza interna, pasta térmica, puerto HDMI"],en:["PS5 or Xbox loud as a jet engine","Deep cleaning, thermal paste, HDMI port repair"]}],
+      ["bug",{es:["Virus, anuncios raros y ventanas que se abren solas",""],en:["Viruses, pop-ups and weird ads, gone",""]}],
       ["db",{es:["Recuperamos tus fotos y archivos",""],en:["Get your photos and files back",""]}],
       ["joy",{es:["Control que se mueve solo","Reparamos el drift, botones y batería"],en:["Controller moving on its own?","Stick drift, buttons and battery repair"]}],
-      ["bug",{es:["Virus, anuncios raros y ventanas que se abren solas",""],en:["Viruses, pop-ups and weird ads, gone",""]}],
       ["bolt",{es:["Más velocidad sin comprar otra PC","SSD, memoria RAM, tarjeta de video"],en:["More speed without buying a new PC","SSD, RAM and graphics upgrades"]}],
       ["tablet",{es:["Tablet o teléfono nuevo, listo para usar","Pasar datos, control parental, configuración"],en:["New phone or tablet, ready to go","Data transfer, parental controls, setup"]}],
       ["headset",{es:["Soporte técnico a distancia","Te lo arreglamos en línea, sin salir de casa"],en:["Remote tech support","Fixed online, no need to go anywhere"]}],
@@ -120,17 +150,18 @@ const S = {
     ]
   },
   negocio:{
-    es:{t:"Más clientes, sin quitarte tiempo", d:"Te ponemos en Google, en redes y en anuncios. Tú atiendes, nosotros traemos la gente.", tile:"Google Maps, anuncios, página web y respuestas con IA"},
-    en:{t:"More customers, less of your time", d:"Google, social media and ads handled. You run the business, we bring the people.", tile:"Google Maps, ads, websites and AI replies"},
+    es:{t:"Tus redes sociales, vendiendo", d:"Community manager, contenido, anuncios y páginas que venden. Desde cero o para rescatar tu negocio.", tile:"Redes sociales, community manager, anuncios y landing pages"},
+    en:{t:"Social media that sells", d:"Community management, content, ads and landing pages. From scratch or to relaunch your business.", tile:"Social media, community management, ads and landing pages"},
     items:[
+      ["share",{es:["Manejamos tus redes: community manager","Publicamos, contestamos y hacemos crecer Instagram, Facebook y TikTok"],en:["We run your social media","We post, reply and grow your Instagram, Facebook and TikTok"],kw:"redes sociales social media community manager instagram facebook tiktok contenido reels posts seguidores followers"}],
+      ["pen",{es:["Tu marca desde cero","Nombre, logo, colores y cómo hablarle a tus clientes"],en:["Your brand from scratch","Name, logo, colors and how you talk to customers"],kw:"branding logo identidad marca emprender"}],
+      ["trend",{es:["Rescatamos tu negocio si bajaron las ventas","Vemos qué está fallando y relanzamos tu marca"],en:["Sales down? We relaunch your business","We find what's failing and relaunch your brand"],kw:"rescate relanzar recuperar ventas clientes"}],
+      ["mega",{es:["Anuncios en Facebook, Instagram y TikTok que traen mensajes","Meta Ads con presupuesto que tú controlas"],en:["Facebook, Instagram and TikTok ads that bring in messages","Ads on a budget you control"],kw:"publicidad anuncios ads promocion marketing"}],
+      ["globe",{es:["Landing page o página web que vende","Con dominio, correo propio y lista para tus anuncios"],en:["Landing page or website that sells","Your own domain, business email, ready for ads"],kw:"landing page pagina web sitio website"}],
       ["pin",{es:["Que te encuentren en Google Maps","Perfil de Google optimizado con fotos y reseñas"],en:["Get found on Google Maps","Optimized Google Business Profile, photos and reviews"]}],
-      ["bot",{es:["Que tu WhatsApp conteste solo","Respuestas automáticas, citas y chatbots con IA"],en:["Your WhatsApp answers itself","AI auto-replies, bookings and chatbots"]}],
-      ["mega",{es:["Anuncios en Facebook e Instagram que traen mensajes","Meta Ads con presupuesto que tú controlas"],en:["Facebook and Instagram ads that bring in messages","Meta Ads on a budget you control"]}],
-      ["globe",{es:["Tu página web con dominio y correo propio","Se ve profesional y la encuentran en Google"],en:["Your own website, domain and business email","Looks professional and shows up on Google"]}],
-      ["share",{es:["Tus redes activas sin que tú publiques","Contenido y manejo de Instagram y Facebook"],en:["Active social media without you posting","Instagram and Facebook content and management"]}],
       ["search",{es:["Google Ads para salir primero",""],en:["Google Ads to show up first",""]}],
+      ["bot",{es:["Que tu WhatsApp conteste solo","Respuestas automáticas, citas y chatbots con IA"],en:["Your WhatsApp answers itself","AI auto-replies, bookings and chatbots"]}],
       ["grid",{es:["Un sistema hecho para tu negocio","Inventario, facturación, reservas, adiós a los papeles"],en:["Software built for your business","Inventory, invoicing, bookings, no more paper"]}],
-      ["cloud",{es:["Servidores en la nube configurados","Google Cloud, hosting y dominios"],en:["Cloud servers set up right","Google Cloud, hosting and domains"]}],
       ["shield",{es:["Protege tu negocio de hackeos",""],en:["Protect your business from hackers",""]}]
     ]
   },

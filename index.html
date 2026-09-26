@@ -9,8 +9,8 @@ if (/[?&](s|z|lang|m)=/.test(location.search)) location.replace("/go/" + locatio
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0B1526">
 <meta name="format-detection" content="telephone=no">
-<title>Fix &amp; Go · Casa, tecnología, trámites y viajes</title>
-<meta name="description" content="Fix & Go: TV en la pared, cámaras, reparación de PS5 y PC, taxes, LLC, trámites en línea, marketing para negocios y viajes a Atlanta. Birmingham y Atlanta, en español e inglés.">
+<title>Fix &amp; Go · Casa, trámites, tecnología, redes sociales y viajes</title>
+<meta name="description" content="Fix & Go: cámaras y trabajos en casa, taxes y trámites, reparación de iPhone, PS5, PC y Mac, redes sociales y community manager para negocios, y viajes a Atlanta. Birmingham, Chamblee y Atlanta, en español e inglés.">
 <link rel="canonical" href="https://fixandgopro.com/">
 <link rel="icon" type="image/png" sizes="32x32" href="/logo/logo-mark-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="/logo/logo-mark-192.png">
@@ -18,7 +18,7 @@ if (/[?&](s|z|lang|m)=/.test(location.search)) location.replace("/go/" + locatio
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Fix &amp; Go">
 <meta property="og:title" content="Fix &amp; Go · Lo instalamos, lo arreglamos y te llevamos">
-<meta property="og:description" content="Casa, tecnología, trámites, negocios y viajes. Birmingham y Atlanta, en español e inglés.">
+<meta property="og:description" content="Casa, trámites, tecnología, redes sociales y viajes. Birmingham y Atlanta, en español e inglés.">
 <meta property="og:url" content="https://fixandgopro.com/">
 <meta property="og:image" content="https://fixandgopro.com/logo/og-image.png">
 <meta property="og:image:width" content="1200">
@@ -196,6 +196,84 @@ section{position:relative}
 .pill .i{width:18px;height:18px;transition:transform .25s}
 .card.open .pill .chev{transform:rotate(180deg)}
 
+
+/* ---------- redes sociales ---------- */
+.social{background:linear-gradient(180deg,#0B1526 0%,#111A33 100%);color:#fff;overflow:hidden;isolation:isolate}
+.social .blob.a{background:#C13584;opacity:.28;top:-200px;right:-200px}
+.social .blob.b{background:var(--sea);opacity:.3;bottom:-220px;left:-160px}
+.social .sec-h p{color:rgba(255,255,255,.72)}
+.social .eyebrow{color:var(--mango)}
+.soc-g{display:grid;gap:40px;align-items:center}
+@media (min-width:980px){.soc-g{grid-template-columns:1fr 1fr;gap:64px}}
+.soc-g>*{min-width:0}
+.wheel{--r:min(440px,86vw);position:relative;width:var(--r);aspect-ratio:1;margin:0 auto}
+@media (max-width:979px){.wheel{--r:min(340px,84vw)}}
+.wheel .ring{position:absolute;inset:0;border-radius:50%;border:1.5px dashed rgba(255,255,255,.18)}
+.wheel .ring.r2{inset:18%;border:1px solid rgba(255,255,255,.08)}
+.wheel .core{position:absolute;inset:32%;border-radius:50%;display:grid;place-items:center;text-align:center;padding:8px;
+  background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.16),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.14);
+  box-shadow:0 30px 80px -24px rgba(193,53,132,.7),inset 0 1px 0 rgba(255,255,255,.2);transition:box-shadow .3s}
+.wheel .core .i{width:34%;height:auto;aspect-ratio:1;color:var(--c,var(--mango));margin:0 auto 4px;transition:color .3s}
+.wheel .core b{display:block;font-family:"Bricolage Grotesque",system-ui;font-weight:800;font-size:clamp(.95rem,3.4vw,1.2rem);line-height:1.05}
+.wheel .spin{position:absolute;inset:0;animation:spin 48s linear infinite}
+.wheel .sat{position:absolute;left:50%;top:50%;width:0;height:0;transform:rotate(var(--a)) translate(calc(var(--r) / 2)) rotate(calc(var(--a) * -1))}
+.wheel .cr{position:absolute;left:0;top:0;animation:spin 48s linear infinite reverse}
+.wheel .net{position:absolute;left:-32px;top:-32px;width:64px;height:64px;border-radius:20px;display:grid;place-items:center;background:#fff;color:var(--c);
+  box-shadow:0 14px 30px -10px rgba(0,0,0,.55);transition:transform .28s cubic-bezier(.2,.9,.3,1.4),background .25s,color .25s,box-shadow .25s}
+.wheel .net .i{width:30px;height:30px;stroke-width:1.9}
+.wheel .net:hover,.wheel .net:focus-visible,.wheel .net.on{transform:scale(1.4);background:var(--c);color:#fff;box-shadow:0 18px 40px -10px var(--c);z-index:2}
+.wheel .net.ig:hover,.wheel .net.ig:focus-visible,.wheel .net.ig.on{background:linear-gradient(45deg,#F58529,#DD2A7B 55%,#8134AF)}
+.wheel:hover .spin,.wheel:hover .cr,.wheel:focus-within .spin,.wheel:focus-within .cr{animation-play-state:paused}
+@media (max-width:979px){.wheel .net{left:-26px;top:-26px;width:52px;height:52px;border-radius:16px}.wheel .net .i{width:25px;height:25px}}
+.wheel-h{text-align:center;color:rgba(255,255,255,.55);font-size:.86rem;margin:18px 0 0}
+.net-p{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--radius);padding:26px;position:relative;overflow:hidden}
+.net-p::before{content:"";position:absolute;left:0;top:0;right:0;height:4px;background:var(--c,var(--mango));transition:background .3s}
+.net-p h3{font-size:1.6rem;font-weight:800;display:flex;align-items:center;gap:12px}
+.net-p h3 .i{width:30px;height:30px;color:var(--c)}
+.net-p ul{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:10px}
+.net-p li{display:flex;gap:10px;align-items:flex-start;color:rgba(255,255,255,.85)}
+.net-p li .i{width:20px;height:20px;color:var(--mango);margin-top:3px}
+.net-p.swap{animation:swap .35s ease}
+@keyframes swap{from{opacity:.3;transform:translateY(6px)}}
+.soc-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+.soc-h3{font-size:clamp(1.5rem,3.4vw,2.1rem);font-weight:800;margin:72px 0 22px}
+.deliv{display:grid;gap:12px}
+@media (min-width:640px){.deliv{grid-template-columns:repeat(2,1fr)}}
+@media (min-width:1080px){.deliv{grid-template-columns:repeat(3,1fr)}}
+.deliv div{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:22px;padding:22px;transition:background .2s,transform .2s,border-color .2s}
+.deliv div:hover{background:rgba(255,255,255,.09);border-color:rgba(242,165,65,.5);transform:translateY(-3px)}
+.deliv .i{width:28px;height:28px;color:var(--mango);margin-bottom:12px}
+.deliv h4{margin:0;font-family:"Bricolage Grotesque",system-ui;font-size:1.15rem;font-weight:800;letter-spacing:-.01em}
+.deliv p{margin:6px 0 0;color:rgba(255,255,255,.7);font-size:.95rem}
+.proc{list-style:none;margin:0;padding:0;display:grid;gap:12px;counter-reset:p}
+@media (min-width:900px){.proc{grid-template-columns:repeat(5,1fr)}}
+.proc li{counter-increment:p;padding:20px;border-radius:20px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.03)}
+.proc li::before{content:counter(p,decimal-leading-zero);display:block;font-family:"Bricolage Grotesque";font-weight:800;font-size:1.6rem;color:var(--mango);line-height:1}
+.proc b{display:block;margin-top:10px;font-size:1.05rem}
+.proc span{display:block;color:rgba(255,255,255,.68);font-size:.93rem;margin-top:4px}
+.forwho{display:grid;gap:12px}
+@media (min-width:900px){.forwho{grid-template-columns:repeat(3,1fr)}}
+.forwho div{border-radius:22px;padding:24px;background:linear-gradient(150deg,rgba(242,165,65,.16),rgba(255,255,255,.03));border:1px solid rgba(242,165,65,.3)}
+.forwho div:nth-child(2){background:linear-gradient(150deg,rgba(25,167,178,.2),rgba(255,255,255,.03));border-color:rgba(25,167,178,.4)}
+.forwho div:nth-child(3){background:linear-gradient(150deg,rgba(193,53,132,.2),rgba(255,255,255,.03));border-color:rgba(193,53,132,.45)}
+.forwho h4{margin:0;font-family:"Bricolage Grotesque",system-ui;font-size:1.25rem;font-weight:800}
+.forwho p{margin:8px 0 0;color:rgba(255,255,255,.75);font-size:.96rem}
+.soc-note{margin:26px 0 0;color:rgba(255,255,255,.65);font-size:.95rem}
+@media (max-width:639px){
+  .soc-h3{margin:52px 0 16px}
+  .deliv{grid-template-columns:repeat(2,1fr);gap:10px}
+  .deliv div{padding:16px 14px;border-radius:18px}
+  .deliv .i{width:24px;height:24px;margin-bottom:8px}
+  .deliv h4{font-size:1rem;line-height:1.15}
+  .deliv p{font-size:.84rem;line-height:1.4}
+  .proc{gap:8px}
+  .proc li{display:grid;grid-template-columns:44px 1fr;column-gap:10px;padding:14px 16px}
+  .proc li::before{grid-row:span 2;font-size:1.4rem;align-self:center}
+  .proc b{margin-top:0}
+  .proc span{margin-top:2px}
+  .forwho div{padding:18px}
+}
+
 /* ---------- cómo funciona ---------- */
 .how{background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .how-g{display:grid;gap:48px;align-items:center}
@@ -299,6 +377,7 @@ footer{background:var(--ink);color:rgba(255,255,255,.65);border-top:1px solid rg
     <a class="brand" href="/"><img src="/logo/logo-mark-teal.svg" alt="" width="34" height="34"><span>Fix <b>&amp;</b> Go</span></a>
     <div class="links">
       <a href="#servicios" data-t="nServ">Servicios</a>
+      <a href="#redes" data-t="nSoc">Redes sociales</a>
       <a href="#como" data-t="nHow">Cómo funciona</a>
       <a href="#zonas" data-t="nZones">Zonas</a>
       <a href="#preguntas" data-t="nFaq">Preguntas</a>
@@ -317,7 +396,7 @@ footer{background:var(--ink);color:rgba(255,255,255,.65);border-top:1px solid rg
     <div>
       <div class="kicker"><span><i></i><b data-t="k1">Respondemos el mismo día</b></span><span data-t="k2">Español e inglés</span><span data-t="k3">Birmingham · Atlanta</span></div>
       <h1><span data-t="h1">Lo instalamos, lo arreglamos y te llevamos.</span><span class="rot" aria-live="polite"><span id="rot"></span></span></h1>
-      <p class="lead" data-t="lead">Un solo equipo para tu tecnología, tus trámites, tu negocio, tus viajes y tu casa. Nos escribes, te cotizamos y lo resolvemos.</p>
+      <p class="lead" data-t="lead">Un solo equipo para tu casa, tus trámites, tu tecnología, tus redes sociales y tus viajes. Nos escribes, te cotizamos y lo resolvemos.</p>
       <div class="cta">
         <a class="btn btn-mango" href="/go/?m=1" data-href="msg"><svg class="i" viewBox="0 0 24 24"><rect x="9" y="2.5" width="6" height="12" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg><span data-t="cta1">Cuéntanos qué necesitas</span></a>
         <a class="btn btn-ghost" href="#servicios"><span data-t="cta2">Ver servicios</span></a>
@@ -347,6 +426,44 @@ footer{background:var(--ink);color:rgba(255,255,255,.65);border-top:1px solid rg
       <ul class="sugg" id="sugg" hidden></ul>
     </div>
     <div class="bento" id="bento"></div>
+  </div>
+</section>
+
+<section class="sec social" id="redes">
+  <div class="blob a"></div><div class="blob b"></div>
+  <div class="wrap">
+    <div class="sec-h rv">
+      <span class="eyebrow" data-t="rEye">Redes sociales · Community manager</span>
+      <h2 data-t="rH">Hacemos crecer tu negocio en redes.</h2>
+      <p data-t="rP">Desde cero o para rescatar una marca que ya no vende. Planeamos, creamos, publicamos, contestamos y anunciamos. Tú atiendes a los clientes que llegan.</p>
+    </div>
+    <div class="soc-g">
+      <div class="rv">
+        <div class="wheel" id="wheel">
+          <div class="ring"></div><div class="ring r2"></div>
+          <div class="spin" id="nets"></div>
+          <div class="core" id="core"></div>
+        </div>
+        <p class="wheel-h" data-t="rHint">Toca una red para ver lo que hacemos ahí.</p>
+      </div>
+      <div class="rv">
+        <div class="net-p" id="netP" aria-live="polite"></div>
+        <div class="soc-cta">
+          <a class="btn btn-mango" id="socAsk"><span data-t="rCta">Queremos ver tus redes</span></a>
+          <a class="btn btn-ghost" id="socWa" target="_blank" rel="noopener"><svg class="i" viewBox="0 0 24 24"><path d="M3.5 20.5 5 16a8.5 8.5 0 1 1 3.3 3.3z"/><path d="M9 8.5c0 3.5 2.9 6.5 6.5 6.5l1-1.6-2-1-1 .8a4.3 4.3 0 0 1-2.2-2.2l.8-1-1-2z"/></svg><span>WhatsApp</span></a>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="soc-h3 rv" data-t="rInc">Todo lo que incluye</h3>
+    <div class="deliv" id="deliv"></div>
+
+    <h3 class="soc-h3 rv" data-t="rProc">Cómo lo hacemos</h3>
+    <ol class="proc" id="proc"></ol>
+
+    <h3 class="soc-h3 rv" data-t="rWho">¿En qué punto está tu negocio?</h3>
+    <div class="forwho" id="forwho"></div>
+    <p class="soc-note rv" data-t="rNote">Sin paquetes cerrados: armamos el plan según tu negocio, tu ciudad y tu presupuesto. Trabajamos con negocios en Chamblee, Doraville, Atlanta, Birmingham y en todo Estados Unidos, en español y en inglés.</p>
   </div>
 </section>
 
@@ -409,7 +526,7 @@ footer{background:var(--ink);color:rgba(255,255,255,.65);border-top:1px solid rg
     <div class="sec-h rv"><span class="eyebrow" data-t="wEye">Por qué Fix &amp; Go</span><h2 data-t="wH">Hecho para nuestra gente.</h2></div>
     <div class="why">
       <div class="rv"><svg class="i" viewBox="0 0 24 24"><path d="M3.5 5h9M8 3v2M5.5 5c.6 3 2.6 5.4 5 6.8M10.5 5c-.7 3.3-3 6-6 7.5"/><path d="m13 21 4-9 4 9M14.4 18h5.2"/></svg><h3 data-t="w1">Hablamos tu idioma</h3><p data-t="w1p">Te atendemos en español o en inglés, como te sientas más cómodo.</p></div>
-      <div class="rv"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="3" width="7.5" height="7.5" rx="1.8"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.8"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.8"/><path d="M17.3 13.5V21M13.5 17.3H21"/></svg><h3 data-t="w2">Un solo contacto</h3><p data-t="w2p">Casa, tecnología, trámites, negocio y viajes con el mismo equipo.</p></div>
+      <div class="rv"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="3" width="7.5" height="7.5" rx="1.8"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.8"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.8"/><path d="M17.3 13.5V21M13.5 17.3H21"/></svg><h3 data-t="w2">Un solo contacto</h3><p data-t="w2p">Casa, trámites, tecnología, redes sociales y viajes con el mismo equipo.</p></div>
       <div class="rv"><svg class="i" viewBox="0 0 24 24"><path d="M13 2 4.5 13.5H11L10 22l8.5-11.5H12z"/></svg><h3 data-t="w3">Rápido</h3><p data-t="w3p">Te respondemos el mismo día. Nota de voz, texto o WhatsApp.</p></div>
       <div class="rv"><svg class="i" viewBox="0 0 24 24"><path d="M12 2.5 19.5 5.5v5.8c0 4.7-3.2 8.6-7.5 10.2-4.3-1.6-7.5-5.5-7.5-10.2V5.5z"/><path d="m9 12 2 2 4-4"/></svg><h3 data-t="w4">Claro desde el inicio</h3><p data-t="w4p">Te cotizamos antes de empezar. Sin sorpresas.</p></div>
     </div>
@@ -452,20 +569,23 @@ footer{background:var(--ink);color:rgba(255,255,255,.65);border-top:1px solid rg
   <a class="btn btn-wa" id="dockWa" aria-label="WhatsApp"><svg class="i" viewBox="0 0 24 24"><path d="M3.5 20.5 5 16a8.5 8.5 0 1 1 3.3 3.3z"/><path d="M9 8.5c0 3.5 2.9 6.5 6.5 6.5l1-1.6-2-1-1 .8a4.3 4.3 0 0 1-2.2-2.2l.8-1-1-2z"/></svg></a>
 </div>
 
-<script src="/config.js?v=4"></script>
+<script src="/config.js?v=5"></script>
 <script>
-if (typeof HOT === "undefined") { window.HOT = []; window.hotIndex = (k, ic) => S[k].items.findIndex(x => x[0] === ic); }
+/* Si Cloudflare entrega un config.js viejo, la página sigue funcionando (sin "Lo más pedido" y con el orden de siempre) */
+if (typeof hotIndex === "undefined") window.hotIndex = (k, ic) => S[k].items.findIndex(x => x[0] === ic);
+const hotList = () => ((typeof HOT === "object" && HOT && !Array.isArray(HOT) && HOT[lang]) || []).filter(([k,ic]) => S[k] && hotIndex(k, ic) > -1);
+const cats = () => typeof catsFor === "function" ? catsFor(lang) : Object.keys(S);
 const L = {
   es:{
-    nServ:"Servicios", nHow:"Cómo funciona", nZones:"Zonas", nFaq:"Preguntas", navCta:"Escríbenos",
+    nServ:"Servicios", nSoc:"Redes sociales", nHow:"Cómo funciona", nZones:"Zonas", nFaq:"Preguntas", navCta:"Escríbenos",
     k1:"Respondemos el mismo día", k2:"Español e inglés", k3:"Birmingham · Atlanta",
     h1:"Lo instalamos, lo arreglamos y te llevamos.",
-    rot:["Tu cuenta hackeada, recuperada.","Tu iPhone y tu Mac, al día.","Tus taxes, listos.","Tu negocio en Google.","Tu viaje a Atlanta.","Tu casa con cámaras."],
-    lead:"Un solo equipo para tu tecnología, tus trámites, tu negocio, tus viajes y tu casa. Nos escribes, te cotizamos y lo resolvemos.",
+    rot:["Tu casa con cámaras.","Tus taxes, listos.","Tu iPhone, como nuevo.","Tu PS5, sin ruido.","Tu PC, rápida otra vez.","Tus redes, vendiendo."],
+    lead:"Un solo equipo para tu casa, tus trámites, tu tecnología, tus redes sociales y tus viajes. Nos escribes, te cotizamos y lo resolvemos.",
     cta1:"Cuéntanos qué necesitas", cta2:"Ver servicios", hot:"Lo más pedido",
     sEye:"Servicios", sH:"Todo lo que hacemos, en un solo lugar.", sP:"Cinco áreas, un solo número. Busca lo que necesitas o abre una categoría.",
     search:"¿Qué necesitas? Ej: iPhone, taxes, cuenta hackeada, Atlanta…", none:"No aparece aquí, pero escríbenos y lo vemos.",
-    see:"Ver servicios", ask:"Pedir", tags:{casa:"Casa",tech:"Tecnología",tramites:"Trámites",negocio:"Negocios",viajes:"Viajes"},
+    see:"Ver servicios", ask:"Pedir", tags:{casa:"Casa",tech:"Tecnología",tramites:"Trámites",negocio:"Redes sociales",viajes:"Viajes"},
     hEye:"Cómo funciona", hH:"Tres pasos. Cero complicaciones.",
     st1:"Nos escribes o mandas una nota de voz", st1p:"Desde la página, WhatsApp, texto o correo. En español o en inglés.",
     st2:"Te cotizamos", st2p:"Te respondemos el mismo día con el precio y el horario.",
@@ -478,7 +598,7 @@ const L = {
     z3:"En línea, desde donde estés", z3p:"Soporte técnico, taxes, pagos, citas y cuentas sin salir de casa.",
     wEye:"Por qué Fix & Go", wH:"Hecho para nuestra gente.",
     w1:"Hablamos tu idioma", w1p:"Te atendemos en español o en inglés, como te sientas más cómodo.",
-    w2:"Un solo contacto", w2p:"Casa, tecnología, trámites, negocio y viajes con el mismo equipo.",
+    w2:"Un solo contacto", w2p:"Casa, trámites, tecnología, redes sociales y viajes con el mismo equipo.",
     w3:"Rápido", w3p:"Te respondemos el mismo día. Nota de voz, texto o WhatsApp.",
     w4:"Claro desde el inicio", w4p:"Te cotizamos antes de empezar. Sin sorpresas.",
     fEye:"Preguntas", fH:"Lo que más nos preguntan.",
@@ -487,24 +607,54 @@ const L = {
       ["¿En qué zonas trabajan?","Birmingham y alrededores toda la semana. Chamblee, Doraville y Atlanta los fines de semana. También hacemos viajes a Atlanta y al aeropuerto, y muchos servicios en línea."],
       ["¿Cómo pido una cotización?","Toca “Cuéntanos qué necesitas”, graba una nota de voz o escribe tu mensaje, y deja tu teléfono. También puedes escribirnos por WhatsApp o a info@fixandgopro.com. Te respondemos el mismo día."],
       ["¿Qué necesito para hacer mis taxes?","Tu identificación, tu número de Seguro Social o ITIN, y tus formularios W-2 o 1099. Si tienes la declaración del año pasado, tráela también."],
-      ["¿Pueden ayudarme a distancia?","Sí. El soporte técnico, los taxes, los pagos en línea, las citas y las cuentas se pueden hacer sin salir de casa."]
+      ["¿Manejan las redes sociales de mi negocio?","Sí. Somos tu community manager: estrategia, diseño, reels, publicaciones, respuestas a comentarios y mensajes, anuncios y reportes. Empezamos desde cero o rescatamos una marca que ya existe."],
+      ["¿Pueden ayudarme a distancia?","Sí. El soporte técnico, los taxes, los pagos en línea, las citas, las cuentas y las redes sociales se pueden hacer sin salir de casa."]
     ],
+    rEye:"Redes sociales · Community manager", rH:"Hacemos crecer tu negocio en redes.",
+    rP:"Desde cero o para rescatar una marca que ya no vende. Planeamos, creamos, publicamos, contestamos y anunciamos. Tú atiendes a los clientes que llegan.",
+    rHint:"Toca una red para ver lo que hacemos ahí.", rCta:"Queremos ver tus redes", rWaMsg:"Hola Fix & Go, quiero ayuda con las redes sociales de mi negocio.",
+    rInc:"Todo lo que incluye", rProc:"Cómo lo hacemos", rWho:"¿En qué punto está tu negocio?", rCore:"Tu marca",
+    rNote:"Sin paquetes cerrados: armamos el plan según tu negocio, tu ciudad y tu presupuesto. Trabajamos con negocios en Chamblee, Doraville, Atlanta, Birmingham y en todo Estados Unidos, en español y en inglés.",
+    deliv:[
+      ["search","Auditoría de tus redes","Revisamos tus perfiles, tu competencia y qué está fallando antes de tocar nada."],
+      ["form","Estrategia y calendario de contenido","Un plan mensual: qué publicamos, qué día y para qué. Tú lo apruebas."],
+      ["pen","Diseño con tu marca","Posts, carruseles e historias con tus colores y tu logo. Si no tienes marca, la creamos."],
+      ["cam","Reels y videos cortos","Guion, grabación, edición, subtítulos y música en tendencia."],
+      ["msg","Textos que venden","Descripciones, llamadas a la acción y hashtags, en español y en inglés."],
+      ["share","Community manager","Contestamos comentarios y mensajes, y cuidamos la imagen de tu negocio todos los días."],
+      ["mega","Anuncios pagados","Facebook, Instagram, TikTok y Google, dirigidos a tu zona. El presupuesto lo controlas tú."],
+      ["globe","Landing page","Una página que convierte los clics de tus anuncios en mensajes de WhatsApp."],
+      ["pin","Google y reseñas","Tu perfil de Google Business al día, más reseñas y respuestas a cada una."],
+      ["trend","Reporte cada mes","Alcance, seguidores, mensajes y ventas. Te explicamos qué funcionó y qué cambiamos."]
+    ],
+    proc:[["Diagnóstico","Conocemos tu negocio, tu cliente ideal y tus redes."],["Estrategia","Metas, tono de marca y calendario."],["Creamos","Diseños, reels y textos listos para publicar."],["Publicamos y atendemos","Constancia, respuestas rápidas y anuncios."],["Medimos y mejoramos","Reporte mensual y ajustes."]],
+    who:[["Empiezas desde cero","Nombre, logo, perfiles, primeras publicaciones y primera campaña para que te conozcan."],["Tu negocio existe, pero no vende en redes","Ordenamos tus perfiles, publicamos con constancia y ponemos anuncios que traen mensajes."],["Tu marca está caída","Rescate: recuperamos cuentas, limpiamos la imagen y relanzamos tu negocio."]],
+    nets:{
+      ig:["Perfil que vende: foto, bio, enlaces y destacadas","Reels, carruseles e historias cada semana","Respondemos comentarios y mensajes directos","Anuncios para que te escriban por DM o WhatsApp"],
+      fbk:["Página profesional con reseñas y botón de WhatsApp","Publicaciones y anuncios para tu ciudad","Grupos y Marketplace para llegar a la comunidad","Contestamos mensajes y comentarios"],
+      tiktok:["Videos cortos con tendencias y tu estilo","Guion, grabación, edición y subtítulos","Ideas para que te conozcan en tu zona","Anuncios en TikTok"],
+      wa:["WhatsApp Business con catálogo de tus servicios","Respuestas rápidas y automáticas","Etiquetas para dar seguimiento a cada cliente","Estados y listas de difusión, sin spam"],
+      yt:["Videos y Shorts que explican lo que haces","Portadas y títulos para que te encuentren","Tu canal organizado y con tu marca"],
+      gg:["Perfil de Google Business para salir en Maps","Más reseñas y respuesta a cada una","Google Ads para salir primero","Que te encuentren cuando buscan “cerca de mí”"],
+      li:["Perfil de empresa y de dueño profesional","Publicaciones que te dan autoridad","Contactos con otros negocios"],
+      th:["Conversación diaria con tu comunidad","Conectado a tu Instagram","Ideas rápidas que llevan gente a tu perfil"]
+    },
     cEye:"Contacto", cH:"¿Listo? Cuéntanos qué necesitas.", cP:"Una nota de voz de 30 segundos es suficiente. Te respondemos hoy.",
     wMsg:"Nota de voz o mensaje", wMsgS:"Desde nuestra página, en 1 minuto", wWa:"WhatsApp", wTel:"Llamar", wMail:"Correo",
     qr:"Escanea con tu celular<br>para escribirnos.",
-    foot:"Casa · Tecnología · Trámites · Negocios · Viajes",
+    foot:"Casa · Trámites · Tecnología · Redes sociales · Viajes",
     waMsg:"Hola Fix & Go, vi su página y quiero información."
   },
   en:{
-    nServ:"Services", nHow:"How it works", nZones:"Areas", nFaq:"FAQ", navCta:"Message us",
+    nServ:"Services", nSoc:"Social media", nHow:"How it works", nZones:"Areas", nFaq:"FAQ", navCta:"Message us",
     k1:"Same-day replies", k2:"English and Spanish", k3:"Birmingham · Atlanta",
     h1:"We mount it, fix it, and drive you.",
-    rot:["Your hacked account, back.","Your iPhone and Mac, sorted.","Your taxes, done.","Your business on Google.","Your ride to Atlanta.","Your home with cameras."],
-    lead:"One team for your tech, your paperwork, your business, your rides and your home. Message us, we quote, we get it done.",
+    rot:["Your home with cameras.","Your TV on the wall.","Your iPhone, like new.","Your PS5, quiet again.","Your PC, fast again.","Your social media, selling."],
+    lead:"One team for your home, your tech, your social media, your rides and your paperwork. Message us, we quote, we get it done.",
     cta1:"Tell us what you need", cta2:"See services", hot:"Most requested",
     sEye:"Services", sH:"Everything we do, in one place.", sP:"Five areas, one number. Search for what you need or open a category.",
     search:"What do you need? E.g. iPhone, taxes, hacked account, Atlanta…", none:"Not listed? Message us anyway.",
-    see:"See services", ask:"Request", tags:{casa:"Home",tech:"Tech",tramites:"Paperwork",negocio:"Business",viajes:"Rides"},
+    see:"See services", ask:"Request", tags:{casa:"Home",tech:"Tech",tramites:"Paperwork",negocio:"Social media",viajes:"Rides"},
     hEye:"How it works", hH:"Three steps. Zero hassle.",
     st1:"Message us or send a voice note", st1p:"From our page, WhatsApp, text or email. In English or Spanish.",
     st2:"We send you a quote", st2p:"Same-day reply with price and schedule.",
@@ -517,7 +667,7 @@ const L = {
     z3:"Online, wherever you are", z3p:"Tech support, taxes, payments, appointments and accounts from home.",
     wEye:"Why Fix & Go", wH:"Made for our community.",
     w1:"We speak your language", w1p:"English or Spanish, whatever feels most comfortable.",
-    w2:"One contact", w2p:"Home, tech, paperwork, business and rides with the same team.",
+    w2:"One contact", w2p:"Home, tech, social media, rides and paperwork with the same team.",
     w3:"Fast", w3p:"Same-day replies. Voice note, text or WhatsApp.",
     w4:"Clear from the start", w4p:"We quote before we start. No surprises.",
     fEye:"FAQ", fH:"What people ask us most.",
@@ -526,12 +676,42 @@ const L = {
       ["Which areas do you cover?","Birmingham area all week. Chamblee, Doraville and Atlanta on weekends. We also do rides to Atlanta and the airport, and many services online."],
       ["How do I get a quote?","Tap “Tell us what you need”, record a voice note or type your message, and leave your phone number. You can also reach us on WhatsApp or at info@fixandgopro.com. Same-day reply."],
       ["What do I need for my taxes?","Your ID, your Social Security number or ITIN, and your W-2 or 1099 forms. Bring last year's return if you have it."],
-      ["Can you help me remotely?","Yes. Tech support, taxes, online payments, appointments and accounts can all be done from home."]
+      ["Can you run my business's social media?","Yes. We're your community manager: strategy, design, reels, posts, replies to comments and messages, ads and reports. We start from scratch or relaunch an existing brand."],
+      ["Can you help me remotely?","Yes. Tech support, taxes, online payments, appointments, accounts and social media can all be done from home."]
     ],
+    rEye:"Social media · Community management", rH:"We grow your business on social media.",
+    rP:"From scratch or to relaunch a brand that stopped selling. We plan, create, post, reply and advertise. You take care of the customers who show up.",
+    rHint:"Tap a network to see what we do there.", rCta:"Let us look at your social media", rWaMsg:"Hi Fix & Go, I'd like help with my business's social media.",
+    rInc:"Everything it includes", rProc:"How we do it", rWho:"Where is your business right now?", rCore:"Your brand",
+    rNote:"No one-size-fits-all packages: we build the plan around your business, your city and your budget. We work with businesses in Chamblee, Doraville, Atlanta, Birmingham and across the US, in English and Spanish.",
+    deliv:[
+      ["search","Social media audit","We review your profiles, your competitors and what's not working before we touch anything."],
+      ["form","Strategy and content calendar","A monthly plan: what we post, when, and why. You approve it."],
+      ["pen","On-brand design","Posts, carousels and stories in your colors with your logo. No brand yet? We create it."],
+      ["cam","Reels and short videos","Script, filming, editing, captions and trending audio."],
+      ["msg","Copy that sells","Captions, calls to action and hashtags, in English and Spanish."],
+      ["share","Community management","We reply to comments and messages and look after your reputation every day."],
+      ["mega","Paid ads","Facebook, Instagram, TikTok and Google, targeted to your area. You control the budget."],
+      ["globe","Landing page","A page that turns ad clicks into WhatsApp messages."],
+      ["pin","Google and reviews","Your Google Business Profile up to date, more reviews and a reply to each one."],
+      ["trend","Monthly report","Reach, followers, messages and sales. We explain what worked and what we're changing."]
+    ],
+    proc:[["Discovery","We learn your business, your ideal customer and your profiles."],["Strategy","Goals, brand voice and calendar."],["We create","Designs, reels and copy ready to post."],["We post and reply","Consistency, fast replies and ads."],["We measure and improve","Monthly report and adjustments."]],
+    who:[["Starting from scratch","Name, logo, profiles, first posts and a first campaign to get you known."],["Your business exists but doesn't sell online","We clean up your profiles, post consistently and run ads that bring in messages."],["Your brand is struggling","Rescue: we recover accounts, clean up your image and relaunch your business."]],
+    nets:{
+      ig:["A profile that sells: photo, bio, links and highlights","Reels, carousels and stories every week","We reply to comments and DMs","Ads that get people messaging you"],
+      fbk:["Professional page with reviews and a WhatsApp button","Posts and ads for your city","Groups and Marketplace to reach the community","We reply to messages and comments"],
+      tiktok:["Short videos with trends and your style","Script, filming, editing and captions","Ideas to get known in your area","TikTok ads"],
+      wa:["WhatsApp Business with a catalog of your services","Quick and automatic replies","Labels to follow up with every customer","Status updates and broadcast lists, no spam"],
+      yt:["Videos and Shorts that explain what you do","Thumbnails and titles people can find","Your channel organized and on-brand"],
+      gg:["Google Business Profile to show up on Maps","More reviews and a reply to each one","Google Ads to show up first","Get found on “near me” searches"],
+      li:["Professional company and owner profiles","Posts that build authority","Connections with other businesses"],
+      th:["Daily conversation with your community","Connected to your Instagram","Quick ideas that bring people to your profile"]
+    },
     cEye:"Contact", cH:"Ready? Tell us what you need.", cP:"A 30-second voice note is enough. We'll get back to you today.",
     wMsg:"Voice note or message", wMsgS:"From our page, in 1 minute", wWa:"WhatsApp", wTel:"Call", wMail:"Email",
     qr:"Scan with your phone<br>to message us.",
-    foot:"Home · Tech · Paperwork · Business · Rides",
+    foot:"Home · Tech · Social media · Rides · Paperwork",
     waMsg:"Hi Fix & Go, I saw your website and I'd like some info."
   }
 };
@@ -568,10 +748,10 @@ function apply(){
     [`mailto:${CONFIG.EMAIL}`, t.wMail, CONFIG.EMAIL, "mail", "var(--sea)", "#fff", ""]
   ].map(([h,a,b,ic,bg,fg,x]) => `<a href="${h}"${x}><span class="ic" style="background:${bg};color:${fg}">${ico(ic)}</span><span>${esc(a)}<small>${esc(b)}</small></span>${ico("right","go")}</a>`).join("");
   $("#faq").innerHTML = t.faq.map(([q,a]) => `<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join("");
-  $("#marq").innerHTML = (() => { const w = Object.keys(S).flatMap(k => S[k].items.slice(0,3).map(x => x[1][lang][0])); const one = w.map(x=>`<span>${esc(x)}</span>`).join(""); return one + one; })();
-  $("#hot").parentElement.hidden = !HOT.length;
-  $("#hot").innerHTML = HOT.map(([k,ic,n]) => `<a href="${go(`&s=${k}&i=${ic}`)}">${ico(ic)}<span>${esc(n[lang])}</span></a>`).join("");
-  renderBento(); startRot();
+  $("#marq").innerHTML = (() => { const w = cats().flatMap(k => S[k].items.slice(0,3).map(x => x[1][lang][0])); const one = w.map(x=>`<span>${esc(x)}</span>`).join(""); return one + one; })();
+  const hot = hotList(); $("#hot").parentElement.hidden = !hot.length;
+  $("#hot").innerHTML = hot.map(([k,ic,n]) => `<a href="${go(`&s=${k}&i=${ic}`)}">${ico(ic)}<span>${esc(n)}</span></a>`).join("");
+  renderBento(); renderSocial(); startRot();
   const f = $("#demo"); if (f.src && !f.src.endsWith(go())) f.src = go();
 }
 
@@ -579,7 +759,7 @@ function apply(){
 let openK = null;
 function renderBento(){
   const t = L[lang];
-  $("#bento").innerHTML = Object.keys(S).map(k => {
+  $("#bento").innerHTML = cats().map(k => {
     const c = S[k][lang], o = k===openK;
     return `<article class="card rv in${o?" open":""}" data-k="${k}"><div class="glow"></div>
       <span class="count">${S[k].items.length}</span>
@@ -612,7 +792,7 @@ const sugg = $("#sugg");
 $("#q").addEventListener("input", e => {
   const t = L[lang], n = norm(e.target.value.trim());
   if (!n) { sugg.hidden = true; return; }
-  const hits = Object.keys(S).flatMap(k => S[k].items.map(([ic,v]) => ({k, ic, v}))).filter(({k,v}) => {
+  const hits = cats().flatMap(k => S[k].items.map(([ic,v]) => ({k, ic, v}))).filter(({k,v}) => {
     const hay = norm([...v.es, ...v.en, v.kw||"", L.es.tags[k], L.en.tags[k], S[k].es.tile, S[k].en.tile].join(" "));
     return n.split(/\s+/).every(w => hay.includes(w));
   }).slice(0, 7);
@@ -622,6 +802,40 @@ $("#q").addEventListener("input", e => {
 });
 $("#q").addEventListener("keydown", e => { if (e.key==="Enter"){ const a = sugg.querySelector("a"); if (a) location.href = a.href; } if (e.key==="Escape") { sugg.hidden = true; e.target.blur(); } });
 document.addEventListener("click", e => { if (!e.target.closest(".finder")) sugg.hidden = true; });
+
+
+/* ---------- redes sociales: rueda de redes, lo que incluye, proceso ---------- */
+const NETS = [["ig","Instagram","#E1306C"],["fbk","Facebook","#1877F2"],["tiktok","TikTok","#111111"],["wa","WhatsApp","#1FA855"],
+  ["yt","YouTube","#FF0000"],["gg","Google","#4285F4"],["li","LinkedIn","#0A66C2"],["th","Threads","#111111"]];
+let netK = "ig", netAuto = null;
+$("#nets").innerHTML = NETS.map(([k,n,c],i,a) => `<div class="sat" style="--a:${i*360/a.length-90}deg"><div class="cr"><button type="button" class="net ${k}" data-n="${k}" style="--c:${c}" aria-label="${n}" aria-pressed="false">${ico(k)}</button></div></div>`).join("");
+function showNet(k, swap){
+  netK = k; const [,n,c] = NETS.find(x => x[0]===k), p = $("#netP");
+  $$(".net").forEach(b => { const o = b.dataset.n===k; b.classList.toggle("on", o); b.setAttribute("aria-pressed", String(o)); });
+  $("#wheel").style.setProperty("--c", c); p.style.setProperty("--c", c);
+  $("#core").innerHTML = `${ico(k)}<b>${esc(n)}</b>`;
+  p.innerHTML = `<h3>${ico(k)}${esc(n)}</h3><ul>${L[lang].nets[k].map(x => `<li>${ico("check")}<span>${esc(x)}</span></li>`).join("")}</ul>`;
+  if (swap) { p.classList.remove("swap"); void p.offsetWidth; p.classList.add("swap"); }
+}
+const stopNetAuto = () => { clearInterval(netAuto); netAuto = null; };
+$("#nets").addEventListener("click", e => { const b = e.target.closest(".net"); if (!b) return; stopNetAuto(); showNet(b.dataset.n, true); });
+if (matchMedia("(hover:hover)").matches) $("#nets").addEventListener("pointerover", e => { const b = e.target.closest(".net"); if (b && b.dataset.n !== netK) { stopNetAuto(); showNet(b.dataset.n, true); } });
+function renderSocial(){
+  const t = L[lang];
+  $("#deliv").innerHTML = t.deliv.map(([ic,h,p]) => `<div class="rv in">${ico(ic)}<h4>${esc(h)}</h4><p>${esc(p)}</p></div>`).join("");
+  $("#proc").innerHTML = t.proc.map(([h,p]) => `<li class="rv in"><b>${esc(h)}</b><span>${esc(p)}</span></li>`).join("");
+  $("#forwho").innerHTML = t.who.map(([h,p]) => `<div class="rv in"><h4>${esc(h)}</h4><p>${esc(p)}</p></div>`).join("");
+  $("#socAsk").href = go("&s=negocio&i=share");
+  $("#socWa").href = `https://wa.me/${CONFIG.PHONE}?text=${encodeURIComponent(t.rWaMsg)}`;
+  showNet(netK, false);
+}
+if (!reduce && "IntersectionObserver" in window) {   // mientras se ve la sección, las redes se van destacando solas hasta que la persona toca una
+  const wo = new IntersectionObserver(es => { if (es[0].isIntersecting && netAuto === null && !wo.done) { netAuto = setInterval(() => { const i = NETS.findIndex(x => x[0]===netK); showNet(NETS[(i+1) % NETS.length][0], true); }, 2800); }
+    else if (!es[0].isIntersecting && netAuto) { clearInterval(netAuto); netAuto = null; } });
+  wo.observe($("#wheel"));
+  ["pointerdown","keydown"].forEach(ev => $("#wheel").addEventListener(ev, () => { wo.done = true; wo.disconnect(); stopNetAuto(); }, {once:true}));
+  $("#wheel").addEventListener("pointerenter", () => { if (matchMedia("(hover:hover)").matches) { wo.done = true; wo.disconnect(); stopNetAuto(); } });
+}
 
 /* ---------- héroe: frases que rotan, órbita, luz que sigue el cursor ---------- */
 let rotI = 0, rotTimer = null;
@@ -639,7 +853,7 @@ function startRot(){
   if (reduce) return;
   rotTimer = setInterval(() => { el.classList.add("out"); setTimeout(() => { rotI = (rotI+1) % list.length; el.textContent = list[rotI]; el.classList.remove("out"); }, 350); }, 2600);
 }
-$("#sats").innerHTML = ["lock","phone","receipt","pin","car","cam","laptop","gamepad"].map((k,i,a) => `<div class="sat" style="--a:${i*360/a.length}deg"><div>${ico(k)}</div></div>`).join("");
+$("#sats").innerHTML = ["cam","receipt","phone","gamepad","laptop","mac","share","car"].map((k,i,a) => `<div class="sat" style="--a:${i*360/a.length}deg"><div>${ico(k)}</div></div>`).join("");
 if (matchMedia("(hover:hover)").matches && !reduce) {
   $(".hero").addEventListener("pointermove", e => { const r = e.currentTarget.getBoundingClientRect(); $("#spot").style.setProperty("--mx", (e.clientX-r.left)+"px"); $("#spot").style.setProperty("--my", (e.clientY-r.top)+"px"); });
 }
