@@ -234,6 +234,7 @@ const T = {
     search:"Busca: iPhone, taxes, PS5, Atlanta…", hot:"Lo más pedido", none:"No aparece aquí, pero déjanos un mensaje y lo vemos.",
     services:n=>`${n}`, tag:{casa:"Casa",tech:"Tecnología",tramites:"Trámites",negocio:"Redes sociales",viajes:"Viajes"},
     leave:"Déjanos un mensaje", leaveTitle:"Déjanos un mensaje", leaveSub:"Nota de voz o escrito. Te respondemos hoy.",
+    leaveSubNoVoice:"Escríbenos y te respondemos hoy mismo.", quick:"Escríbenos ahora",
     when:"¿Para cuándo?", chips:["Hoy","Esta semana","Sin apuro"],
     voice:"Nota de voz", write:"Escribir",
     recIdle:"Toca para grabar (hasta 90 s)", recOn:"Grabando… toca para parar", recDone:"Lista. Escúchala o envíala.", redo:"Grabar de nuevo",
@@ -243,9 +244,9 @@ const T = {
     send:"Enviar mensaje", sending:"Enviando…",
     needPhone:"Pon tu teléfono para poder responderte.", needMsg:"Graba una nota o escribe tu mensaje.",
     fail:"No se pudo enviar. Escríbenos directo abajo.",
-    or:"o escríbenos directo", sms:"Texto", tel:"Llamar", wa:"WhatsApp", fb:"Messenger", mail:"Correo", subj:s=>`Consulta: ${s}`,
+    or:"o cuéntanos más", sms:"Texto", tel:"Llamar", wa:"WhatsApp", fb:"Messenger", mail:"Correo", subj:s=>`Consulta: ${s}`,
     doneT:n=>`¡Listo${n?`, ${n}`:""}!`, doneP:"Recibimos tu mensaje. Te respondemos hoy mismo.", close:"Cerrar",
-    msg:(s,w,d)=>`Hola, vi la tarjeta de Fix & Go. Me interesa: ${s}.`+(w?` Para: ${w.toLowerCase()}.`:"")+(d?` ${d}`:""),
+    msg:(s,w,d)=>`Hola, vi la tarjeta de Fix & Go. Servicio: ${/[.!?]$/.test(s)?s:s+"."}`+(w?` Para: ${w.toLowerCase()}.`:"")+(d?` ${d}`:""),
     generic:"Hola, vi la tarjeta de Fix & Go y quiero información.", general:"Consulta general",
     foot:a=>`Fix & Go · ${a} · Español e inglés`
   },
@@ -254,6 +255,7 @@ const T = {
     search:"Search: iPhone, taxes, PS5, Atlanta…", hot:"Most requested", none:"Not listed? Leave us a message anyway.",
     services:n=>`${n}`, tag:{casa:"Home",tech:"Tech",tramites:"Paperwork",negocio:"Social media",viajes:"Rides"},
     leave:"Leave us a message", leaveTitle:"Leave us a message", leaveSub:"Voice note or text. We'll get back to you today.",
+    leaveSubNoVoice:"Message us and we'll get back to you today.", quick:"Message us now",
     when:"When do you need it?", chips:["Today","This week","No rush"],
     voice:"Voice note", write:"Type it",
     recIdle:"Tap to record (up to 90s)", recOn:"Recording… tap to stop", recDone:"Ready. Play it back or send it.", redo:"Record again",
@@ -263,9 +265,9 @@ const T = {
     send:"Send message", sending:"Sending…",
     needPhone:"Add your phone so we can get back to you.", needMsg:"Record a voice note or type your message.",
     fail:"Couldn't send. Reach us directly below.",
-    or:"or reach us directly", sms:"Text", tel:"Call", wa:"WhatsApp", fb:"Messenger", mail:"Email", subj:s=>`Inquiry: ${s}`,
+    or:"or tell us more", sms:"Text", tel:"Call", wa:"WhatsApp", fb:"Messenger", mail:"Email", subj:s=>`Inquiry: ${s}`,
     doneT:n=>`Got it${n?`, ${n}`:""}!`, doneP:"Your message is in. We'll get back to you today.", close:"Close",
-    msg:(s,w,d)=>`Hi, I got the Fix & Go card. I'm interested in: ${s}.`+(w?` Needed: ${w.toLowerCase()}.`:"")+(d?` ${d}`:""),
+    msg:(s,w,d)=>`Hi, I got the Fix & Go card. Service: ${/[.!?]$/.test(s)?s:s+"."}`+(w?` Needed: ${w.toLowerCase()}.`:"")+(d?` ${d}`:""),
     generic:"Hi, I got the Fix & Go card and I'd like some info.", general:"General question",
     foot:a=>`Fix & Go · ${a} · English and Spanish`
   }
@@ -330,7 +332,7 @@ function render(){
     <p class="empty" id="empty" hidden>${t.none}</p>`;
   document.title = seg ? `${S[seg][lang].t} | Fix & Go` : "Fix & Go";
   document.getElementById("brand").href = U();
-  document.getElementById("leave").innerHTML = `${ico("mic")}<span>${t.leave}</span>`;
+  document.getElementById("leave").innerHTML = `${ico(canVoice()?"mic":"msg")}<span>${t.leave}</span>`;
   const call = document.getElementById("call"); call.href = links.tel(); call.innerHTML = ico("call"); call.setAttribute("aria-label", t.tel);
   document.getElementById("foot").textContent = t.foot(Z.area);
   const q = document.getElementById("q");
@@ -381,17 +383,22 @@ const fmt = s => `${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,"0")
 
 function fillSheet(){
   const t = T[lang], s = svc();
+  const voice = canVoice(), mode = voice ? st.mode : "text";
+  const subDefault = voice ? t.leaveSub : t.leaveSubNoVoice;
   const head = `<span class="grab" aria-hidden="true"></span>
     <div class="sh-top"><span class="ib">${ico(s?s.ic:"msg")}</span>
-      <div><h3 id="shTitle">${esc(s?s.name:t.leaveTitle)}</h3><p>${esc(s?(s.sub||t.leaveSub):t.leaveSub)}</p></div>
+      <div><h3 id="shTitle">${esc(s?s.name:t.leaveTitle)}</h3><p>${esc(s?(s.sub||subDefault):subDefault)}</p></div>
       <button type="button" class="x" id="x" aria-label="${t.close}">${ico("close")}</button></div>`;
   if (st.sent){
     sheet.innerHTML = head + `<div class="done"><div class="ok">${ico("check")}</div><h3>${esc(t.doneT(st.name))}</h3><p>${t.doneP}</p>
       <button type="button" class="btn send" id="doneBtn">${t.close}</button></div>`;
     sheet.querySelector("#x").onclick = closeSheet; sheet.querySelector("#doneBtn").onclick = closeSheet; return;
   }
-  const voice = canVoice(), mode = voice ? st.mode : "text";
+  const directRow = `<div class="direct n${order().length}" id="direct">${order().map(k=>`<a class="d-${k}" data-c="${k}"${k==="wa"||k==="fb"?' target="_blank" rel="noopener"':""}><span>${ico(k==="tel"?"call":k)}</span><small>${t[k]}</small></a>`).join("")}</div>`;
   sheet.innerHTML = head + `<div class="sh-body">
+    <p class="lbl">${t.quick}</p>
+    ${directRow}
+    <p class="or">${t.or}</p>
     <p class="lbl">${t.when}</p>
     <div class="chips">${t.chips.map((c,j)=>`<button type="button" class="chip" data-j="${j}" aria-pressed="${j===st.when}">${c}</button>`).join("")}</div>
     ${voice?`<div class="segc" role="tablist">
@@ -409,8 +416,6 @@ function fillSheet(){
     <input class="hp" id="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
     <button type="button" class="btn send" id="send">${ico("msg")}<span>${t.send}</span></button>
     <p class="status" id="status" role="status"></p>
-    <p class="or">${t.or}</p>
-    <div class="direct n${order().length}" id="direct">${order().map(k=>`<a class="d-${k}" data-c="${k}"${k==="wa"||k==="fb"?' target="_blank" rel="noopener"':""}><span>${ico(k==="tel"?"call":k)}</span><small>${t[k]}</small></a>`).join("")}</div>
   </div>`;
   if (st.audio) showRecDone();
   updateLinks();

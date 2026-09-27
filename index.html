@@ -679,7 +679,7 @@ const L = {
       th:["Conversación diaria con tu comunidad","Conectado a tu Instagram","Ideas rápidas que llevan gente a tu perfil"]
     },
     cEye:"Contacto", cH:"¿Listo? Cuéntanos qué necesitas.", cP:"Una nota de voz de 30 segundos es suficiente. Te respondemos hoy.",
-    wMsg:"Nota de voz o mensaje", wMsgS:"Desde nuestra página, en 1 minuto", wWa:"WhatsApp", wTel:"Llamar", wMail:"Correo",
+    wMsg:"Nota de voz o mensaje", wMsgNoVoice:"Escríbenos", wMsgS:"Desde nuestra página, en 1 minuto", wWa:"WhatsApp", wTel:"Llamar", wMail:"Correo",
     qr:"Escanea con tu celular<br>para escribirnos.",
     foot:"Casa · Trámites · Tecnología · Redes sociales · Viajes",
     waMsg:"Hola Fix & Go, vi su página y quiero información."
@@ -752,7 +752,7 @@ const L = {
       th:["Daily conversation with your community","Connected to your Instagram","Quick ideas that bring people to your profile"]
     },
     cEye:"Contact", cH:"Ready? Tell us what you need.", cP:"A 30-second voice note is enough. We'll get back to you today.",
-    wMsg:"Voice note or message", wMsgS:"From our page, in 1 minute", wWa:"WhatsApp", wTel:"Call", wMail:"Email",
+    wMsg:"Voice note or message", wMsgNoVoice:"Message us", wMsgS:"From our page, in 1 minute", wWa:"WhatsApp", wTel:"Call", wMail:"Email",
     qr:"Scan with your phone<br>to message us.",
     foot:"Home · Tech · Social media · Rides · Paperwork",
     waMsg:"Hi Fix & Go, I saw your website and I'd like some info."
@@ -784,8 +784,9 @@ function apply(){
   $("#footTxt").textContent = `${t.foot} · © ${new Date().getFullYear()}`;
   const wa = `https://wa.me/${CONFIG.PHONE}?text=${encodeURIComponent(t.waMsg)}`;
   $("#dockWa").href = wa; $("#dockWa").target = "_blank"; $("#dockWa").rel = "noopener";
+  const voiceOn = !!(CONFIG.ENDPOINT && navigator.mediaDevices && window.MediaRecorder);
   $("#ways").innerHTML = [
-    [go("&m=1"), t.wMsg, t.wMsgS, "mic", "var(--mango)", "#14213D", ""],
+    [go("&m=1"), voiceOn ? t.wMsg : t.wMsgNoVoice, t.wMsgS, voiceOn ? "mic" : "msg", "var(--mango)", "#14213D", ""],
     [wa, t.wWa, phoneFmt(CONFIG.PHONE), "wa", "var(--wa)", "#fff", ' target="_blank" rel="noopener"'],
     [`tel:+${CONFIG.PHONE}`, t.wTel, phoneFmt(CONFIG.PHONE), "call", "#fff", "#14213D", ""],
     [`mailto:${CONFIG.EMAIL}`, t.wMail, CONFIG.EMAIL, "mail", "var(--sea)", "#fff", ""]
