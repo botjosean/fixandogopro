@@ -17,7 +17,7 @@ if (/[?&](s|z|lang|m)=/.test(location.search)) location.replace("/go/" + locatio
 <link rel="apple-touch-icon" sizes="180x180" href="/logo/apple-touch-icon.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Fix &amp; Go">
-<meta property="og:title" content="Fix &amp; Go · Lo instalamos, lo arreglamos y te llevamos">
+<meta property="og:title" content="Fix &amp; Go · ¿Necesitas una mano? Aquí estamos.">
 <meta property="og:description" content="Casa, trámites, tecnología, redes sociales y viajes. Birmingham y Atlanta, en español e inglés.">
 <meta property="og:url" content="https://fixandgopro.com/">
 <meta property="og:image" content="https://fixandgopro.com/logo/og-image.png">
@@ -108,7 +108,7 @@ section{position:relative}
 .kicker{display:inline-flex;flex-wrap:wrap;gap:8px}
 .kicker span{display:inline-flex;align-items:center;gap:7px;padding:7px 13px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);font-size:.82rem;font-weight:700;color:rgba(255,255,255,.88)}
 .kicker span i{width:7px;height:7px;border-radius:50%;background:var(--mango);box-shadow:0 0 0 4px rgba(242,165,65,.2)}
-.hero h1{font-size:clamp(2.7rem,8.4vw,5.4rem);font-weight:800;margin:22px 0 0}
+.hero h1{font-size:clamp(2.6rem,8.4vw,5rem);font-weight:800;margin:22px 0 0}
 .rot{display:block;color:var(--mango);font-size:.6em;line-height:1.1;margin-top:.3em;min-height:1.1em;white-space:nowrap;position:relative}
 .rot span{display:inline-block;transition:opacity .35s ease,transform .35s ease}
 .rot span.out{opacity:0;transform:translateY(.35em)}
@@ -416,7 +416,7 @@ footer{background:var(--ink);color:rgba(255,255,255,.65);border-top:1px solid rg
   <div class="wrap hero-g">
     <div>
       <div class="kicker"><span><i></i><b data-t="k1">Respondemos el mismo día</b></span><span data-t="k2">Español e inglés</span><span data-t="k3">Birmingham · Atlanta</span></div>
-      <h1><span data-t="h1">Lo instalamos, lo arreglamos y te llevamos.</span><span class="rot" aria-live="polite"><span id="rot"></span></span></h1>
+      <h1><span data-t="h1">¿Necesitas una mano?<br>Aquí estamos.</span><span class="rot" aria-live="polite"><span id="rot"></span></span></h1>
       <p class="lead" data-t="lead">Un solo equipo para tu casa, tus trámites, tu tecnología, tus redes sociales y tus viajes. Nos escribes, te cotizamos y lo resolvemos.</p>
       <div class="cta">
         <a class="btn btn-mango" href="/go/?m=1" data-href="msg"><svg class="i" viewBox="0 0 24 24"><rect x="9" y="2.5" width="6" height="12" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg><span data-t="cta1">Cuéntanos qué necesitas</span></a>
@@ -615,7 +615,7 @@ const L = {
   es:{
     nServ:"Servicios", nSoc:"Redes sociales", nHow:"Cómo funciona", nZones:"Zonas", nFaq:"Preguntas", navCta:"Escríbenos",
     k1:"Respondemos el mismo día", k2:"Español e inglés", k3:"Birmingham · Atlanta",
-    h1:"Lo instalamos, lo arreglamos y te llevamos.",
+    h1:"¿Necesitas una mano?<br>Aquí estamos.",
     rot:["Tu casa con cámaras.","Tus taxes, listos.","Tu iPhone, como nuevo.","Tu PS5, sin ruido.","Tu PC, rápida otra vez.","Tus redes, vendiendo."],
     lead:"Un solo equipo para tu casa, tus trámites, tu tecnología, tus redes sociales y tus viajes. Nos escribes, te cotizamos y lo resolvemos.",
     cta1:"Cuéntanos qué necesitas", cta2:"Ver servicios", hot:"Lo más pedido",
@@ -688,7 +688,7 @@ const L = {
   en:{
     nServ:"Services", nSoc:"Social media", nHow:"How it works", nZones:"Areas", nFaq:"FAQ", navCta:"Message us",
     k1:"Same-day replies", k2:"English and Spanish", k3:"Birmingham · Atlanta",
-    h1:"We mount it, fix it, and drive you.",
+    h1:"Need a hand?<br>We've got you.",
     rot:["Your home with cameras.","Your TV on the wall.","Your iPhone, like new.","Your PS5, quiet again.","Your PC, fast again.","Your social media, selling."],
     lead:"One team for your home, your tech, your social media, your rides and your paperwork. Message us, we quote, we get it done.",
     cta1:"Tell us what you need", cta2:"See services", hot:"Most requested",
@@ -889,7 +889,20 @@ if (!reduce && "IntersectionObserver" in window) {   // mientras se ve la secci�
 
 /* ---------- héroe: frases que rotan, órbita, luz que sigue el cursor ---------- */
 let rotI = 0, rotTimer = null;
+/* el título va en dos líneas ("¿Necesitas una mano?" / "Aquí estamos."): si una no cabe, se achica la letra en vez de partirla */
+function fitH1(){
+  const h = $(".hero h1"); h.style.fontSize = "";
+  const probe = document.createElement("span");
+  probe.style.cssText = "position:absolute;visibility:hidden;white-space:nowrap"; h.appendChild(probe);
+  let widest = 0; L[lang].h1.split("<br>").forEach(x => { probe.textContent = x; widest = Math.max(widest, probe.offsetWidth); }); probe.remove();
+  const room = h.getBoundingClientRect().width;
+  if (widest > room) h.style.fontSize = (parseFloat(getComputedStyle(h).fontSize) * room / widest * .97) + "px";
+  const lines = () => { const r = document.createRange(); r.selectNodeContents(h.querySelector('[data-t="h1"]'));
+    return new Set([...r.getClientRects()].filter(x => x.width > 1).map(x => Math.round(x.top))).size; };
+  for (let i = 0; i < 12 && lines() > 2; i++) h.style.fontSize = (parseFloat(getComputedStyle(h).fontSize) * .96) + "px";
+}
 function fitRot(){
+  fitH1();
   const el = $("#rot"), box = el.parentElement, list = L[lang].rot;
   box.style.fontSize = ""; const probe = document.createElement("span");
   probe.style.cssText = "position:absolute;visibility:hidden;white-space:nowrap"; box.appendChild(probe);
