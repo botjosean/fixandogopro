@@ -78,7 +78,8 @@ h1,h2,.b{font-family:'Bricolage Grotesque','Arial Narrow',Arial,sans-serif}
 .front .tx{position:absolute;left:.22in;top:.22in;width:2.05in;z-index:1}
 .front h1{font-weight:800;font-size:17pt;line-height:.98;letter-spacing:-.02em}
 .front p{font-size:7.6pt;margin-top:.08in;line-height:1.3}
-.gen h1{font-size:14.5pt}
+.gen h1{font-size:13.2pt}
+.gen .tx{width:2.12in}
 .gen ul{list-style:none;margin-top:.1in;font-size:7.4pt;line-height:1.45;font-weight:700}
 .gen li::before{content:"";display:inline-block;width:.05in;height:.05in;border-radius:50%;background:var(--mango);margin-right:.06in;vertical-align:middle}
 .front .ar{position:absolute;left:.22in;bottom:.2in;font-size:6.8pt;font-weight:700;opacity:.9;z-index:1}
@@ -101,7 +102,7 @@ h1,h2,.b{font-family:'Bricolage Grotesque','Arial Narrow',Arial,sans-serif}
 .plate{width:5.25in;height:7.25in;background:var(--sea);color:#fff}
 .plate::after{content:"";position:absolute;right:-1.2in;top:-1.2in;width:3.2in;height:3.2in;border-radius:50%;background:var(--mango)}
 .plate .tx{position:absolute;left:.45in;top:.5in;right:.45in;z-index:1}
-.plate h1{font-weight:800;font-size:36pt;line-height:.95;letter-spacing:-.03em;max-width:3.1in}
+.plate h1{font-weight:800;font-size:34pt;line-height:.95;letter-spacing:-.03em;max-width:4.35in}
 .plate h2{font-weight:500;font-size:17pt;margin-top:.12in;opacity:.95}
 .plate .sv{font-size:13pt;margin-top:.22in;line-height:1.45;max-width:4.2in}
 .duo{position:absolute;left:.45in;right:.45in;bottom:.5in;display:flex;gap:.3in;z-index:1}
@@ -132,8 +133,8 @@ TILE = {
   "viajes":  {"en": "Atlanta & airport rides", "es": "Atlanta y aeropuerto"},
 }
 GEN = {
-  "en": ("We mount it, fix it, and drive you.", [TILE[k]["en"] for k in CAT_ORDER["en"]]),
-  "es": ("Lo instalamos, lo arreglamos y te llevamos.", [TILE[k]["es"] for k in CAT_ORDER["es"]]),
+  "en": ("Need a hand?<br>We've got you.", [TILE[k]["en"] for k in CAT_ORDER["en"]]),
+  "es": ("¿Necesitas una mano?<br>Aquí estamos.", [TILE[k]["es"] for k in CAT_ORDER["es"]]),
 }
 
 def front_general(lang):
@@ -170,8 +171,8 @@ def plate():
     # la placa es bilingüe: sin lang, así la página sale en el idioma del teléfono
     url = f"https://{a.domain}/go/" + (f"?z={a.zone}" if a.zone else "")
     return f'''<div class="pg plate"><div class="tx">
-      <div class="logo">{logo_white()}</div><h1>Need a hand at home?</h1><h2>Home, tech, social media, rides and paperwork.</h2>
-      <p class="sv">We come to you or help you online. Se habla español.</p></div>
+      <div class="logo">{logo_white()}</div><h1>Need a hand?<br>We&#39;ve got you.</h1><h2>Home, tech, social media, rides and paperwork.</h2>
+      <p class="sv">We come to you or help you online.<br>Se habla español.</p></div>
       <div class="duo">
         <div class="col"><div class="qrbig">{qr(url)}</div><b>Scan</b><span>Open your camera</span></div>
         <div class="col"><div class="tap">{PHONE_SVG}</div><b>Tap here</b><span>Hold your phone here</span></div>
