@@ -170,11 +170,11 @@ def plate():
     # la placa es bilingüe: sin lang, así la página sale en el idioma del teléfono
     url = f"https://{a.domain}/go/" + (f"?z={a.zone}" if a.zone else "")
     return f'''<div class="pg plate"><div class="tx">
-      <div class="logo">{logo_white()}</div><h1>Need a hand at home?</h1><h2>¿Necesitas una mano en casa?</h2>
-      <p class="sv">Casa, trámites, tecnología, redes sociales y viajes.<br>Home, paperwork, tech, social media and rides.</p></div>
+      <div class="logo">{logo_white()}</div><h1>Need a hand at home?</h1><h2>Home, tech, social media, rides and paperwork.</h2>
+      <p class="sv">We come to you or help you online. Se habla español.</p></div>
       <div class="duo">
-        <div class="col"><div class="qrbig">{qr(url)}</div><b>Scan</b><span>Escanea con la cámara</span></div>
-        <div class="col"><div class="tap">{PHONE_SVG}</div><b>Tap here</b><span>Acerca tu teléfono aquí</span></div>
+        <div class="col"><div class="qrbig">{qr(url)}</div><b>Scan</b><span>Open your camera</span></div>
+        <div class="col"><div class="tap">{PHONE_SVG}</div><b>Tap here</b><span>Hold your phone here</span></div>
       </div></div>'''
 
 def render(pages, size, path):
