@@ -48,17 +48,21 @@ def qr(url):
     return svg[svg.index("<svg"):]
 
 CARDS = {
-  "casa":   {"en": ("TV mounting, cameras & ceiling fans", "Lights, furniture, Wi-Fi. Same week."),
-             "es": ("TV en la pared, cámaras y ventiladores", "Lámparas, muebles y WiFi. Esta misma semana.")},
-  "tech":   {"en": ("PS5, PC & controller repair", "Slow, loud or dead? Fixed fast."),
-             "es": ("Reparamos PS5, PC y controles", "¿Lento, ruidoso o no prende? Lo arreglamos.")},
-  "negocio":{"en": ("More customers for your business", "Google Maps, ads, websites and AI."),
-             "es": ("Más clientes para tu negocio", "Google Maps, anuncios, web e IA.")},
-  "viajes": {"en": ("Rides to Atlanta & the airport", "We drive you, wait and bring you back."),
-             "es": ("Te llevamos, te esperamos y te traemos", "Atlanta, aeropuerto y citas médicas.")},
+  "casa":    {"en": ("Your home: safe, connected, done", "Cameras, Wi-Fi, TVs, lights, furniture. One visit, done."),
+              "es": ("Tu casa segura, conectada y al día", "Cámaras, WiFi, TV, lámparas y muebles. Una visita y listo.")},
+  "tramites":{"en": ("Paperwork, handled", "Taxes, LLCs, insurance, payments, appointments and shipping."),
+              "es": ("Tus trámites, resueltos", "Taxes, LLC, seguros, pagos, citas y paquetería.")},
+  "tech":    {"en": ("Slow, overheating or dead? We'll fix it", "iPhone, PS5, PCs and Macs, hacked accounts and lost data."),
+              "es": ("¿Lenta, caliente o no prende? La arreglamos", "iPhone, PS5, PC y Mac, cuentas hackeadas y datos perdidos.")},
+  "negocio": {"en": ("Social media that sells", "Community management, content, ads and landing pages."),
+              "es": ("Tus redes sociales, vendiendo", "Community manager, contenido, anuncios y páginas que venden.")},
+  "viajes":  {"en": ("We drive you, wait, and bring you back", "Atlanta trips, airport rides and appointments."),
+              "es": ("Te llevamos, te esperamos y te traemos", "Consulado en Atlanta, aeropuerto y citas.")},
 }
+# orden actual del sitio (config.js -> ORDER), asi la tarjeta general sigue lo mismo que la pagina
+CAT_ORDER = {"en": ["casa", "tech", "negocio", "viajes", "tramites"], "es": ["casa", "tramites", "tech", "negocio", "viajes"]}
 BACK = {"en": ("Text or call", "English and Spanish"), "es": ("Escríbenos o llámanos", "Español e inglés")}
-TAG = {"en": "Home · Tech · Paperwork · Rides", "es": "Casa · Tecnología · Trámites · Viajes"}
+TAG = {"en": "Home · Tech · Social media · Rides · Paperwork", "es": "Casa · Trámites · Tecnología · Redes sociales · Viajes"}
 
 CSS = """
 @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&display=swap');
@@ -119,11 +123,17 @@ def front(k, lang):
       <div class="ar">{AREA[lang]}</div>
       <div class="qrbox">{qr(url)}<span>{scan}</span></div></div>'''
 
+# version corta (una linea) de cada categoria, para que quepan las 5 en la tarjeta general
+TILE = {
+  "casa":    {"en": "Cameras, Wi-Fi & TV", "es": "Cámaras, WiFi y TV"},
+  "tramites":{"en": "Taxes, LLCs & insurance", "es": "Taxes, LLC y seguros"},
+  "tech":    {"en": "iPhone, PS5, PC & Mac", "es": "iPhone, PS5, PC y Mac"},
+  "negocio": {"en": "Social media & ads", "es": "Redes sociales y anuncios"},
+  "viajes":  {"en": "Atlanta & airport rides", "es": "Atlanta y aeropuerto"},
+}
 GEN = {
-  "en": ("We mount it, fix it, and drive you.",
-         ["TV mounting and security cameras", "PS5, PC and Apple repair", "More customers for your business", "Rides to Atlanta and the airport"]),
-  "es": ("Lo instalamos, lo arreglamos y te llevamos.",
-         ["TV en la pared y cámaras", "Reparamos PS5, PC y Apple", "Más clientes para tu negocio", "Viajes a Atlanta y al aeropuerto"]),
+  "en": ("We mount it, fix it, and drive you.", [TILE[k]["en"] for k in CAT_ORDER["en"]]),
+  "es": ("Lo instalamos, lo arreglamos y te llevamos.", [TILE[k]["es"] for k in CAT_ORDER["es"]]),
 }
 
 def front_general(lang):
@@ -161,7 +171,7 @@ def plate():
     url = f"https://{a.domain}/go/" + (f"?z={a.zone}" if a.zone else "")
     return f'''<div class="pg plate"><div class="tx">
       <div class="logo">{logo_white()}</div><h1>Need a hand at home?</h1><h2>¿Necesitas una mano en casa?</h2>
-      <p class="sv">TV mounting, cameras, ceiling fans, PS5 and PC repair, rides to Atlanta.</p></div>
+      <p class="sv">Casa, trámites, tecnología, redes sociales y viajes.<br>Home, paperwork, tech, social media and rides.</p></div>
       <div class="duo">
         <div class="col"><div class="qrbig">{qr(url)}</div><b>Scan</b><span>Escanea con la cámara</span></div>
         <div class="col"><div class="tap">{PHONE_SVG}</div><b>Tap here</b><span>Acerca tu teléfono aquí</span></div>
