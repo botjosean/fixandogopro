@@ -243,7 +243,8 @@ section{position:relative}
 .wheel .net .i{width:30px;height:30px;stroke-width:1.9}
 .wheel .net:hover,.wheel .net:focus-visible,.wheel .net.on{transform:scale(1.4);background:var(--c);color:#fff;box-shadow:0 18px 40px -10px var(--c);z-index:2}
 .wheel .net.ig:hover,.wheel .net.ig:focus-visible,.wheel .net.ig.on{background:linear-gradient(45deg,#F58529,#DD2A7B 55%,#8134AF)}
-.wheel:hover .spin,.wheel:hover .cr,.wheel:focus-within .spin,.wheel:focus-within .cr{animation-play-state:paused}
+.wheel.paused .spin,.wheel.paused .cr{animation-play-state:paused}
+@media (hover:hover){.wheel:hover .spin,.wheel:hover .cr{animation-play-state:paused}}
 @media (max-width:979px){.wheel .net{left:-26px;top:-26px;width:52px;height:52px;border-radius:16px}.wheel .net .i{width:25px;height:25px}}
 .wheel-h{text-align:center;color:rgba(255,255,255,.55);font-size:.86rem;margin:18px 0 0}
 .net-p{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--radius);padding:26px;position:relative;overflow:hidden}
@@ -862,7 +863,9 @@ function showNet(k, swap){
   if (swap) { p.classList.remove("swap"); void p.offsetWidth; p.classList.add("swap"); }
 }
 const stopNetAuto = () => { clearInterval(netAuto); netAuto = null; };
-$("#nets").addEventListener("click", e => { const b = e.target.closest(".net"); if (!b) return; stopNetAuto(); showNet(b.dataset.n, true); });
+let netPauseT = null;
+const pauseWheel = () => { $("#wheel").classList.add("paused"); clearTimeout(netPauseT); netPauseT = setTimeout(() => $("#wheel").classList.remove("paused"), 4000); };
+$("#nets").addEventListener("click", e => { const b = e.target.closest(".net"); if (!b) return; stopNetAuto(); showNet(b.dataset.n, true); pauseWheel(); });
 if (matchMedia("(hover:hover)").matches) $("#nets").addEventListener("pointerover", e => { const b = e.target.closest(".net"); if (b && b.dataset.n !== netK) { stopNetAuto(); showNet(b.dataset.n, true); } });
 function renderSocial(){
   const t = L[lang];
