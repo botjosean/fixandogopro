@@ -286,6 +286,20 @@ details p{margin:0;padding:0 18px 16px;color:var(--mute)}
 .vbtn i{width:3.2em;height:3.2em;border-radius:50%;background:#2A2A2E;display:grid;place-items:center}
 .vbtn i svg{width:1.4em}
 
+.kb-go{background:var(--s-blue);color:#fff;border:0;border-radius:.4em;height:2.3em;padding:0 1.1em;font-weight:700;font-size:.9em;flex:none}
+.sugg{padding:.3em 1em}
+.sugg div{padding:.55em 0;border-bottom:1px solid var(--s-line);font-size:.95em}
+.typed{display:inline-block;overflow:hidden;white-space:nowrap;width:3.9em;font-weight:600;animation:typing 1.3s steps(7,end) both}
+@keyframes typing{from{width:0}}
+.dlr{width:2.3em;height:2.3em;position:relative;flex:none}
+.dlr svg{width:100%;display:block}
+.dlr i{position:absolute;inset:36%;background:var(--s-blue);border-radius:.15em}
+.arc{animation:fill 2.6s linear forwards}
+@keyframes fill{to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){.arc{stroke-dashoffset:40}}
+.splash{background:#000;color:#fff;align-items:center;justify-content:center}
+.splash .ico{width:5em;background:#0B0B0D;box-shadow:0 0 0 1px #2B2D33}
+
 /* Toque */
 .hot{position:relative;outline:3px solid var(--hot);outline-offset:2px;animation:ring 1.6s ease-out infinite}
 .hot::after{content:"";position:absolute;right:10%;bottom:-.6em;width:1.5em;height:1.5em;border-radius:50%;background:color-mix(in srgb,var(--hot) 75%,transparent);border:2px solid #fff;pointer-events:none;animation:tap 1.6s ease-in-out infinite}
@@ -363,6 +377,9 @@ details p{margin:0;padding:0 18px 16px;color:var(--mute)}
   function comp(){ return '<div class="comp"><span>+</span><span class="ph">Pregunta lo que quieras</span><span class="circ">'+SV.wave+'</span></div>'; }
   function keys(){ return '<div class="kbd"><div class="kr">'+'<i></i>'.repeat(10)+'</div><div class="kr">'+'<i></i>'.repeat(9)+'</div><div class="kr">'+'<i></i>'.repeat(7)+'</div><div class="kr"><i style="width:9em"></i></div></div>'; }
   function scr(cls, inner){ return '<div class="scr '+cls+'">'+inner+'</div>'; }
+  function gptRow(btn){ return '<div class="row"><div class="ico gpt">'+GLYPH+'</div><div class="rt"><b>ChatGPT</b><small>OpenAI · Productividad</small></div>'+btn+'</div>'; }
+  function keys2(){ return '<div class="kbd"><div class="kr">'+'<i></i>'.repeat(10)+'</div><div class="kr">'+'<i></i>'.repeat(9)+'</div><div class="kr">'+'<i></i>'.repeat(7)+'</div><div class="kr"><i style="width:5.5em"></i>'+H('kb-go','buscar')+'</div></div>'; }
+  var RING = '<div class="dlr"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15" fill="none" stroke="var(--s-line)" stroke-width="4"/><circle class="arc" cx="18" cy="18" r="15" fill="none" stroke="var(--s-blue)" stroke-width="4" stroke-linecap="round" stroke-dasharray="94.2" stroke-dashoffset="94.2" transform="rotate(-90 18 18)"/></svg><i></i></div>';
 
   var CHIPS = [
     {q:'Dame 3 ideas de cena fáciles con pollo', a:'<div>¡Claro! Aquí van tres ideas:</div><ol><li>Pollo al horno con papas</li><li>Pollo salteado con arroz y verduras</li><li>Tacos de pollo con aguacate</li></ol>'},
@@ -379,18 +396,29 @@ details p{margin:0;padding:0 18px 16px;color:var(--mute)}
           screen:function(){ return scr('home', SB+'<div class="hgrid">'+app('bub','#34C759','Mensajes')+app('pho','#FF9F0A','Fotos')+app('cam','#8E8E93','Cámara')+app('map','#30B0C7','Mapas')+app('clk','#1C1C1E','Reloj')+app('not','#FFD60A','Notas')+app('set','#636366','Ajustes')+app('as','linear-gradient(#2A9BFF,#0064D6)','App Store',1)+'</div><div class="dock"><div class="ico" style="background:#34C759">'+IC.bub+'</div><div class="ico" style="background:#0A84FF">'+IC.map+'</div><div class="ico" style="background:#2A6FDB">'+IC.not+'</div><div class="ico" style="background:#FF453A">'+IC.pho+'</div></div>'); } },
         { say:'Abajo a la derecha toca <b>Buscar</b> (la lupa).',
           screen:function(){ return scr('', SB+'<div class="as-head"><small>HOY EN LA APP STORE</small><h3>Hoy</h3></div><div class="feat f1"><small>LA APP DEL DÍA</small><b>Aprende algo nuevo cada día</b></div><div class="feat f2"><small>SUGERENCIA</small><b>Apps para tu casa</b></div><div class="tabs"><div class="tab on"><i></i>Hoy</div><div class="tab"><i></i>Juegos</div><div class="tab"><i></i>Apps</div><div class="tab"><i></i>Arcade</div><button type="button" class="tab hot" data-go="1"><i></i>Buscar</button></div>'); } },
-        { say:'Arriba escribes <b>ChatGPT</b> y sale esta lista. Toca <b>Obtener</b> en el que dice <b>OpenAI</b> debajo del nombre.',
-          screen:function(){ return scr('', SB+'<div class="srch"><div class="field">'+SV.lupa+'<span>ChatGPT</span></div><span class="canc">Cancelar</span></div><div class="res"><div class="row"><div class="ico gpt">'+GLYPH+'</div><div class="rt"><b>ChatGPT</b><small>OpenAI · Productividad</small></div>'+H('get','Obtener')+'</div><div class="row"><div class="ico" style="background:#7C3AED">'+IC.bub+'</div><div class="rt"><b>Chat IA - Asistente</b><small>Otra empresa · Utilidades</small></div>'+D('get','Obtener','Ese no. El correcto dice OpenAI debajo del nombre.')+'</div><div class="row"><div class="ico" style="background:#0EA5A4">'+IC.not+'</div><div class="rt"><b>GPT Chatbot Pro</b><small>Otra empresa · Utilidades</small></div>'+D('get','Obtener','Ese tampoco. Busca el que dice OpenAI debajo del nombre.')+'</div></div>'); } },
-        { say:'Cuando termine de bajar, el botón cambia a <b>Abrir</b>. Tócalo.',
-          screen:function(){ return scr('', SB+'<div class="srch"><div class="field">'+SV.lupa+'<span>ChatGPT</span></div><span class="canc">Cancelar</span></div><div class="res"><div class="row"><div class="ico gpt">'+GLYPH+'</div><div class="rt"><b>ChatGPT</b><small>OpenAI · Productividad</small></div>'+H('get open','Abrir')+'</div></div><div class="note">Listo, ya se instaló en tu iPhone.</div>'); } }
+        { say:'Toca la barra de arriba y escribe <b>ChatGPT</b>. Cuando termines, toca el botón azul <b>buscar</b> del teclado.',
+          screen:function(){ return scr('', SB+'<div class="srch"><div class="field">'+SV.lupa+'<span class="typed">ChatGPT</span></div><span class="canc">Cancelar</span></div><div class="sugg"><div>ChatGPT</div><div>chatgpt en español</div></div><div style="flex:1"></div>'+keys2()); } },
+        { say:'Sale una lista. Busca el que dice <b>OpenAI</b> debajo del nombre. El botón azul <b>Obtener</b> es el que baja la app. Tócalo.',
+          screen:function(){ return scr('', SB+'<div class="srch"><div class="field">'+SV.lupa+'<span>ChatGPT</span></div><span class="canc">Cancelar</span></div><div class="res">'+gptRow(H('get','Obtener'))+'<div class="row"><div class="ico" style="background:#7C3AED">'+IC.bub+'</div><div class="rt"><b>Chat IA - Asistente</b><small>Otra empresa · Utilidades</small></div>'+D('get','Obtener','Ese no. El correcto dice OpenAI debajo del nombre.')+'</div><div class="row"><div class="ico" style="background:#0EA5A4">'+IC.not+'</div><div class="rt"><b>GPT Chatbot Pro</b><small>Otra empresa · Utilidades</small></div>'+D('get','Obtener','Ese tampoco. Busca el que dice OpenAI debajo del nombre.')+'</div></div>'); } },
+        { say:'El iPhone quiere confirmar que eres tú. Haz <b>doble clic en el botón lateral</b> (o mira el teléfono si tiene Face ID). Es gratis, no te cobra.',
+          screen:function(){ return scr('', SB+'<div class="srch"><div class="field">'+SV.lupa+'<span>ChatGPT</span></div><span class="canc">Cancelar</span></div><div class="res">'+gptRow('<span class="get">Instalar</span>')+'</div><div class="dim end"><div class="sheet"><div class="prow"><div class="ico gpt">'+GLYPH+'</div><div><b>ChatGPT</b><small>OpenAI</small></div><b>Gratis</b></div><div class="prow sm"><span>Cuenta</span><span>Tu Apple ID</span></div>'+H('paybtn','Instalar con el botón lateral')+'</div></div>'); } },
+        { wait:2800, say:'Espera unos segundos mientras baja. Ese círculo se va llenando y la pantalla avanza sola.',
+          screen:function(){ return scr('', SB+'<div class="srch"><div class="field">'+SV.lupa+'<span>ChatGPT</span></div><span class="canc">Cancelar</span></div><div class="res">'+gptRow(RING)+'</div><div class="note" style="color:var(--s-mute)">Descargando…</div>'); } },
+        { say:'Terminó de bajar. El botón ahora dice <b>Abrir</b>. Tócalo.',
+          screen:function(){ return scr('', SB+'<div class="srch"><div class="field">'+SV.lupa+'<span>ChatGPT</span></div><span class="canc">Cancelar</span></div><div class="res">'+gptRow(H('get open','Abrir'))+'</div><div class="note">Listo, ya se instaló en tu iPhone.</div>'); } },
+        { auto:1, say:'¡Se abrió! Esta es la pantalla negra con el logo de ChatGPT. En un momento sale la bienvenida. Toca <b>Siguiente paso</b>.',
+          screen:function(){ return scr('splash', '<div class="ico gpt">'+GLYPH+'</div>'); } }
       ],
       tips:[
         {q:'Me pide mi contraseña de Apple', a:'Es normal. Es la contraseña de tu Apple ID, la misma de iCloud. Si tienes Face ID o Touch ID, basta con mirar el teléfono o poner el dedo.'},
+        {q:'¿Cuánto tarda en bajar?', a:'Con Wi-Fi son unos segundos. Con datos puede tardar un poco más. Solo espera a que el círculo se llene.'},
         {q:'No me sale nada al buscar', a:'Revisa que tengas internet (Wi-Fi o datos). Escribe ChatGPT todo junto, sin espacio.'}
       ] },
 
     { title:'Ábrela y crea tu cuenta', lead:'Con tu Apple ID no tienes que inventar otra contraseña. Es lo más fácil.',
       frames:[
+        { say:'Si la app no se abrió sola, busca en tu pantalla el ícono negro de <b>ChatGPT</b> y tócalo.',
+          screen:function(){ return scr('home', SB+'<div class="hgrid">'+app('bub','#34C759','Mensajes')+app('pho','#FF9F0A','Fotos')+app('cam','#8E8E93','Cámara')+app('map','#30B0C7','Mapas')+app('clk','#1C1C1E','Reloj')+app('not','#FFD60A','Notas')+app('set','#636366','Ajustes')+app('as','linear-gradient(#2A9BFF,#0064D6)','App Store')+'<div class="app"><button type="button" class="ico gpt hot" data-go="1" aria-label="ChatGPT">'+GLYPH+'</button><span>ChatGPT</span></div></div><div class="dock"><div class="ico" style="background:#34C759">'+IC.bub+'</div><div class="ico" style="background:#0A84FF">'+IC.map+'</div><div class="ico" style="background:#2A6FDB">'+IC.not+'</div><div class="ico" style="background:#FF453A">'+IC.pho+'</div></div>'); } },
         { say:'La primera vez sale una bienvenida. Toca <b>Registrarse</b>.',
           screen:function(){ return scr('', SB+'<div class="wel"><div class="ico gpt">'+GLYPH+'</div><h4>Bienvenido a ChatGPT</h4><p>Pregunta, escribe, traduce y aprende.</p></div><div class="wbt">'+H('btn-s dark','Registrarse')+'<div class="btn-s alt">Iniciar sesión</div></div>'); } },
         { say:'Toca <b>Continuar con Apple</b>. Así usas tu Apple ID y no necesitas otra contraseña.',
@@ -468,7 +496,7 @@ details p{margin:0;padding:0 18px 16px;color:var(--mute)}
   ];
 
   /* ---------- Estado ---------- */
-  var cur = 0, F = 0, done = false, ctx = {chip:-1};
+  var cur = 0, F = 0, done = false, ctx = {chip:-1}, waitT = null;
   try { var sv = parseInt(localStorage.getItem('fg-chatgpt-step'), 10); if (sv >= 0 && sv <= 7) cur = sv; } catch(e){}
   function save(){ try { localStorage.setItem('fg-chatgpt-step', String(cur)); } catch(e){} }
 
@@ -530,6 +558,7 @@ details p{margin:0;padding:0 18px 16px;color:var(--mute)}
   }
 
   function paint(){
+    clearTimeout(waitT);
     var s = STEPS[cur-1], fs = s.frames, fr = fs[F];
     var screenEl = document.getElementById('scr');
     screenEl.innerHTML = fr.screen(ctx) + (done && !fr.auto ? '<div class="okmark">✓</div>' : '');
@@ -541,6 +570,7 @@ details p{margin:0;padding:0 18px 16px;color:var(--mute)}
     var d = '';
     for (var i = 0; i < fs.length; i++){ d += '<i class="'+(done || i < F ? 'past' : (i === F ? 'on' : ''))+'"></i>'; }
     document.getElementById('dots').innerHTML = d;
+    if (fr.wait) { var sc = cur, sf = F; waitT = setTimeout(function(){ if (cur === sc && F === sf) advance(); }, fr.wait); }
   }
   function focusHot(){
     var h = document.querySelector('#scr .hot');
