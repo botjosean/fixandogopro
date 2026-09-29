@@ -8,40 +8,39 @@
 <title>Fix &amp; Go · Recibo de equipo</title>
 <link rel="icon" type="image/png" href="/logo/logo-mark-32.png">
 <style>
-:root{--navy:#14213D;--sea:#0E7C86;--mango:#F2A541;--bg:#F5F8F9;--card:#fff;--ink:#14213D;--mut:#4A5873;--line:#D8E1E6;--ok:#1E8E3E;--bad:#C62828}
-@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0B1526;--card:#14213D;--ink:#EEF3F8;--mut:#B4C2D3;--line:#2A3B5C}}
+:root{--navy:#14213D;--sea:#0E7C86;--mango:#F2A541;--bg:#F5F8F9;--card:#fff;--ink:#14213D;--mut:#4A5873;--line:#D8E1E6;--ok:#1E8E3E;--bad:#C62828;--warn:#FDF0DC}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0B1526;--card:#14213D;--ink:#EEF3F8;--mut:#B4C2D3;--line:#2A3B5C;--warn:#3A2E14}}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;min-height:100dvh}
 .wrap{max-width:620px;margin:0 auto;padding:0 16px 40px}
-header{background:var(--navy);color:#fff;padding:16px}
+header{background:var(--navy);color:#fff;padding:14px 16px}
 header .in{max-width:620px;margin:0 auto;display:flex;align-items:center;gap:12px}
 header img{width:38px;height:38px;border-radius:10px}
 header b{font-size:1.1rem}
 .lang{margin-left:auto;display:flex;gap:6px}
 .lang button{min-height:44px;min-width:48px;border:1.5px solid rgba(255,255,255,.35);background:transparent;color:#fff;border-radius:999px;font-weight:700;cursor:pointer}
 .lang button[aria-pressed=true]{background:#fff;color:var(--navy)}
-h1{font-size:1.6rem;line-height:1.2;margin:22px 0 6px}
-.sub{color:var(--mut);margin:0 0 16px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin:0 0 14px}
-.eq{background:var(--sea);color:#fff;border-radius:18px;padding:14px 16px;margin:0 0 14px}
+h1{font-size:1.5rem;line-height:1.2;margin:20px 0 4px}
+.sub{color:var(--mut);margin:0 0 14px}
+.eq{background:var(--sea);color:#fff;border-radius:16px;padding:12px 16px;margin:0 0 12px}
 .eq small{opacity:.9;display:block}
-.eq b{font-size:1.2rem}
+.eq b{font-size:1.15rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin:0 0 12px}
+ul.t{margin:0;padding:0;list-style:none}
+ul.t li{display:flex;gap:10px;margin:0 0 10px;font-size:.97rem;line-height:1.45}
+ul.t li::before{content:"✓";color:var(--ok);font-weight:800;flex:none}
+.key{background:var(--warn);border:1.5px solid var(--mango);border-radius:14px;padding:12px 14px;margin:6px 0 0;font-size:.97rem;line-height:1.45}
 label{display:block;font-weight:700;margin:12px 0 6px}
-input[type=text],input[type=email],input[type=tel],textarea{width:100%;min-height:48px;padding:10px 12px;border:1.5px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);font:inherit}
-input:focus-visible,textarea:focus-visible,button:focus-visible{outline:3px solid var(--mango);outline-offset:2px}
-ol{margin:8px 0 0;padding-left:22px}
-li{margin:10px 0;font-size:.95rem;line-height:1.5;list-style:none}
-ol{padding-left:0}
-.agree{display:flex;gap:12px;align-items:flex-start;margin-top:14px;font-weight:600}
-.agree input{width:24px;height:24px;flex:none;margin-top:2px}
-.btn{display:block;width:100%;min-height:52px;border:0;border-radius:14px;background:var(--mango);color:#14213D;font:800 1.05rem system-ui;cursor:pointer;margin-top:16px}
+input[type=text],input[type=email]{width:100%;min-height:48px;padding:10px 12px;border:1.5px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);font:inherit}
+input:focus-visible,button:focus-visible{outline:3px solid var(--mango);outline-offset:2px}
+.btn{display:block;width:100%;min-height:58px;border:0;border-radius:16px;background:var(--mango);color:#14213D;font:800 1.15rem system-ui;cursor:pointer;margin-top:4px}
 .btn[disabled]{opacity:.6;cursor:default}
-.msg{margin-top:12px;font-weight:700}
+.msg{margin-top:10px;font-weight:700}
 .msg.err{color:var(--bad)}
 .done{text-align:center;padding:26px 16px}
 .done .ck{width:64px;height:64px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center;margin:0 auto 12px;font-size:34px}
-.fine{color:var(--mut);font-size:.85rem;margin-top:12px}
+.fine{color:var(--mut);font-size:.82rem;margin-top:10px;line-height:1.4}
 .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
 </style>
 </head>
@@ -54,75 +53,64 @@ ol{padding-left:0}
 const qs = new URLSearchParams(location.search);
 let lang = qs.get("l") === "en" ? "en" : (qs.get("l") === "es" ? "es" : (/^es/i.test(navigator.language) ? "es" : "en"));
 const T = {
-  es:{ title:"Recibo y autorización de equipo", sub:"Revisa y firma. Toma 1 minuto. Sin esto no podemos recoger tu equipo.", eq:"Equipo a recoger", eqPh:"Describe el equipo (p. ej. PS5 con control)",
-    name:"Tu nombre completo", phone:"Teléfono", email:"Correo (para enviarte tu copia)", optional:"opcional",
-    termsH:"Lo que aceptas",
+  es:{ title:"Autorización para recoger tu equipo", sub:"Léelo y toca el botón. Es rápido.", eq:"Equipo", eqPh:"¿Qué equipo? (p. ej. PS5 con control)", name:"Tu nombre", email:"Correo para tu copia", optional:"opcional",
     terms:[
-      "1. Recojo y revisión. Autorizo a Fix & Go a recoger el equipo descrito arriba, llevarlo a su taller y revisarlo para dar un diagnóstico. Fix & Go puede tomar fotos del estado del equipo al recibirlo, solo para su registro.",
-      "2. Propiedad. Declaro que soy el dueño del equipo o que su dueño me autorizó a entregarlo, y que el equipo no es robado ni tiene bloqueos de cuentas ajenas (por ejemplo iCloud o Google). Fix & Go puede negarse a trabajar en un equipo si tiene dudas sobre esto.",
-      "3. Cotización y aprobación. No se hará ninguna reparación sin que yo apruebe antes una cotización por mensaje, correo o firma. Si no la apruebo, el equipo se me devuelve. Si el diagnóstico tiene algún costo, se me informará antes de cobrarlo.",
-      "4. Estado del equipo y fallas previas. El equipo se recibe tal como está. Si ya tenía golpes, humedad, fallas o piezas faltantes, o si el diagnóstico revela otras fallas, entiendo que un equipo dañado puede empeorar o dejar de encender al abrirlo o probarlo, y que Fix & Go no responde por fallas ya existentes ni por las que salgan a la luz durante la revisión.",
-      "5. Mis datos. Soy responsable de haber respaldado mi información. Puede ser necesario reiniciar o restablecer el equipo, y Fix & Go no responde por la pérdida de datos. Si debo darle una clave o código de acceso, solo se usará para la revisión o reparación y no se guardará.",
-      "6. Límite de responsabilidad. Si Fix & Go llegara a ser responsable de un daño al equipo mientras lo tiene bajo su cuidado, su responsabilidad se limita al valor de mercado del equipo al momento del recojo, hasta donde la ley lo permita. No responde por daños indirectos ni por lucro cesante.",
-      "7. Avisos. Acepto recibir avisos sobre mi equipo al teléfono y al correo que dejé aquí. Un aviso enviado por mensaje de texto o correo a esos datos se considera recibido. Me comprometo a avisar si cambio de número o correo.",
-      "8. Equipo no retirado. Cuando mi equipo esté listo, o cuando yo rechace la reparación, Fix & Go me avisará por escrito (mensaje y correo). Tendré 30 días desde ese aviso para retirarlo. Pasado ese plazo, el equipo quedará guardado otros 60 días, y Fix & Go me enviará un segundo aviso por escrito al comenzar ese periodo. Si tampoco lo retiro en esos 60 días, autorizo a Fix & Go a considerarlo abandonado y a disponer de él (reciclarlo, donarlo o venderlo) para recuperar costos, conforme a la ley aplicable. Cualquier cargo de almacenamiento o costo adeudado se me informará por escrito antes de cobrarse.",
-      "9. Firma electrónica. Mi nombre completo escrito abajo es mi firma electrónica y tiene el mismo valor que una firma en papel. Puedo pedir una copia. Este acuerdo se rige por las leyes del estado de Alabama."],
-    agree:"He leído y acepto lo anterior, y autorizo el recojo del equipo.", agree2:"Entiendo especialmente la cláusula 8: si no retiro mi equipo en los plazos indicados, puede considerarse abandonado.", sign:"Firma: escribe tu nombre completo", signHint:"Debe coincidir con tu nombre de arriba.",
-    send:"Firmar y enviar", sending:"Enviando…", errFill:"Completa tu nombre, el equipo, marca las dos casillas y firma con tu nombre completo.", errMatch:"La firma debe ser igual a tu nombre completo.", errNet:"No pudimos enviarlo. Intenta de nuevo o escríbenos por WhatsApp.",
-    okH:"¡Listo, gracias!", okP:"Recibimos tu firma. Ya podemos recoger tu equipo. Te llegará una copia si dejaste tu correo.", fine:"Fix & Go · fixandgopro.com" },
-  en:{ title:"Equipment receipt and authorization", sub:"Please review and sign. It takes 1 minute. We can't pick up your equipment without it.", eq:"Equipment to pick up", eqPh:"Describe the equipment (e.g. PS5 with controller)",
-    name:"Your full name", phone:"Phone", email:"Email (to send you a copy)", optional:"optional",
-    termsH:"What you agree to",
+      "Autorizo a Fix & Go a recoger mi equipo, revisarlo y darme un diagnóstico. Puede tomar fotos de su estado.",
+      "El equipo es mío (o tengo permiso del dueño) y no tiene bloqueos de cuentas ajenas.",
+      "Nada se repara sin que yo apruebe antes la cotización. Si el diagnóstico tiene costo, me avisan antes.",
+      "Se recibe tal como está. Fix & Go no responde por fallas o daños que ya tenía. Yo respaldé mis datos y no responde por su pérdida.",
+      "Si Fix & Go daña algo por su culpa, responde hasta el valor del equipo, hasta donde la ley lo permita.",
+      "Me avisan por mensaje o correo al contacto que dejé."],
+    key:"<b>Equipo no retirado:</b> cuando esté listo o rechace la reparación, tengo 30 días para retirarlo. Luego se guarda 60 días más, con un segundo aviso. Si aun así no lo retiro, puede considerarse abandonado y Fix & Go puede reciclarlo, donarlo o venderlo para recuperar costos, según la ley aplicable.",
+    go:"Acepto y firmo", sending:"Enviando…", errFill:"Escribe tu nombre y el equipo.", errNet:"No pudimos enviarlo. Intenta de nuevo o escríbenos por WhatsApp.",
+    fine:"Al tocar el botón, mi nombre queda como mi firma electrónica, con el mismo valor que una firma en papel. Este acuerdo se rige por las leyes de Alabama.",
+    okH:"¡Listo, gracias!", okP:"Recibimos tu firma. Ya podemos recoger tu equipo. Si dejaste tu correo, te llega una copia." },
+  en:{ title:"Authorization to pick up your equipment", sub:"Read it and tap the button. It's quick.", eq:"Equipment", eqPh:"What equipment? (e.g. PS5 with controller)", name:"Your name", email:"Email for your copy", optional:"optional",
     terms:[
-      "1. Pickup and inspection. I authorize Fix & Go to pick up the equipment described above, take it to its shop and inspect it to give a diagnosis. Fix & Go may take photos of the equipment's condition on receipt, for its records only.",
-      "2. Ownership. I state that I own the equipment or that its owner authorized me to hand it over, and that it is not stolen and has no locks tied to someone else's accounts (for example iCloud or Google). Fix & Go may refuse to work on equipment if it has doubts about this.",
-      "3. Quote and approval. No repair will be done unless I approve a quote first by message, email or signature. If I don't approve it, the equipment is returned to me. If the diagnosis has any cost, I will be told before it is charged.",
-      "4. Condition and prior faults. The equipment is received as-is. If it already had dents, moisture damage, faults or missing parts, or if the diagnosis reveals other faults, I understand that damaged equipment can get worse or stop turning on when opened or tested, and that Fix & Go is not responsible for existing faults or for those found during the inspection.",
-      "5. My data. I am responsible for having backed up my information. The equipment may need to be reset or restored, and Fix & Go is not responsible for data loss. If I must give a password or access code, it will be used only for the inspection or repair and will not be stored.",
-      "6. Limit of liability. If Fix & Go is ever responsible for damage to the equipment while in its care, its liability is limited to the market value of the equipment at the time of pickup, to the extent the law allows. It is not liable for indirect damages or lost profits.",
-      "7. Notices. I agree to receive notices about my equipment at the phone number and email I left here. A notice sent by text message or email to those details is considered received. I will tell Fix & Go if my number or email changes.",
-      "8. Unclaimed equipment. When my equipment is ready, or when I decline the repair, Fix & Go will notify me in writing (text and email). I will have 30 days from that notice to pick it up. After that, the equipment will be stored for another 60 days, and Fix & Go will send me a second written notice when that period starts. If I still don't pick it up within those 60 days, I authorize Fix & Go to treat it as abandoned and to dispose of it (recycle, donate or sell it) to recover costs, as allowed by applicable law. Any storage fee or amount owed will be told to me in writing before it is charged.",
-      "9. Electronic signature. My full name typed below is my electronic signature and has the same value as a paper signature. I may request a copy. This agreement is governed by the laws of the State of Alabama."],
-    agree:"I have read and agree to the above, and I authorize the pickup of the equipment.", agree2:"I specifically understand clause 8: if I do not pick up my equipment within the stated deadlines, it may be considered abandoned.", sign:"Signature: type your full name", signHint:"It must match your name above.",
-    send:"Sign and send", sending:"Sending…", errFill:"Enter your name and the equipment, tick both boxes and sign with your full name.", errMatch:"The signature must match your full name.", errNet:"We couldn't send it. Try again or message us on WhatsApp.",
-    okH:"All set, thank you!", okP:"We received your signature. We can now pick up your equipment. You'll get a copy if you left your email.", fine:"Fix & Go · fixandgopro.com" }
+      "I authorize Fix & Go to pick up my equipment, inspect it and give me a diagnosis. It may take photos of its condition.",
+      "The equipment is mine (or I have the owner's permission) and has no locks tied to someone else's accounts.",
+      "Nothing is repaired unless I approve the quote first. If the diagnosis has a cost, I'm told before it's charged.",
+      "It is received as-is. Fix & Go is not responsible for faults or damage it already had. I backed up my data and it is not responsible for data loss.",
+      "If Fix & Go damages something through its own fault, it is responsible up to the value of the equipment, as far as the law allows.",
+      "I'm notified by text or email at the contact I left."],
+    key:"<b>Unclaimed equipment:</b> when it's ready or I decline the repair, I have 30 days to pick it up. It is then stored 60 more days, with a second notice. If I still don't pick it up, it may be treated as abandoned and Fix & Go may recycle, donate or sell it to recover costs, as allowed by applicable law.",
+    go:"I agree and sign", sending:"Sending…", errFill:"Enter your name and the equipment.", errNet:"We couldn't send it. Try again or message us on WhatsApp.",
+    fine:"By tapping the button, my name becomes my electronic signature, with the same value as a paper signature. This agreement is governed by Alabama law.",
+    okH:"All set, thank you!", okP:"We received your signature. We can now pick up your equipment. If you left your email, you'll get a copy." }
 };
 const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
-const st = { name: (qs.get("n") || "").slice(0, 80), phone: (qs.get("p") || "").replace(/\D/g, "").slice(-10), email: "", items: (qs.get("e") || "").slice(0, 300), sig: "", agree: false, agree2: false, sent: false };
+const st = { name: (qs.get("n") || "").slice(0, 80), phone: (qs.get("p") || "").replace(/\D/g, "").slice(-10), email: "", items: (qs.get("e") || "").slice(0, 300), sent: false };
 
 function render(){
   const t = T[lang]; document.documentElement.lang = lang;
   document.querySelectorAll(".lang button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.l === lang)));
   const app = document.getElementById("app");
-  if (st.sent){ app.innerHTML = `<div class="card done"><div class="ck" aria-hidden="true">✓</div><h1>${t.okH}</h1><p>${t.okP}</p><p class="fine">${t.fine}</p></div>`; return; }
+  if (st.sent){ app.innerHTML = `<div class="card done"><div class="ck" aria-hidden="true">✓</div><h1>${t.okH}</h1><p>${t.okP}</p><p class="fine">Fix &amp; Go · fixandgopro.com</p></div>`; return; }
+  const needName = st.name.trim().length < 3, needEq = !st.items.trim();
   app.innerHTML = `<h1>${t.title}</h1><p class="sub">${t.sub}</p>
-  <div class="eq"><small>${t.eq}</small>${st.items ? `<b id="eqv">${esc(st.items)}</b>` : `<input type="text" id="eqi" placeholder="${esc(t.eqPh)}" maxlength="300" autocomplete="off">`}</div>
+  ${needEq ? `<div class="card"><label for="eqi" style="margin-top:0">${t.eq}</label><input type="text" id="eqi" placeholder="${esc(t.eqPh)}" maxlength="300" autocomplete="off" value="${esc(st.items)}"></div>` : `<div class="eq"><small>${t.eq}</small><b>${esc(st.items)}</b></div>`}
+  <div class="card"><ul class="t">${t.terms.map(x => `<li>${esc(x)}</li>`).join("")}</ul><div class="key">${t.key}</div></div>
   <form class="card" id="f" novalidate>
-    <label for="nm">${t.name}</label><input type="text" id="nm" autocomplete="name" maxlength="80" value="${esc(st.name)}">
-    <label for="ph">${t.phone}</label><input type="tel" id="ph" autocomplete="tel" inputmode="tel" maxlength="20" value="${esc(st.phone)}">
-    <label for="em">${t.email} <small>(${t.optional})</small></label><input type="email" id="em" autocomplete="email" maxlength="120" value="${esc(st.email)}">
-    <h2 style="font-size:1.1rem;margin:20px 0 0">${t.termsH}</h2><ol>${t.terms.map(x => `<li>${esc(x)}</li>`).join("")}</ol>
-    <label class="agree"><input type="checkbox" id="ag"${st.agree ? " checked" : ""}><span>${t.agree}</span></label>
-    <label class="agree"><input type="checkbox" id="ag2"${st.agree2 ? " checked" : ""}><span>${t.agree2}</span></label>
-    <label for="sg">${t.sign}</label><input type="text" id="sg" autocomplete="off" maxlength="80" value="${esc(st.sig)}"><div class="fine">${t.signHint}</div>
+    ${needName ? `<label for="nm" style="margin-top:0">${t.name}</label><input type="text" id="nm" autocomplete="name" maxlength="80" value="${esc(st.name)}">` : `<div style="font-weight:700;margin-bottom:8px">${esc(st.name)}</div>`}
+    <label for="em" style="margin-top:${needName ? 12 : 0}px">${t.email} <small style="font-weight:400;color:var(--mut)">(${t.optional})</small></label><input type="email" id="em" autocomplete="email" inputmode="email" maxlength="120" value="${esc(st.email)}">
     <input class="hp" type="text" id="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-    <button class="btn" type="submit" id="go">${t.send}</button><div class="msg" id="ms" role="status" aria-live="polite"></div>
-  </form><p class="fine">${t.fine}</p>`;
+    <div style="height:14px"></div><button class="btn" type="submit" id="go">${t.go}</button><div class="msg" id="ms" role="status" aria-live="polite"></div>
+    <div class="fine">${t.fine}</div>
+  </form>`;
   const $ = id => document.getElementById(id);
-  const sync = () => { st.name = $("nm").value; st.phone = $("ph").value; st.email = $("em").value; st.sig = $("sg").value; st.agree = $("ag").checked; st.agree2 = $("ag2").checked; if ($("eqi")) st.items = $("eqi").value; };
-  app.querySelectorAll("input").forEach(i => i.addEventListener("input", sync));
+  app.querySelectorAll("input").forEach(i => i.addEventListener("input", () => { if ($("nm")) st.name = $("nm").value; if ($("eqi")) st.items = $("eqi").value; st.email = $("em").value; }));
   $("f").addEventListener("submit", async e => {
-    e.preventDefault(); sync(); const ms = $("ms"); ms.className = "msg"; ms.textContent = "";
-    const items = st.items.trim(), name = st.name.trim(), sig = st.sig.trim();
-    if (name.length < 3 || !items || !st.agree || !st.agree2 || sig.length < 3){ ms.className = "msg err"; ms.textContent = t.errFill; return; }
-    if (sig.toLowerCase() !== name.toLowerCase()){ ms.className = "msg err"; ms.textContent = t.errMatch; $("sg").focus(); return; }
+    e.preventDefault(); const ms = $("ms"); ms.className = "msg"; ms.textContent = "";
+    if ($("nm")) st.name = $("nm").value; if ($("eqi")) st.items = $("eqi").value; st.email = $("em").value;
+    const name = st.name.trim(), items = st.items.trim();
+    if (name.length < 3 || !items){ ms.className = "msg err"; ms.textContent = t.errFill; return; }
     const go = $("go"); go.disabled = true; go.textContent = t.sending;
     try{
       if (!CONFIG.ENDPOINT) throw new Error("no endpoint");
-      const r = await fetch(CONFIG.ENDPOINT, { method: "POST", body: JSON.stringify({ type: "consent", lang, name, signature: sig, phone: st.phone.replace(/\D/g, ""), email: st.email.trim(), items, agree: true, agree2: true, terms: t.terms, ua: navigator.userAgent.slice(0, 200), v: "1", hp: $("hp").value }) });
+      const r = await fetch(CONFIG.ENDPOINT, { method: "POST", body: JSON.stringify({ type: "consent", lang, name, signature: name, phone: st.phone, email: st.email.trim(), items, agree: true, agree2: true, terms: t.terms.concat([t.key.replace(/<[^>]+>/g, "")]), ua: navigator.userAgent.slice(0, 200), v: "2", hp: $("hp").value }) });
       const j = await r.json(); if (!j.ok) throw new Error(j.error || "fail");
       st.sent = true; render(); window.scrollTo(0, 0);
-    }catch(err){ go.disabled = false; go.textContent = t.send; ms.className = "msg err"; ms.textContent = t.errNet; }
+    }catch(err){ go.disabled = false; go.textContent = t.go; ms.className = "msg err"; ms.textContent = t.errNet; }
   });
 }
 document.querySelectorAll(".lang button").forEach(b => b.addEventListener("click", () => { lang = b.dataset.l; render(); }));
