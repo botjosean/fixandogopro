@@ -50,6 +50,7 @@ function doPost(e) {
   try {
     const d = JSON.parse(e.postData.contents || '{}');
     if (d.hp) return out_({ ok: true });                       // bot atrapado
+    if (d.type === 'consent') return consent_(d);
     const phone = String(d.phone || '').replace(/\D/g, '').slice(-10);
     if (phone.length < 10) return out_({ ok: false, error: 'phone' });
     if (!throttle_()) return out_({ ok: false, error: 'busy' });
@@ -81,6 +82,35 @@ Mensaje${transcript ? ' (nota de voz transcrita)' : ''}: ${said}`;
   }
 }
 function doGet() { return out_({ ok: true, service: CFG.BRAND }); }
+
+/* ---------- consentimiento firmado en línea (recibo de equipo) ---------- */
+function consent_(d) {
+  const clean = (s, n) => String(s || '').replace(/[\u0000-\u001f]/g, ' ').trim().slice(0, n);
+  const name = clean(d.name, 80), items = clean(d.items, 400), signed = clean(d.signature, 80), email = clean(d.email, 120);
+  const phone = String(d.phone || '').replace(/\D/g, '').slice(-10);
+  if (name.length < 3 || signed.length < 3 || !items || !d.agree) return out_({ ok: false, error: 'data' });
+  if (signed.toLowerCase() !== name.toLowerCase()) return out_({ ok: false, error: 'match' });
+  if (!throttle_()) return out_({ ok: false, error: 'busy' });
+  const en = d.lang === 'en', when = Utilities.formatDate(new Date(), 'America/Chicago', "yyyy-MM-dd HH:mm 'CT'");
+  const body = `<div style="font-family:Arial,sans-serif;max-width:560px;color:#14213D">
+    <div style="background:#0E7C86;color:#fff;border-radius:18px;padding:16px 20px">
+      <div style="font-size:13px;opacity:.9">${en ? 'Signed equipment receipt' : 'Recibo de equipo firmado'} · ${esc_(when)}</div>
+      <div style="font-size:21px;font-weight:800;margin:4px 0">${esc_(items)}</div>
+      <div>${esc_(name)}${phone ? ' · ' + esc_(fmtPhone_(phone)) : ''}${email ? ' · ' + esc_(email) : ''}</div></div>
+    <p>${en
+      ? 'The customer authorized Fix &amp; Go to pick up and inspect the equipment above, agreed that no repair is done without approving a quote first, and accepted the terms shown on the form. Signed electronically by typing their full name.'
+      : 'El cliente autorizó a Fix &amp; Go a recoger y revisar el equipo indicado, aceptó que no se repara nada sin aprobar antes una cotización, y aceptó los términos del formulario. Firmado electrónicamente escribiendo su nombre completo.'}</p>
+    <p><b>${en ? 'Terms accepted' : 'Términos aceptados'}:</b></p><ul>${(d.terms || []).slice(0, 12).map(x => `<li>${esc_(clean(x, 400))}</li>`).join('')}</ul>
+    <p style="font-size:13px;color:#4A5873">${en ? 'Electronic signature' : 'Firma electrónica'}: <b>${esc_(signed)}</b> · ${esc_(when)}</p></div>`;
+  const subject = `✅ ${en ? 'Signed' : 'Firmado'} · ${items.slice(0, 50)} · ${name}`;
+  const owner = Session.getEffectiveUser().getEmail();
+  GmailApp.sendEmail(owner, subject, `${name} - ${items} - ${when}`, { htmlBody: body, name: 'Recibos ' + CFG.BRAND });
+  if (/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+    const opts = { htmlBody: body, name: CFG.BRAND }; if (hasAlias_()) opts.from = CFG.SUPPORT;
+    try { GmailApp.sendEmail(email, `${CFG.BRAND} · ${en ? 'Your signed receipt' : 'Tu recibo firmado'}`, `${items} - ${when}`, opts); } catch (e) { console.error(e); }
+  }
+  return out_({ ok: true });
+}
 
 /* ---------- 2) buzones y SMS de Google Voice ---------- */
 function processVoice() {
@@ -163,6 +193,7 @@ nombre, telefono, idioma ("es"|"en"), linea ("casa"|"tech"|"tramites"|"negocio"|
 pedido_original (lo que dijo, en su idioma), resumen (2-3 líneas en español), urgencia ("hoy"|"semana"|"flexible"),
 ubicacion, disponibilidad, soluciones (array, español), materiales (array), precio (SOLO un rango de esta lista o "a cotizar": ${JSON.stringify(CFG.PRICES)}),
 preguntas (array de lo que falta saber), respuesta_sms (mensaje corto listo para enviarle, en SU idioma, cálido y directo, hablando como empresa en plural ("nosotros", nunca "yo"), firmado "${CFG.SIGNATURE}", sin precio exacto),
+equipo (lista corta del equipo o aparato que hay que recoger para revisar, en el idioma del cliente, p. ej. "PS5 con control"; "" si el trabajo es en sitio o no hay equipo),
 pedido_es (lo que dijo el cliente traducido al español; si ya está en español, repítelo igual), respuesta_es (traducción al español de respuesta_sms, para que el dueño entienda qué se le envía; si ya está en español, repítela igual).
 Si un dato no aparece, usa "". No inventes.`;
   let t = {};
@@ -216,6 +247,7 @@ function email_(t) {
     ${n ? btn('sms:+' + n + '?&body=' + encodeURIComponent(t.respuesta_sms || ''), '💬 Enviar respuesta', '#2FB344') : ''}
     ${n ? btn('https://wa.me/' + n + '?text=' + encodeURIComponent(t.respuesta_sms || ''), 'WhatsApp', '#1FA855') : ''}
     ${t.audio ? btn(t.audio, '🎧 Escuchar nota', '#F2A541') : ''}
+    ${n && t.equipo ? btn('sms:+' + n + '?&body=' + encodeURIComponent(consentMsg_(t)), '📝 Enviar consentimiento', '#8A5CF6') : ''}
     ${t.draft ? btn(t.draft, '✉️ Ver borrador de respuesta', '#0E7C86') : ''}
   </div>
   ${t.draft && !t.alias ? `<p style="background:#FDF0DC;padding:10px 12px;border-radius:10px;font-size:13px">⚠️ Gmail no tiene el alias ${esc_(CFG.SUPPORT)} en "Enviar como": no se mandó acuse al cliente y el borrador saldría desde tu Gmail personal. Configúralo (README → Correo de empresa).</p>` : ''}
@@ -231,6 +263,15 @@ function email_(t) {
   const subject = `${U_[t.urgencia] || '⚪'} ${t.servicio || 'Nuevo contacto'} · ${t.ubicacion || 'sin zona'} · ${t.telefono || t.email || ''}`;
   const text = `${t.servicio} | ${t.nombre} ${t.telefono} | ${t.ubicacion}\n${t.resumen}\nPrecio: ${t.precio}\nRespuesta: ${t.respuesta_sms}`;
   GmailApp.sendEmail(Session.getEffectiveUser().getEmail(), subject, text, { htmlBody: html, name: 'Tickets ' + CFG.BRAND });
+}
+
+function consentMsg_(t) {
+  const en = t.idioma === 'en', first = String(t.nombre || '').trim().split(/\s+/)[0];
+  const url = 'https://fixandgopro.com/recibo/?l=' + (en ? 'en' : 'es') + '&n=' + encodeURIComponent(t.nombre || '') +
+    '&p=' + encodeURIComponent(String(t.telefono || '').replace(/\D/g, '').slice(-10)) + '&e=' + encodeURIComponent(t.equipo || '');
+  return en
+    ? `Hi${first ? ' ' + first : ''}! Before we pick up your equipment, please review and sign this short form (1 minute): ${url}\n${CFG.BRAND} Team`
+    : `¡Hola${first ? ' ' + first : ''}! Antes de recoger tu equipo, revisa y firma este formulario corto (1 minuto): ${url}\n${CFG.SIGNATURE}`;
 }
 
 /* ---------- utilidades ---------- */

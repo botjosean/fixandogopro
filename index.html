@@ -146,6 +146,11 @@ section{position:relative}
 @media (max-width:640px){.hot-c{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0 -20px;padding:2px 20px 4px}.hot-c::-webkit-scrollbar{display:none}.hot-c a{flex:none}}
 
 /* marquee */
+.pickup{background:var(--navy);color:#fff}
+.pk{display:flex;align-items:center;gap:14px;padding-top:16px;padding-bottom:16px}
+.pk .i{flex:none;width:30px;height:30px;stroke:var(--mango-2);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.pk p{margin:0;font-size:.98rem;line-height:1.45;color:#DCE6F2}
+.pk b{color:#fff;font-weight:800;margin-right:6px}
 .marq{background:var(--mango);color:#14213D;overflow:hidden;white-space:nowrap;padding:16px 0;font-family:"Bricolage Grotesque",system-ui;font-weight:800;font-size:clamp(1.05rem,2.4vw,1.4rem)}
 .marq-t{display:inline-flex;gap:34px;padding-right:34px;animation:marq 38s linear infinite}
 .marq-t span{display:inline-flex;align-items:center;gap:34px}
@@ -434,6 +439,13 @@ footer{background:var(--ink);color:rgba(255,255,255,.65);border-top:1px solid rg
 
 <div class="marq" aria-hidden="true"><div class="marq-t" id="marq"></div></div>
 
+<aside class="pickup" aria-label="Recojo gratis">
+  <div class="wrap pk">
+    <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7.5" cy="17.5" r="1.8"/><circle cx="17.5" cy="17.5" r="1.8"/></svg>
+    <p><b data-t="pk1">Recojo gratis de tu equipo</b> <span data-t="pk2">Celulares, laptops, consolas y más. Hasta 20 millas de Birmingham (35209). Te lo devolvemos listo.</span></p>
+  </div>
+</aside>
+
 <section class="sec" id="servicios">
   <div class="wrap">
     <div class="sec-h rv">
@@ -619,6 +631,7 @@ const L = {
     rot:["Tu casa con cámaras.","Tus taxes, listos.","Tu iPhone, como nuevo.","Tu PS5, sin ruido.","Tu PC, rápida otra vez.","Tus redes, vendiendo."],
     lead:"Un solo equipo para tu casa, tus trámites, tu tecnología, tus redes sociales y tus viajes. Nos escribes, te cotizamos y lo resolvemos.",
     cta1:"Cuéntanos qué necesitas", cta2:"Ver servicios", hot:"Lo más pedido",
+    pk1:"Recojo gratis de tu equipo", pk2:"Celulares, laptops, consolas y más. Hasta 20 millas de Birmingham (35209). Te lo devolvemos listo.",
     sEye:"Servicios", sH:"Todo lo que hacemos, en un solo lugar.", sP:"Cinco áreas, un solo número. Busca lo que necesitas o abre una categoría.",
     search:"¿Qué necesitas? Ej: iPhone, taxes, cuenta hackeada, Atlanta…", none:"No aparece aquí, pero escríbenos y lo vemos.",
     see:"Ver servicios", ask:"Pedir", tags:{casa:"Casa",tech:"Tecnología",tramites:"Trámites",negocio:"Redes sociales",viajes:"Viajes"},
@@ -692,6 +705,7 @@ const L = {
     rot:["Your home with cameras.","Your TV on the wall.","Your iPhone, like new.","Your PS5, quiet again.","Your PC, fast again.","Your social media, selling."],
     lead:"One team for your home, your tech, your social media, your rides and your paperwork. Message us, we quote, we get it done.",
     cta1:"Tell us what you need", cta2:"See services", hot:"Most requested",
+    pk1:"Free pickup of your device", pk2:"Phones, laptops, consoles and more. Within 20 miles of Birmingham (35209). Returned to you ready to go.",
     sEye:"Services", sH:"Everything we do, in one place.", sP:"Five areas, one number. Search for what you need or open a category.",
     search:"What do you need? E.g. iPhone, taxes, hacked account, Atlanta…", none:"Not listed? Message us anyway.",
     see:"See services", ask:"Request", tags:{casa:"Home",tech:"Tech",tramites:"Paperwork",negocio:"Social media",viajes:"Rides"},
