@@ -118,6 +118,22 @@ const HOT = {
     ["negocio","share","Social media"]
   ]
 };
+/* Precios "desde" (USD): ~30% por debajo del mercado de Birmingham. Número = por trabajo; [n,"mo"] = por mes. Sin entrada = sin precio.
+   Cambia un número aquí y se actualiza en todas las páginas. */
+const PRICE = {
+  "tech:phone":39, "tech:gamepad":59, "tech:laptop":55, "tech:mac":55, "tech:lock":69, "tech:mail":45, "tech:db":79,
+  "tech:shield":49, "tech:bug":65, "tech:joy":45, "tech:bolt":45, "tech:tablet":39, "tech:headset":39, "tech:cpu":99,
+  "tramites:receipt":99, "tramites:file":149, "tramites:card":15, "tramites:form":25,
+  "negocio:share":[299,"mo"], "negocio:pen":149, "negocio:trend":199, "negocio:mega":[199,"mo"], "negocio:globe":299,
+  "negocio:pin":99, "negocio:search":149, "negocio:bot":149, "negocio:shield":99,
+  "viajes:car":129, "viajes:plane":20, "viajes:heart":25, "viajes:translate":30, "viajes:bag":20,
+  "casa:cam":59, "casa:bell":49, "casa:wifi":59, "casa:shield":49, "casa:home":69, "casa:tv":99, "casa:sofa":45, "casa:frame":35
+};
+const priceOf = (k, ic, lang) => {
+  const v = PRICE[k + ":" + ic]; if (v == null) return "";
+  const [n, u] = Array.isArray(v) ? v : [v, ""];
+  return (lang === "en" ? "From $" : "Desde $") + n + (u === "mo" ? (lang === "en" ? "/mo" : "/mes") : "");
+};
 const hotIndex = (k, ic) => S[k].items.findIndex(x => x[0] === ic);
 
 const S = {

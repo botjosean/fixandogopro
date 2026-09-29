@@ -383,7 +383,9 @@ footer{background:var(--ink);color:rgba(255,255,255,.65);border-top:1px solid rg
   transform:translateY(140%);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
 .dock.show{transform:none}
 .dock .btn{flex:1;min-height:56px;box-shadow:0 18px 40px -14px rgba(11,21,38,.6)}
-.dock .btn-wa{flex:none;width:56px;padding:0}
+.dock .btn-wa,.dock .btn-call{flex:none;width:56px;padding:0}
+.btn-call{background:var(--navy);color:#fff}
+.btn-call .i{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 @media (min-width:640px){.dock{display:none}}
 
 /* aparición al hacer scroll */
@@ -393,6 +395,79 @@ footer{background:var(--ink);color:rgba(255,255,255,.65);border-top:1px solid rg
   *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
   .rv{opacity:1;transform:none}
 }
+
+/* ---- compacto: menos scroll ---- */
+.fold{margin-top:22px}
+.fold summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:0 22px;border-radius:999px;border:1.5px solid rgba(255,255,255,.35);color:#fff;font-weight:800;font-size:1rem;width:max-content;max-width:100%;margin:0 auto;transition:background .15s}
+.fold summary::-webkit-details-marker{display:none}
+.fold summary .i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .25s}
+.fold[open] summary .i{transform:rotate(180deg)}
+.fold summary:focus-visible{outline:3px solid var(--mango);outline-offset:3px}
+@media (hover:hover){.fold summary:hover{background:rgba(255,255,255,.1)}}
+@media (min-width:900px){.sec{padding:88px 0}.sec-h{margin-bottom:32px}}
+@media (max-width:719px){
+  .sec{padding:44px 0}
+  .sec-h{margin-bottom:22px}
+  .sec-h h2{font-size:clamp(1.7rem,7.4vw,2.2rem)}
+  .sec-h p{font-size:.98rem;margin-top:10px}
+  .card{padding:18px}
+  .card .ib{width:44px;height:44px;border-radius:14px;margin-bottom:12px}
+  .card .ib .i{width:22px;height:22px}
+  .card h3{font-size:1.25rem}
+  .card p{font-size:.93rem;margin-top:6px}
+  .card .count{top:18px;right:18px}
+  .bento{gap:10px}
+  .sos-c{padding:24px 20px;gap:18px}
+  .sos-t small{display:none}
+  .sos-t a{padding:12px 12px}
+  .map{display:none}
+  .how-g{gap:0}
+  .how-g > .rv:last-child{display:none}
+  .why{grid-template-columns:repeat(2,1fr);gap:10px}
+  .why div{padding:14px}
+  .why h3{font-size:.98rem}
+  .why p{display:none}
+  .zone p{font-size:.92rem}
+  .card:not(.open){display:grid;grid-template-columns:44px 1fr auto;align-items:center;gap:0 12px;padding:14px}
+  .card:not(.open) .ib{margin:0}
+  .card:not(.open) p,.card:not(.open) .more,.card:not(.open) .count,.card:not(.open) .acts .dark{display:none}
+  .card:not(.open) h3{font-size:1.02rem;line-height:1.25}
+  .card:not(.open) .acts{margin:0}
+  .card:not(.open) .pill{font-size:0;gap:0;padding:0 13px}
+}
+
+/* ---- selector de servicios ---- */
+.pk-tabs{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:14px}
+.pk-t{display:flex;flex-direction:column;align-items:center;gap:6px;min-height:78px;padding:12px 2px 10px;border-radius:20px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;font:inherit;transition:background .18s,border-color .18s,transform .18s,box-shadow .18s}
+.pk-t .ib{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:var(--tint);color:var(--sea);transition:background .18s,color .18s}
+.pk-t .ib .i{width:22px;height:22px}
+.pk-t b{font-size:clamp(.6rem,2.7vw,.74rem);font-weight:800;line-height:1.15;text-align:center;letter-spacing:-.01em}
+.pk-t[aria-selected=true]{background:var(--mango);border-color:var(--mango);color:#14213D;box-shadow:0 14px 30px -14px rgba(242,165,65,.9);transform:translateY(-2px)}
+.pk-t[aria-selected=true] .ib{background:rgba(255,255,255,.55);color:#14213D}
+.pk-t:focus-visible,.pk-panel .pill:focus-visible,.pk-list a:focus-visible{outline:3px solid var(--sea);outline-offset:2px}
+@media (hover:hover){.pk-t:not([aria-selected=true]):hover{border-color:var(--sea);transform:translateY(-2px)}}
+@media (min-width:720px){.pk-tabs{gap:12px}.pk-t{min-height:92px;padding:14px 6px 12px}.pk-t b{font-size:.92rem}.pk-t .ib{width:44px;height:44px}}
+@media (min-width:1024px){.pk-tabs{gap:14px}.pk-t{flex-direction:row;justify-content:center;gap:12px;min-height:72px;padding:12px 14px}.pk-t b{font-size:1rem}}
+.pk-panel{background:var(--card);border:1.5px solid var(--line);border-radius:26px;padding:22px;overflow:hidden}
+@media (max-width:400px){.pk-panel{padding:18px}.pk-list .pr{font-size:.7rem;padding:3px 7px}.pk-list a{gap:9px}}
+.pk-panel.swap{animation:pkIn .32s cubic-bezier(.2,.8,.2,1)}
+@keyframes pkIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.pk-panel.swap{animation:none}}
+.pk-head h3{font-size:1.35rem;font-weight:800;line-height:1.2}
+.pk-head p{color:var(--muted);margin:6px 0 0;font-size:.97rem}
+.pk-list{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:2px}
+@media (min-width:900px){.pk-list{grid-template-columns:repeat(2,1fr);column-gap:22px}}
+.pk-list li:nth-child(n+7){display:none}
+.pk-panel.all .pk-list li{display:list-item}
+.pk-list a{display:flex;align-items:center;gap:12px;padding:11px 10px;margin:0 -10px;border-radius:14px;text-decoration:none;color:var(--ink);min-height:56px}
+.pk-list a .i{width:22px;height:22px;color:var(--sea);flex:none}
+.pk-list a span{flex:1;min-width:0}
+.pk-list b{display:block;font-size:.98rem;line-height:1.3;overflow-wrap:anywhere}
+.pk-list small{display:block;color:var(--muted);font-size:.83rem;line-height:1.3;margin-top:2px}
+.pk-list .pr{flex:none;font-style:normal;font-weight:800;font-size:.76rem;color:var(--sea);background:rgba(14,124,134,.12);border-radius:999px;padding:3px 9px;white-space:nowrap}
+.pk-list a .go{width:18px;height:18px;color:var(--muted)}
+@media (hover:hover){.pk-list a:hover{background:var(--tint)}}
+.pk-acts{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
 </style>
 </head>
 <body>
@@ -451,14 +526,14 @@ footer{background:var(--ink);color:rgba(255,255,255,.65);border-top:1px solid rg
     <div class="sec-h rv">
       <span class="eyebrow" data-t="sEye">Servicios</span>
       <h2 data-t="sH">Todo lo que hacemos, en un solo lugar.</h2>
-      <p data-t="sP">Cinco áreas, un solo número. Busca lo que necesitas o abre una categoría.</p>
+      <p data-t="sP">Elige un área y toca el servicio que necesitas.</p>
     </div>
     <div class="finder rv">
       <label><svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>
         <input id="q" type="search" autocomplete="off" enterkeyhint="search"></label>
       <ul class="sugg" id="sugg" hidden></ul>
     </div>
-    <div class="bento" id="bento"></div>
+    <div class="picker" id="bento"></div>
   </div>
 </section>
 
@@ -503,6 +578,7 @@ footer{background:var(--ink);color:rgba(255,255,255,.65);border-top:1px solid rg
       </div>
     </div>
 
+    <details class="fold rv"><summary><span data-t="rMore">Ver qué incluye y cómo lo hacemos</span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
     <h3 class="soc-h3 rv" data-t="rInc">Todo lo que incluye</h3>
     <div class="deliv" id="deliv"></div>
 
@@ -512,6 +588,7 @@ footer{background:var(--ink);color:rgba(255,255,255,.65);border-top:1px solid rg
     <h3 class="soc-h3 rv" data-t="rWho">¿En qué punto está tu negocio?</h3>
     <div class="forwho" id="forwho"></div>
     <p class="soc-note rv" data-t="rNote">Sin paquetes cerrados: armamos el plan según tu negocio, tu ciudad y tu presupuesto. Trabajamos con negocios en Chamblee, Doraville, Atlanta, Birmingham y en todo Estados Unidos, en español y en inglés.</p>
+    </details>
   </div>
 </section>
 
@@ -614,10 +691,11 @@ footer{background:var(--ink);color:rgba(255,255,255,.65);border-top:1px solid rg
 
 <div class="dock" id="dock">
   <a class="btn btn-mango" href="/go/?m=1" data-href="msg"><span data-t="navCta">Escríbenos</span></a>
+  <a class="btn btn-call" id="dockCall" aria-label="Llamar / Call"><svg class="i" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg></a>
   <a class="btn btn-wa" id="dockWa" aria-label="WhatsApp"><svg class="i" viewBox="0 0 24 24"><path d="M3.5 20.5 5 16a8.5 8.5 0 1 1 3.3 3.3z"/><path d="M9 8.5c0 3.5 2.9 6.5 6.5 6.5l1-1.6-2-1-1 .8a4.3 4.3 0 0 1-2.2-2.2l.8-1-1-2z"/></svg></a>
 </div>
 
-<script src="/config.js?v=8"></script>
+<script src="/config.js?v=9"></script>
 <script>
 /* Si Cloudflare entrega un config.js viejo, la página sigue funcionando (sin "Lo más pedido" y con el orden de siempre) */
 if (typeof hotIndex === "undefined") window.hotIndex = (k, ic) => S[k].items.findIndex(x => x[0] === ic);
@@ -631,10 +709,11 @@ const L = {
     rot:["Tu casa con cámaras.","Tus taxes, listos.","Tu iPhone, como nuevo.","Tu PS5, sin ruido.","Tu PC, rápida otra vez.","Tus redes, vendiendo."],
     lead:"Un solo equipo para tu casa, tus trámites, tu tecnología, tus redes sociales y tus viajes. Nos escribes, te cotizamos y lo resolvemos.",
     cta1:"Cuéntanos qué necesitas", cta2:"Ver servicios", hot:"Lo más pedido",
+    rMore:"Ver qué incluye y cómo lo hacemos",
     pk1:"Recojo gratis de tu equipo", pk2:"Celulares, laptops, consolas y más. Hasta 20 millas de Birmingham (35209). Te lo devolvemos listo.",
-    sEye:"Servicios", sH:"Todo lo que hacemos, en un solo lugar.", sP:"Cinco áreas, un solo número. Busca lo que necesitas o abre una categoría.",
+    sEye:"Servicios", sH:"Todo lo que hacemos, en un solo lugar.", sP:"Elige un área y toca el servicio que necesitas.",
     search:"¿Qué necesitas? Ej: iPhone, taxes, cuenta hackeada, Atlanta…", none:"No aparece aquí, pero escríbenos y lo vemos.",
-    see:"Ver servicios", ask:"Pedir", tags:{casa:"Casa",tech:"Tecnología",tramites:"Trámites",negocio:"Redes sociales",viajes:"Viajes"},
+    see:"Ver servicios", ask:"Pedir", pkAll:"Ver los {n} servicios", pkLess:"Ver menos", tags:{casa:"Casa",tech:"Tecnología",tramites:"Trámites",negocio:"Redes sociales",viajes:"Viajes"},
     hEye:"Cómo funciona", hH:"Tres pasos. Cero complicaciones.",
     st1:"Nos escribes o mandas una nota de voz", st1p:"Desde la página, WhatsApp, texto o correo. En español o en inglés.",
     st2:"Te cotizamos", st2p:"Te respondemos el mismo día con el precio y el horario.",
@@ -705,10 +784,11 @@ const L = {
     rot:["Your home with cameras.","Your TV on the wall.","Your iPhone, like new.","Your PS5, quiet again.","Your PC, fast again.","Your social media, selling."],
     lead:"One team for your home, your tech, your social media, your rides and your paperwork. Message us, we quote, we get it done.",
     cta1:"Tell us what you need", cta2:"See services", hot:"Most requested",
+    rMore:"See what's included and how we work",
     pk1:"Free pickup of your device", pk2:"Phones, laptops, consoles and more. Within 20 miles of Birmingham (35209). Returned to you ready to go.",
     sEye:"Services", sH:"Everything we do, in one place.", sP:"Five areas, one number. Search for what you need or open a category.",
     search:"What do you need? E.g. iPhone, taxes, hacked account, Atlanta…", none:"Not listed? Message us anyway.",
-    see:"See services", ask:"Request", tags:{casa:"Home",tech:"Tech",tramites:"Paperwork",negocio:"Social media",viajes:"Rides"},
+    see:"See services", ask:"Request", pkAll:"See all {n} services", pkLess:"Show less", tags:{casa:"Home",tech:"Tech",tramites:"Paperwork",negocio:"Social media",viajes:"Rides"},
     hEye:"How it works", hH:"Three steps. Zero hassle.",
     st1:"Message us or send a voice note", st1p:"From our page, WhatsApp, text or email. In English or Spanish.",
     st2:"We send you a quote", st2p:"Same-day reply with price and schedule.",
@@ -798,6 +878,7 @@ function apply(){
   $("#q").placeholder = t.search; $("#q").setAttribute("aria-label", t.search);
   $("#footTxt").textContent = `${t.foot} · © ${new Date().getFullYear()}`;
   const wa = `https://wa.me/${CONFIG.PHONE}?text=${encodeURIComponent(t.waMsg)}`;
+  $("#dockCall").href = "tel:+" + CONFIG.PHONE;
   $("#dockWa").href = wa; $("#dockWa").target = "_blank"; $("#dockWa").rel = "noopener";
   const voiceOn = !!(CONFIG.ENDPOINT && navigator.mediaDevices && window.MediaRecorder);
   $("#ways").innerHTML = [
@@ -815,36 +896,31 @@ function apply(){
 }
 
 /* ---------- servicios ---------- */
-let openK = null;
+let pickK = null, pickAll = false;
 function renderBento(){
-  const t = L[lang];
-  $("#bento").innerHTML = cats().map(k => {
-    const c = S[k][lang], o = k===openK;
-    return `<article class="card rv in${o?" open":""}" data-k="${k}"><div class="glow"></div>
-      <span class="count">${S[k].items.length}</span>
-      <div class="ib">${ico(CAT_ICON[k])}</div>
-      <h3>${esc(c.t)}</h3><p>${esc(c.d)}</p>
-      <div class="more" id="m-${k}" ${o?"":"inert"}><div><ul>${S[k].items.map(([ic,v]) => `<li><a href="${go(`&s=${k}&i=${ic}`)}">${ico(ic)}<span>${esc(v[lang][0])}</span>${ico("right","go")}</a></li>`).join("")}</ul></div></div>
-      <div class="acts"><button type="button" class="pill" aria-expanded="${o}" aria-controls="m-${k}">${esc(t.see)} ${ico("down","chev")}</button>
-        <a class="pill dark" href="${go(`&s=${k}`)}">${esc(t.ask)} ${ico("right")}</a></div>
-    </article>`;
-  }).join("");
+  const t = L[lang], ks = cats();
+  if (!ks.includes(pickK)) pickK = ks[0];
+  const item = ([ic, v], k) => { const pr = typeof priceOf === "function" ? priceOf(k, ic, lang) : "";
+    return `<li><a href="${go(`&s=${k}&i=${ic}`)}">${ico(ic)}<span><b>${esc(v[lang][0])}</b>${v[lang][1] ? `<small>${esc(v[lang][1])}</small>` : ""}</span>${pr ? `<em class="pr">${esc(pr)}</em>` : ""}${ico("right","go")}</a></li>`; };
+  const k = pickK, c = S[k][lang], n = S[k].items.length, many = n > 6;
+  $("#bento").innerHTML = `<div class="pk-tabs" role="tablist" aria-label="${esc(t.sH)}">${ks.map(x => `<button type="button" role="tab" class="pk-t" id="pt-${x}" data-k="${x}" aria-selected="${x===k}" aria-controls="pp" tabindex="${x===k?0:-1}"><span class="ib">${ico(CAT_ICON[x])}</span><b>${esc(t.tags[x])}</b></button>`).join("")}</div>
+  <div class="pk-panel${pickAll?" all":""}" id="pp" role="tabpanel" aria-labelledby="pt-${k}">
+    <div class="pk-head"><h3>${esc(c.t)}</h3><p>${esc(c.d)}</p></div>
+    <ul class="pk-list">${S[k].items.map(it => item(it, k)).join("")}</ul>
+    <div class="pk-acts">${many ? `<button type="button" class="pill" id="pkMore" aria-expanded="${pickAll}">${esc(pickAll ? t.pkLess : t.pkAll.replace("{n}", n))}</button>` : ""}
+      <a class="pill dark" href="${go(`&s=${k}`)}">${esc(t.ask)} · ${esc(t.tags[k])} ${ico("right")}</a></div>
+  </div>`;
 }
 $("#bento").addEventListener("click", e => {
-  const b = e.target.closest("button.pill"); if (!b) return;
-  const card = b.closest(".card"), k = card.dataset.k;
-  openK = openK===k ? null : k;
-  $$(".card").forEach(c => { const o = c.dataset.k===openK; c.classList.toggle("open", o); c.querySelector(".more").inert = !o; c.querySelector("button.pill").setAttribute("aria-expanded", String(o)); });
+  const tb = e.target.closest(".pk-t");
+  if (tb){ if (tb.dataset.k !== pickK){ pickK = tb.dataset.k; pickAll = false; renderBento(); const p = $("#pp"); p.classList.add("swap"); } return; }
+  if (e.target.closest("#pkMore")){ pickAll = !pickAll; renderBento(); }
 });
-if (matchMedia("(hover:hover)").matches && !reduce) {
-  $("#bento").addEventListener("pointermove", e => {
-    const c = e.target.closest(".card"); if (!c) return;
-    const r = c.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
-    c.style.setProperty("--gx", x*100+"%"); c.style.setProperty("--gy", y*100+"%");
-    c.style.transform = `perspective(900px) rotateX(${(.5-y)*4}deg) rotateY(${(x-.5)*5}deg) translateY(-3px)`;
-  });
-  $("#bento").addEventListener("pointerout", e => { const c = e.target.closest(".card"); if (c && !c.contains(e.relatedTarget)) c.style.transform = ""; });
-}
+$("#bento").addEventListener("keydown", e => {
+  const tb = e.target.closest(".pk-t"); if (!tb || !/^Arrow(Left|Right)$/.test(e.key)) return;
+  const ks = cats(), i = ks.indexOf(tb.dataset.k), j = (i + (e.key === "ArrowRight" ? 1 : ks.length - 1)) % ks.length;
+  pickK = ks[j]; pickAll = false; renderBento(); $("#pt-" + pickK).focus(); e.preventDefault();
+});
 
 /* ---------- buscador ---------- */
 const sugg = $("#sugg");
