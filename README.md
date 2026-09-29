@@ -6,6 +6,7 @@ Sitio bilingüe (ES/EN) con dos páginas:
 |---|---|---|
 | **fixandgopro.com** | `index.html` | Página principal: moderna, animada, con todos los servicios, zonas y preguntas. |
 | **fixandgopro.com/go/** | `go/index.html` | Página del **QR / NFC** (placa del carro y tarjetas): elegir servicio, llamar, escribir o mandar nota de voz en 3 toques. |
+| **fixandgopro.com/tutorials/chatgpt/** | `tutorials/chatgpt/index.html` | Guía interactiva para clientes: instalar, configurar y pagar ChatGPT en el iPhone. Página aparte, el teléfono va escrito dentro (`PHONE`). Más guías van en `tutorials/<nombre>/`. |
 
 Los dos leen el teléfono, el correo y la lista de servicios de **`config.js`**. Se cambia ahí una sola vez.
 En `config.js` también está **`HOT`**, la lista "Lo más pedido" **por idioma** (`HOT.es` y `HOT.en`): los botones que salen primero en las dos páginas.
@@ -20,6 +21,7 @@ Los enlaces viejos del QR (`fixandgopro.com/?s=…`, `?lang=…`, `?z=…`) se r
 ```
 index.html                    Página principal (HTML + CSS + JS). Se publica tal cual, sin build.
 go/index.html                 Página del QR/NFC (la que abren la placa y las tarjetas)
+tutorials/chatgpt/            Guía interactiva de ChatGPT para clientes (index.html + og.png)
 config.js                     Teléfono, correo, Facebook, ENDPOINT y la lista de servicios (compartido)
 .assetsignore                 Lo que Cloudflare NO publica (solo se publican index.html, go/, config.js y logo/)
 logo/                         Logos (los usan las dos páginas y las tarjetas)
