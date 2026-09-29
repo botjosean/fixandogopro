@@ -105,6 +105,9 @@ h1,h2,.b{font-family:'Bricolage Grotesque','Arial Narrow',Arial,sans-serif}
 .plate h1{font-weight:800;font-size:34pt;line-height:.95;letter-spacing:-.03em;max-width:4.35in}
 .plate h2{font-weight:500;font-size:17pt;margin-top:.12in;opacity:.95}
 .plate .sv{font-size:13pt;margin-top:.22in;line-height:1.45;max-width:4.2in}
+.plate .pill{display:inline-block;margin:.1in 0 0;padding:.05in .18in;border-radius:999px;background:#fff;color:#14213D;font-weight:800;font-size:12.5pt}
+.plate .ph{font-family:'Bricolage Grotesque',Arial;font-weight:800;font-size:29pt;line-height:1;letter-spacing:-.02em;margin:.1in 0 0}
+.plate .phs{font-size:10.5pt;margin:.04in 0 0;opacity:.95}
 .duo{position:absolute;left:.45in;right:.45in;bottom:.5in;display:flex;gap:.3in;z-index:1}
 .col{flex:1;text-align:center}
 .col b{display:block;font-family:'Bricolage Grotesque',Arial;font-size:18pt;line-height:1;margin-top:.14in}
@@ -172,7 +175,8 @@ def plate():
     url = f"https://{a.domain}/go/" + (f"?z={a.zone}" if a.zone else "")
     return f'''<div class="pg plate"><div class="tx">
       <div class="logo">{logo_white()}</div><h1>Need a hand?<br>We&#39;ve got you.</h1><h2>Home, tech, social media, rides and paperwork.</h2>
-      <p class="sv">We come to you or help you online.<br>Se habla español.</p></div>
+      <p class="pill">Free pickup &middot; Recojo gratis</p>
+      <p class="ph">(205) 490-8033</p><p class="phs">Call or text &middot; Llama o escribe &middot; Se habla espa&ntilde;ol</p></div>
       <div class="duo">
         <div class="col"><div class="qrbig">{qr(url)}</div><b>Scan</b><span>Open your camera</span></div>
         <div class="col"><div class="tap">{PHONE_SVG}</div><b>Tap here</b><span>Hold your phone here</span></div>

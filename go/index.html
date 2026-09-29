@@ -250,6 +250,8 @@ textarea:focus,.in:focus{outline:none;border-color:var(--sea)}
 .fielderr{color:var(--rec);font-weight:700;font-size:.9rem;margin:-6px 0 12px}
 .in.bad{border-color:var(--rec);box-shadow:0 0 0 3px rgba(229,72,77,.15)}
 @media (prefers-reduced-motion:reduce){.wave.fake i,.dots i{animation:none}}
+.micerr{color:var(--rec);font-weight:700}
+.recinfo small{overflow-wrap:anywhere}
 </style>
 </head>
 <body>
@@ -288,7 +290,7 @@ const T = {
     when:"¿Para cuándo?", chips:["Hoy","Esta semana","Sin apuro"],
     voice:"Nota de voz", write:"Escribir",
     recIdle:"Toca para grabar (hasta 90 s)", recOn:"Grabando… toca para parar", recDone:"Lista. Escúchala o envíala.", redo:"Grabar de nuevo",
-    hold:"Mantén pulsado para hablar", release:"Suelta cuando termines", typing:"Escribiendo lo que dijiste", check:"Esto entendimos. Corrígelo si hace falta:", txFail:"No pudimos escribirlo. Puedes escribirlo tú o enviar solo la nota de voz.", reach:"¿A dónde te respondemos?", play:"Escuchar", pause:"Pausa",
+    hold:"Mantén pulsado para hablar", prep:"Preparando el micrófono…", slow:"Sigue enviando, un momento… no cierres esta pantalla.", tapstop:"Grabando… toca para parar", micHelp:"No pudimos usar el micrófono. Toca el candado junto a la dirección, permite el micrófono y vuelve a intentar. O escribe tu mensaje.", useText:"Escribir mi mensaje", release:"Suelta cuando termines", typing:"Escribiendo lo que dijiste", check:"Esto entendimos. Corrígelo si hace falta:", txFail:"No pudimos escribirlo. Puedes escribirlo tú o enviar solo la nota de voz.", reach:"¿A dónde te respondemos?", play:"Escuchar", pause:"Pausa",
     micErr:"No se pudo usar el micrófono. Escríbenos aquí abajo.",
     ph:"Cuéntanos qué necesitas. Ej: TV de 65\" en pared de drywall, en Hoover.",
     name:"Tu nombre", phone:"Tu teléfono",
@@ -310,7 +312,7 @@ const T = {
     when:"When do you need it?", chips:["Today","This week","No rush"],
     voice:"Voice note", write:"Type it",
     recIdle:"Tap to record (up to 90s)", recOn:"Recording… tap to stop", recDone:"Ready. Play it back or send it.", redo:"Record again",
-    hold:"Hold to talk", release:"Release when you're done", typing:"Writing what you said", check:"Here's what we heard. Fix it if needed:", txFail:"We couldn't write it out. You can type it or just send the voice note.", reach:"Where can we reply?", play:"Play", pause:"Pause",
+    hold:"Hold to talk", prep:"Getting the microphone ready…", slow:"Still sending, one moment… please keep this screen open.", tapstop:"Recording… tap to stop", micHelp:"We couldn't use the microphone. Tap the lock next to the address, allow the microphone and try again. Or type your message.", useText:"Type my message", release:"Release when you're done", typing:"Writing what you said", check:"Here's what we heard. Fix it if needed:", txFail:"We couldn't write it out. You can type it or just send the voice note.", reach:"Where can we reply?", play:"Play", pause:"Pause",
     micErr:"Couldn't use the microphone. Type your message below.",
     ph:"Tell us what you need. E.g. 65\" TV on drywall, in Hoover.",
     name:"Your name", phone:"Your phone",
@@ -512,16 +514,27 @@ function startWave(ms){
 }
 function stopWave(){ cancelAnimationFrame(raf); try{ actx && actx.close(); }catch(e){} actx = null; sheet.querySelectorAll("#wave i").forEach(b=>b.style.transform=""); const w = sheet.querySelector("#wave"); if (w) w.classList.remove("fake"); }
 function stopPlayer(){ if (player){ try{ player.pause(); }catch(e){} player = null; } }
+let held = false, sawPointer = false;
 function bindRec(b){
+  const toggle = ()=>{ if (rec && rec.state==="recording") rec.stop(); else startRec(); };
   b.oncontextmenu = e=>e.preventDefault();
   b.onpointerdown = e=>{
-    e.preventDefault(); try{ b.setPointerCapture(e.pointerId); }catch(_){}
-    if (rec && rec.state==="recording"){ rec.stop(); pressT = 0; return; }   // segundo toque: parar
-    pressT = Date.now(); startRec();
+    sawPointer = true; e.preventDefault(); try{ b.setPointerCapture(e.pointerId); }catch(_){}
+    if (rec && rec.state==="recording"){ rec.stop(); pressT = 0; held = false; return; }   // segundo toque: parar
+    pressT = Date.now(); held = true; startRec();
   };
-  const up = ()=>{ if (rec && rec.state==="recording" && pressT && Date.now()-pressT > 650) rec.stop(); pressT = 0; };  // si lo mantuvo pulsado, suelta = parar
+  const up = ()=>{ held = false; if (rec && rec.state==="recording" && pressT && Date.now()-pressT > 650) rec.stop(); else if (rec && rec.state==="recording") sheet.querySelector("#recS").textContent = T[lang].tapstop; pressT = 0; };
   b.onpointerup = up; b.onpointercancel = up;
-  b.onkeydown = e=>{ if (e.key==="Enter" || e.key===" "){ e.preventDefault(); if (rec && rec.state==="recording") rec.stop(); else startRec(); } };
+  b.onclick = e=>{ if (!sawPointer) toggle(); };            // navegadores sin eventos de puntero
+  b.onkeydown = e=>{ if (e.key==="Enter" || e.key===" "){ e.preventDefault(); toggle(); } };
+}
+function micFail(err){
+  const t = T[lang], S = sel => sheet.querySelector(sel);
+  const b = S("#rec"), box = S("#recbox"); if (!b) return;
+  b.classList.remove("on"); b.innerHTML = ico("mic"); box.classList.remove("rec");
+  S("#recT").textContent = "0:00";
+  S("#recS").innerHTML = `<span class="micerr">${t.micHelp}</span> <button type="button" class="link" id="useTxt">${t.useText}</button>`;
+  S("#useTxt").onclick = ()=>setMode("text");
 }
 async function startRec(){
   const t = T[lang], b = sheet.querySelector("#rec"), box = sheet.querySelector("#recbox");
@@ -529,26 +542,31 @@ async function startRec(){
   stopPlayer();
   if (st.audio){ URL.revokeObjectURL(st.audio.url); st.audio = null; sheet.querySelector("#recP").innerHTML = ""; }
   const owner = st; micBusy = true;
+  // respuesta inmediata: el boton reacciona al instante aunque el navegador tarde en dar el micrófono
+  b.classList.add("on"); b.innerHTML = ico("stop"); box.classList.add("rec"); sheet.querySelector("#txWrap").hidden = true; status("");
+  sheet.querySelector("#recS").textContent = t.prep; sheet.querySelector("#recT").textContent = "0:00";
   try{ stream = await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}}); }
-  catch(e){ micBusy = false; if (st===owner){ status(t.micErr, true); setMode("text"); } return; }
+  catch(e){ micBusy = false; if (st===owner) micFail(e); return; }
   micBusy = false;
   if (st!==owner){ stream.getTracks().forEach(x=>x.stop()); return; }
-  const mime = ["audio/webm;codecs=opus","audio/mp4","audio/webm"].find(m=>window.MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(m)) || "";
-  const chunks = [], mr = rec = new MediaRecorder(stream, mime?{mimeType:mime}:undefined), ms = stream;
-  const t0 = Date.now(); let secs = 0;
+  let mr, mime = "";
+  try{
+    mime = ["audio/webm;codecs=opus","audio/mp4","audio/webm"].find(m=>window.MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(m)) || "";
+    mr = rec = new MediaRecorder(stream, mime?{mimeType:mime}:undefined);
+  }catch(e){ stream.getTracks().forEach(x=>x.stop()); micFail(e); return; }
+  const chunks = [], ms = stream, t0 = Date.now(); let secs = 0;
   rec.ondataavailable = e=>{ if (e.data.size) chunks.push(e.data); };
   rec.onstop = ()=>{
     clearInterval(tick); stopWave(); ms.getTracks().forEach(x=>x.stop());
     if (st!==owner) return;
     const blob = new Blob(chunks, {type: mr.mimeType || mime || "audio/webm"});
     b.classList.remove("on"); b.innerHTML = ico("mic"); box.classList.remove("rec");
-    if (secs < .6){ sheet.querySelector("#recT").textContent = "0:00"; sheet.querySelector("#recS").textContent = t.hold; return; }  // toque sin hablar
+    if (secs < .6){ sheet.querySelector("#recT").textContent = "0:00"; sheet.querySelector("#recS").textContent = t.hold; return; }
     st.audio = {blob, url:URL.createObjectURL(blob), mime:blob.type, dur:Math.max(1, Math.round(secs))};
     transcribe(owner);
   };
-  rec.start(250); status("");
-  b.classList.add("on"); b.innerHTML = ico("stop"); box.classList.add("rec");
-  sheet.querySelector("#recS").textContent = t.release; sheet.querySelector("#txWrap").hidden = true;
+  rec.start(250);
+  sheet.querySelector("#recS").textContent = held ? t.release : t.tapstop;
   startWave(ms);
   tick = setInterval(()=>{ secs = (Date.now()-t0)/1000; sheet.querySelector("#recT").textContent = fmt(secs); if (secs>=90 && mr.state==="recording") mr.stop(); }, 200);
 }
@@ -558,8 +576,9 @@ async function transcribe(owner){
   S("#recS").innerHTML = `${t.typing}<span class="dots"><i></i><i></i><i></i></span>`; S("#recP").innerHTML = ""; S("#rec").disabled = true;
   let ok = false, text = "";
   try{
-    const r = await fetch(CONFIG.ENDPOINT, {method:"POST", body:JSON.stringify({type:"transcribe", mime:st.audio.mime, audio:await b64(st.audio.blob)})});
-    const j = await r.json(); ok = !!j.ok; text = (j.text||"").trim();
+    const ac = new AbortController(), to = setTimeout(()=>ac.abort(), 15000);
+    const r = await fetch(CONFIG.ENDPOINT, {method:"POST", signal:ac.signal, body:JSON.stringify({type:"transcribe", mime:st.audio.mime, audio:await b64(st.audio.blob)})});
+    clearTimeout(to); const j = await r.json(); ok = !!j.ok; text = (j.text||"").trim();
   }catch(e){}
   if (st!==owner) return;
   S("#rec").disabled = false;
@@ -596,6 +615,7 @@ async function send(){
   if (!hasMsg){ status(t.needMsg, true); return; }
   if (!CONFIG.ENDPOINT){ location.href = links[order()[0]](textMsg() + (st.name?` — ${st.name}`:"") + ` (${st.phone})`); return; }
   btn.disabled = true; btn.lastElementChild.textContent = t.sending; status("");
+  const slowT = setTimeout(()=>status(t.slow), 3500);
   try{
     const payload = { v:1, lang, zone:zk, service: s?s.name:t.general, line: st.k??"", when: st.when>=0?t.chips[st.when]:"",
       name:(st.name||"").trim().slice(0,80), phone, text:(st.text||"").trim().slice(0,2000), tx:(mode==="voice" && st.tx) ? 1 : 0,
@@ -603,9 +623,9 @@ async function send(){
       audio: mode==="voice" ? await b64(st.audio.blob) : "" };
     const r = await fetch(CONFIG.ENDPOINT, {method:"POST", body:JSON.stringify(payload)});
     const j = await r.json(); if (!j.ok) throw new Error(j.error||"fail");
-    st.sent = true; fillSheet();
+    clearTimeout(slowT); st.sent = true; fillSheet();
   }catch(e){
-    btn.disabled = false; btn.lastElementChild.textContent = t.send; status(t.fail, true);
+    clearTimeout(slowT); btn.disabled = false; btn.lastElementChild.textContent = t.send; status(t.fail, true);
   }
 }
 
