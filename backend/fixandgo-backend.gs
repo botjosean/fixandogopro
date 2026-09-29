@@ -51,6 +51,12 @@ function doPost(e) {
     const d = JSON.parse(e.postData.contents || '{}');
     if (d.hp) return out_({ ok: true });                       // bot atrapado
     if (d.type === 'consent') return consent_(d);
+    if (d.type === 'transcribe') {                              // solo escribe lo que se dijo; no crea ticket
+      if (!throttle_()) return out_({ ok: false, error: 'busy' });
+      const tb = Utilities.base64Decode(d.audio || '');
+      if (!tb.length || tb.length > 8 * 1024 * 1024) return out_({ ok: false, error: 'size' });
+      return out_({ ok: true, text: deepgram_(tb, String(d.mime || 'audio/webm').split(';')[0]) });
+    }
     const phone = String(d.phone || '').replace(/\D/g, '').slice(-10);
     if (phone.length < 10) return out_({ ok: false, error: 'phone' });
     if (!throttle_()) return out_({ ok: false, error: 'busy' });
@@ -63,7 +69,7 @@ function doPost(e) {
       const ext = mime.indexOf('mp4') > -1 ? 'm4a' : 'webm';
       const f = folder_().createFile(Utilities.newBlob(bytes, mime, `nota-${phone}-${Date.now()}.${ext}`));
       audioUrl = f.getUrl();
-      transcript = deepgram_(bytes, mime);
+      transcript = d.tx ? '' : deepgram_(bytes, mime);   // si el cliente ya mandó el texto transcrito, no se repite
     }
     const said = [d.text, transcript].filter(Boolean).join('\n') || '(nota de voz sin transcripción, escúchala)';
     const input = `Origen: página web (${d.zone === 'atl' ? 'zona Atlanta/Chamblee' : 'zona Birmingham'})

@@ -214,3 +214,25 @@ const S = {
     ]
   }
 };
+
+/* Fila de chips ("Lo más pedido") que se desplaza sola, despacio, y se detiene si la tocan. */
+function autoScrollChips(el){
+  if (!el || el.dataset.auto) return; el.dataset.auto = "1";
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  let pos = 0, dir = 1, paused = false, timer = 0, last = 0;
+  el.style.scrollSnapType = "none";
+  const pause = () => { paused = true; clearTimeout(timer); timer = setTimeout(() => { pos = el.scrollLeft; paused = false; }, 6000); };
+  ["pointerdown","touchstart","wheel","keydown","focusin"].forEach(ev => el.addEventListener(ev, pause, {passive:true}));
+  el.addEventListener("scroll", () => { if (paused) pos = el.scrollLeft; }, {passive:true});
+  const step = ts => {
+    if (!el.isConnected) return;
+    const max = el.scrollWidth - el.clientWidth;
+    if (!paused && max > 8 && document.visibilityState === "visible"){
+      pos += dir * Math.min(50, ts - last || 16) * 0.035;
+      if (pos >= max){ pos = max; dir = -1; } else if (pos <= 0){ pos = 0; dir = 1; }
+      el.scrollLeft = pos;
+    }
+    last = ts; requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}

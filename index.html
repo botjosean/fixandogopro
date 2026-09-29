@@ -144,7 +144,7 @@ section{position:relative}
 .hot-c a:hover{background:rgba(255,255,255,.14);border-color:rgba(242,165,65,.6);transform:translateY(-2px)}
 .hot-c .i{width:18px;height:18px;padding:4px;box-sizing:content-box;border-radius:50%;background:var(--mango);color:#14213D;stroke-width:2}
 .hot-c a:first-child .i{background:#E5484D;color:#fff}
-@media (max-width:640px){.hot-c{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0 -20px;padding:2px 20px 4px}.hot-c::-webkit-scrollbar{display:none}.hot-c a{flex:none}}
+@media (max-width:640px){.hot-c{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0 -20px;padding:2px 20px 4px;-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent)}.hot-c::-webkit-scrollbar{display:none}.hot-c a{flex:none}}
 
 /* marquee */
 .pickup{background:var(--navy);color:#fff}
@@ -785,7 +785,7 @@ footer{background:#0F1A30}
   <a class="btn btn-wa" id="dockWa" aria-label="WhatsApp"><svg class="i" viewBox="0 0 24 24"><path d="M3.5 20.5 5 16a8.5 8.5 0 1 1 3.3 3.3z"/><path d="M9 8.5c0 3.5 2.9 6.5 6.5 6.5l1-1.6-2-1-1 .8a4.3 4.3 0 0 1-2.2-2.2l.8-1-1-2z"/></svg></a>
 </div>
 
-<script src="/config.js?v=9"></script>
+<script src="/config.js?v=10"></script>
 <script>
 /* Si Cloudflare entrega un config.js viejo, la página sigue funcionando (sin "Lo más pedido" y con el orden de siempre) */
 if (typeof hotIndex === "undefined") window.hotIndex = (k, ic) => S[k].items.findIndex(x => x[0] === ic);
@@ -986,6 +986,7 @@ function apply(){
   const hot = hotList(); $("#hot").parentElement.hidden = !hot.length;
   $("#hot").innerHTML = hot.map(([k,ic,n]) => `<a href="${go(`&s=${k}&i=${ic}`)}">${ico(ic)}<span>${esc(n)}</span></a>`).join("");
   renderBento(); renderSocial(); startRot();
+  autoScrollChips($("#hot"));
   const f = $("#demo"); if (f.src && !f.src.endsWith(go())) f.src = go();
 }
 

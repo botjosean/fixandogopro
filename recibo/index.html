@@ -49,7 +49,7 @@ input:focus-visible,button:focus-visible{outline:3px solid var(--mango);outline-
 <header><div class="in"><img src="/logo/logo-mark-192.png" alt=""><b>Fix &amp; Go</b>
   <div class="lang" role="group" aria-label="Language"><button type="button" data-l="es" aria-pressed="true">ES</button><button type="button" data-l="en" aria-pressed="false">EN</button></div></div></header>
 <main class="wrap" id="app"></main>
-<script src="/config.js?v=9"></script>
+<script src="/config.js?v=10"></script>
 <script>
 const qs = new URLSearchParams(location.search);
 let lang = qs.get("l") === "en" ? "en" : (qs.get("l") === "es" ? "es" : (/^es/i.test(navigator.language) ? "es" : "en"));

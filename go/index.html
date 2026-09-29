@@ -114,7 +114,7 @@ header{display:flex;justify-content:space-between;align-items:center;padding:14p
 .go{width:30px;height:30px;padding:6px;border-radius:50%;background:var(--mango);color:#14213D;stroke-width:2.4}
 .hot{margin:0 0 14px}
 .hot-l{margin:0 0 8px;font-size:.78rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
-.hot-c{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin:0 -18px;padding:2px 18px 4px;scroll-padding-inline:18px;scroll-snap-type:x proximity}
+.hot-c{-webkit-mask-image:linear-gradient(90deg,#000 90%,transparent);mask-image:linear-gradient(90deg,#000 90%,transparent);display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin:0 -18px;padding:2px 18px 4px;scroll-padding-inline:18px;scroll-snap-type:x proximity}
 .hot-c::-webkit-scrollbar{display:none}
 .hotb{flex:none;display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 14px 0 10px;border-radius:999px;background:var(--card);border:1.5px solid var(--line);font-weight:700;font-size:.9rem;white-space:nowrap;scroll-snap-align:start;transition:border-color .15s,transform .12s}
 .hotb:active{transform:scale(.96)}
@@ -221,6 +221,35 @@ textarea:focus,.in:focus{outline:none;border-color:var(--sea)}
 .row .ri{width:38px;height:38px;padding:8px;box-sizing:border-box;border-radius:12px;background:var(--c1);color:var(--c2)}
 .row .pr{background:var(--c1);color:var(--c2)}
 .n{background:#F2EBDD}
+
+/* ---- nota de voz: mantener pulsado, ondas y reproductor propio ---- */
+.recbtn{width:84px;height:84px;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;box-shadow:0 14px 26px -14px rgba(242,165,65,.9)}
+.recbtn .i{width:34px;height:34px}
+.recbtn.on{box-shadow:0 14px 26px -14px rgba(229,72,77,.9)}
+.recbox{align-items:center;background:var(--tint);border:1.5px solid var(--line)}
+.recbox.rec{border-color:var(--rec);background:#FFF1EE}
+.recinfo b{font-size:1.7rem}
+.wave{display:flex;align-items:center;gap:3px;height:0;margin-top:0;overflow:hidden;opacity:0;transition:height .2s,opacity .2s,margin .2s}
+.recbox.rec .wave{height:38px;margin-top:8px;opacity:1}
+.wave i{flex:1;max-width:6px;height:100%;background:var(--rec);border-radius:3px;transform:scaleY(.1);transition:transform .07s linear}
+.wave.fake i{animation:wv .9s ease-in-out infinite alternate}
+.wave.fake i:nth-child(3n){animation-delay:.15s}.wave.fake i:nth-child(3n+1){animation-delay:.3s}
+@keyframes wv{from{transform:scaleY(.15)}to{transform:scaleY(.85)}}
+.dots{display:inline-flex;gap:3px;margin-left:6px;vertical-align:middle}
+.dots i{width:5px;height:5px;border-radius:50%;background:var(--sea);animation:dt 1s infinite}
+.dots i:nth-child(2){animation-delay:.15s}.dots i:nth-child(3){animation-delay:.3s}
+@keyframes dt{0%,80%,100%{opacity:.25;transform:translateY(0)}40%{opacity:1;transform:translateY(-3px)}}
+.play{display:flex;align-items:center;gap:10px;margin-top:8px}
+.play button{width:44px;height:44px;border-radius:50%;background:var(--sea);color:#fff;display:grid;place-items:center;flex:none}
+.play button .i{width:20px;height:20px}
+.pbar{flex:1;height:8px;border-radius:99px;background:rgba(20,33,61,.12);overflow:hidden}
+.pbar i{display:block;height:100%;width:0;background:var(--sea);border-radius:99px}
+#txWrap{margin-bottom:12px}
+#txWrap textarea{min-height:88px;background:#fff}
+.hint{color:var(--muted);font-size:.84rem;margin:6px 0 0}
+.fielderr{color:var(--rec);font-weight:700;font-size:.9rem;margin:-6px 0 12px}
+.in.bad{border-color:var(--rec);box-shadow:0 0 0 3px rgba(229,72,77,.15)}
+@media (prefers-reduced-motion:reduce){.wave.fake i,.dots i{animation:none}}
 </style>
 </head>
 <body>
@@ -243,7 +272,7 @@ textarea:focus,.in:focus{outline:none;border-color:var(--sea)}
   <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="shTitle" tabindex="-1"></div>
 </div>
 
-<script src="/config.js?v=9"></script>
+<script src="/config.js?v=10"></script>
 <script>
 /* Si Cloudflare entrega un config.js viejo, la página sigue funcionando (sin "Lo más pedido" y con el orden de siempre) */
 if (typeof hotIndex === "undefined") window.hotIndex = (k, ic) => S[k].items.findIndex(x => x[0] === ic);
@@ -259,6 +288,7 @@ const T = {
     when:"¿Para cuándo?", chips:["Hoy","Esta semana","Sin apuro"],
     voice:"Nota de voz", write:"Escribir",
     recIdle:"Toca para grabar (hasta 90 s)", recOn:"Grabando… toca para parar", recDone:"Lista. Escúchala o envíala.", redo:"Grabar de nuevo",
+    hold:"Mantén pulsado para hablar", release:"Suelta cuando termines", typing:"Escribiendo lo que dijiste", check:"Esto entendimos. Corrígelo si hace falta:", txFail:"No pudimos escribirlo. Puedes escribirlo tú o enviar solo la nota de voz.", reach:"¿A dónde te respondemos?", play:"Escuchar", pause:"Pausa",
     micErr:"No se pudo usar el micrófono. Escríbenos aquí abajo.",
     ph:"Cuéntanos qué necesitas. Ej: TV de 65\" en pared de drywall, en Hoover.",
     name:"Tu nombre", phone:"Tu teléfono",
@@ -280,6 +310,7 @@ const T = {
     when:"When do you need it?", chips:["Today","This week","No rush"],
     voice:"Voice note", write:"Type it",
     recIdle:"Tap to record (up to 90s)", recOn:"Recording… tap to stop", recDone:"Ready. Play it back or send it.", redo:"Record again",
+    hold:"Hold to talk", release:"Release when you're done", typing:"Writing what you said", check:"Here's what we heard. Fix it if needed:", txFail:"We couldn't write it out. You can type it or just send the voice note.", reach:"Where can we reply?", play:"Play", pause:"Pause",
     micErr:"Couldn't use the microphone. Type your message below.",
     ph:"Tell us what you need. E.g. 65\" TV on drywall, in Hoover.",
     name:"Your name", phone:"Your phone",
@@ -426,14 +457,19 @@ function fillSheet(){
       <button type="button" role="tab" data-m="voice" aria-selected="${mode==="voice"}">${ico("mic")}${t.voice}</button>
       <button type="button" role="tab" data-m="text" aria-selected="${mode==="text"}">${ico("pen")}${t.write}</button></div>`:""}
     <div id="pVoice" ${mode==="voice"?"":"hidden"}>
-      <div class="recbox"><button type="button" class="recbtn" id="rec" aria-label="${t.voice}">${ico("mic")}</button>
-        <div class="recinfo"><b id="recT">0:00</b><small id="recS">${t.recIdle}</small><div id="recP"></div></div></div>
+      <div class="recbox" id="recbox">
+        <button type="button" class="recbtn" id="rec" aria-label="${t.hold}">${ico("mic")}</button>
+        <div class="recinfo"><b id="recT">0:00</b><small id="recS">${t.hold}</small>
+          <div class="wave" id="wave" aria-hidden="true">${"<i></i>".repeat(26)}</div><div id="recP"></div></div></div>
+      <div id="txWrap" hidden><label class="lbl" for="tx">${t.check}</label><textarea id="tx" rows="3" aria-label="${esc(t.check)}">${esc(st.text)}</textarea><p class="hint" id="txHint" hidden>${t.txFail}</p></div>
     </div>
     <div id="pText" ${mode==="text"?"":"hidden"}><textarea id="txt" placeholder="${esc(t.ph)}" aria-label="${esc(t.write)}">${esc(st.text)}</textarea></div>
+    <p class="lbl">${t.reach}</p>
     <div class="two">
       <input class="in" id="nm" type="text" autocomplete="given-name" placeholder="${esc(t.name)}" aria-label="${esc(t.name)}" value="${esc(st.name)}">
       <input class="in" id="ph" type="tel" inputmode="tel" autocomplete="tel" placeholder="${esc(t.phone)}" aria-label="${esc(t.phone)}" value="${esc(st.phone)}">
     </div>
+    <p class="fielderr" id="phErr" role="alert" hidden></p>
     <input class="hp" id="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
     <button type="button" class="btn send" id="send">${ico("msg")}<span>${t.send}</span></button>
     <p class="status" id="status" role="status"></p>
@@ -446,10 +482,11 @@ function fillSheet(){
     st.when = st.when===+c.dataset.j ? -1 : +c.dataset.j;
     sheet.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed", String(+x.dataset.j===st.when))); updateLinks(); };
   if (voice) $(".segc").onclick = e=>{ const b = e.target.closest("[data-m]"); if (!b) return; setMode(b.dataset.m); };
-  $("#rec").onclick = toggleRec;
-  $("#txt").oninput = e=>{ st.text = e.target.value; updateLinks(); };
+  bindRec($("#rec"));
+  $("#txt").oninput = e=>{ st.text = e.target.value; const tx = $("#tx"); if (tx) tx.value = st.text; updateLinks(); };
+  $("#tx").oninput = e=>{ st.text = e.target.value; $("#txt").value = st.text; updateLinks(); };
   $("#nm").oninput = e=>{ st.name = e.target.value; };
-  $("#ph").oninput = e=>{ st.phone = e.target.value; };
+  $("#ph").oninput = e=>{ st.phone = e.target.value; e.target.classList.remove("bad"); const pe = $("#phErr"); pe.hidden = true; };
   $("#send").onclick = send;
 }
 function setMode(m){
@@ -460,38 +497,90 @@ function setMode(m){
 function updateLinks(){ const m = textMsg(); sheet.querySelectorAll("#direct a").forEach(a=>a.href = links[a.dataset.c](m)); }
 function status(msg, err){ const s = sheet.querySelector("#status"); if (s){ s.textContent = msg||""; s.className = "status"+(err?" err":""); } }
 
-async function toggleRec(){
-  const t = T[lang], b = sheet.querySelector("#rec");
-  if (rec && rec.state==="recording"){ rec.stop(); return; }
-  if (micBusy) return;  // ya se está pidiendo el micrófono (doble toque)
+let actx = null, raf = 0, pressT = 0, player = null;
+function startWave(ms){
+  const bars = [...sheet.querySelectorAll("#wave i")], wv = sheet.querySelector("#wave");
+  try{
+    actx = new (window.AudioContext||window.webkitAudioContext)();
+    const src = actx.createMediaStreamSource(ms), an = actx.createAnalyser(); an.fftSize = 64; src.connect(an);
+    const data = new Uint8Array(an.frequencyBinCount);
+    const loop = ()=>{ an.getByteFrequencyData(data);
+      bars.forEach((b,i)=>{ const v = data[Math.min(data.length-1, Math.floor(i*data.length/bars.length))]/255; b.style.transform = `scaleY(${Math.max(.1, Math.min(1, v*1.25))})`; });
+      raf = requestAnimationFrame(loop); };
+    loop();
+  }catch(e){ wv.classList.add("fake"); }
+}
+function stopWave(){ cancelAnimationFrame(raf); try{ actx && actx.close(); }catch(e){} actx = null; sheet.querySelectorAll("#wave i").forEach(b=>b.style.transform=""); const w = sheet.querySelector("#wave"); if (w) w.classList.remove("fake"); }
+function stopPlayer(){ if (player){ try{ player.pause(); }catch(e){} player = null; } }
+function bindRec(b){
+  b.oncontextmenu = e=>e.preventDefault();
+  b.onpointerdown = e=>{
+    e.preventDefault(); try{ b.setPointerCapture(e.pointerId); }catch(_){}
+    if (rec && rec.state==="recording"){ rec.stop(); pressT = 0; return; }   // segundo toque: parar
+    pressT = Date.now(); startRec();
+  };
+  const up = ()=>{ if (rec && rec.state==="recording" && pressT && Date.now()-pressT > 650) rec.stop(); pressT = 0; };  // si lo mantuvo pulsado, suelta = parar
+  b.onpointerup = up; b.onpointercancel = up;
+  b.onkeydown = e=>{ if (e.key==="Enter" || e.key===" "){ e.preventDefault(); if (rec && rec.state==="recording") rec.stop(); else startRec(); } };
+}
+async function startRec(){
+  const t = T[lang], b = sheet.querySelector("#rec"), box = sheet.querySelector("#recbox");
+  if (micBusy || (rec && rec.state==="recording")) return;
+  stopPlayer();
   if (st.audio){ URL.revokeObjectURL(st.audio.url); st.audio = null; sheet.querySelector("#recP").innerHTML = ""; }
   const owner = st; micBusy = true;
   try{ stream = await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}}); }
   catch(e){ micBusy = false; if (st===owner){ status(t.micErr, true); setMode("text"); } return; }
   micBusy = false;
-  if (st!==owner){ stream.getTracks().forEach(x=>x.stop()); return; }  // la hoja se cerró mientras pedía permiso
+  if (st!==owner){ stream.getTracks().forEach(x=>x.stop()); return; }
   const mime = ["audio/webm;codecs=opus","audio/mp4","audio/webm"].find(m=>window.MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(m)) || "";
   const chunks = [], mr = rec = new MediaRecorder(stream, mime?{mimeType:mime}:undefined), ms = stream;
   const t0 = Date.now(); let secs = 0;
   rec.ondataavailable = e=>{ if (e.data.size) chunks.push(e.data); };
   rec.onstop = ()=>{
-    clearInterval(tick); ms.getTracks().forEach(x=>x.stop());
-    if (st!==owner) return;  // la hoja se cerró mientras grababa: descartar
+    clearInterval(tick); stopWave(); ms.getTracks().forEach(x=>x.stop());
+    if (st!==owner) return;
     const blob = new Blob(chunks, {type: mr.mimeType || mime || "audio/webm"});
-    st.audio = {blob, url:URL.createObjectURL(blob), mime:blob.type, dur:Math.round(secs)};
-    b.classList.remove("on"); b.innerHTML = ico("mic"); showRecDone();
+    b.classList.remove("on"); b.innerHTML = ico("mic"); box.classList.remove("rec");
+    if (secs < .6){ sheet.querySelector("#recT").textContent = "0:00"; sheet.querySelector("#recS").textContent = t.hold; return; }  // toque sin hablar
+    st.audio = {blob, url:URL.createObjectURL(blob), mime:blob.type, dur:Math.max(1, Math.round(secs))};
+    transcribe(owner);
   };
   rec.start(250); status("");
-  b.classList.add("on"); b.innerHTML = ico("stop");
-  sheet.querySelector("#recS").textContent = t.recOn;
+  b.classList.add("on"); b.innerHTML = ico("stop"); box.classList.add("rec");
+  sheet.querySelector("#recS").textContent = t.release; sheet.querySelector("#txWrap").hidden = true;
+  startWave(ms);
   tick = setInterval(()=>{ secs = (Date.now()-t0)/1000; sheet.querySelector("#recT").textContent = fmt(secs); if (secs>=90 && mr.state==="recording") mr.stop(); }, 200);
 }
-function showRecDone(){
-  const t = T[lang];
-  sheet.querySelector("#recT").textContent = fmt(st.audio.dur);
-  sheet.querySelector("#recS").textContent = t.recDone;
-  sheet.querySelector("#recP").innerHTML = `<audio controls src="${st.audio.url}"></audio><button type="button" class="link" id="redo">${t.redo}</button>`;
-  sheet.querySelector("#redo").onclick = toggleRec;
+async function transcribe(owner){
+  const t = T[lang], S = sel => sheet.querySelector(sel);
+  S("#recT").textContent = fmt(st.audio.dur);
+  S("#recS").innerHTML = `${t.typing}<span class="dots"><i></i><i></i><i></i></span>`; S("#recP").innerHTML = ""; S("#rec").disabled = true;
+  let ok = false, text = "";
+  try{
+    const r = await fetch(CONFIG.ENDPOINT, {method:"POST", body:JSON.stringify({type:"transcribe", mime:st.audio.mime, audio:await b64(st.audio.blob)})});
+    const j = await r.json(); ok = !!j.ok; text = (j.text||"").trim();
+  }catch(e){}
+  if (st!==owner) return;
+  S("#rec").disabled = false;
+  if (text){ st.text = text; st.tx = 1; }
+  showRecDone(ok && !!text);
+}
+function showRecDone(good){
+  const t = T[lang], S = sel => sheet.querySelector(sel), d = st.audio.dur;
+  S("#recT").textContent = fmt(d); S("#recS").textContent = t.recDone;
+  S("#recP").innerHTML = `<div class="play"><button type="button" id="pl" aria-label="${t.play}"><svg class="i" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor" stroke="none"/></svg></button><span class="pbar"><i id="pg"></i></span></div><button type="button" class="link" id="redo">${t.redo}</button>`;
+  S("#redo").onclick = ()=>{ stopPlayer(); startRec(); };
+  const pl = S("#pl"), pg = S("#pg");
+  const icoPlay = '<svg class="i" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor" stroke="none"/></svg>', icoPause = '<svg class="i" viewBox="0 0 24 24"><path d="M8 5h3v14H8zM13 5h3v14h-3z" fill="currentColor" stroke="none"/></svg>';
+  pl.onclick = ()=>{
+    if (player && !player.paused){ player.pause(); pl.innerHTML = icoPlay; pl.setAttribute("aria-label", t.play); return; }
+    if (!player){ player = new Audio(st.audio.url); player.ontimeupdate = ()=>{ pg.style.width = Math.min(100, player.currentTime/d*100) + "%"; }; player.onended = ()=>{ pl.innerHTML = icoPlay; pg.style.width = "0"; player = null; }; }
+    player.play().catch(()=>{}); pl.innerHTML = icoPause; pl.setAttribute("aria-label", t.pause);
+  };
+  S("#txWrap").hidden = false; S("#tx").value = st.text || ""; S("#txHint").hidden = !!good;
+  updateLinks();
+  const snd = S("#send"); if (snd && snd.scrollIntoView) snd.scrollIntoView({block:"nearest", behavior:"smooth"});
 }
 const b64 = blob => new Promise((ok,ko)=>{ const r = new FileReader(); r.onload = ()=>ok(String(r.result).split(",")[1]); r.onerror = ko; r.readAsDataURL(blob); });
 
@@ -499,13 +588,17 @@ async function send(){
   const t = T[lang], s = svc(), btn = sheet.querySelector("#send");
   const phone = (st.phone||"").replace(/\D/g,""), mode = canVoice() ? st.mode : "text";
   const hasMsg = mode==="voice" ? !!st.audio : !!(st.text||"").trim();
-  if (phone.length<10){ status(t.needPhone, true); sheet.querySelector("#ph").focus(); return; }
+  if (phone.length<10){
+    const ph = sheet.querySelector("#ph"), pe = sheet.querySelector("#phErr");
+    pe.textContent = t.needPhone; pe.hidden = false; ph.classList.add("bad");
+    ph.scrollIntoView({block:"center", behavior:"smooth"}); ph.focus({preventScroll:true}); return;
+  }
   if (!hasMsg){ status(t.needMsg, true); return; }
   if (!CONFIG.ENDPOINT){ location.href = links[order()[0]](textMsg() + (st.name?` — ${st.name}`:"") + ` (${st.phone})`); return; }
   btn.disabled = true; btn.lastElementChild.textContent = t.sending; status("");
   try{
     const payload = { v:1, lang, zone:zk, service: s?s.name:t.general, line: st.k??"", when: st.when>=0?t.chips[st.when]:"",
-      name:(st.name||"").trim().slice(0,80), phone, text:(st.text||"").trim().slice(0,2000),
+      name:(st.name||"").trim().slice(0,80), phone, text:(st.text||"").trim().slice(0,2000), tx:(mode==="voice" && st.tx) ? 1 : 0,
       hp: sheet.querySelector("#hp").value, mime: mode==="voice"?st.audio.mime:"", dur: mode==="voice"?st.audio.dur:0,
       audio: mode==="voice" ? await b64(st.audio.blob) : "" };
     const r = await fetch(CONFIG.ENDPOINT, {method:"POST", body:JSON.stringify(payload)});
@@ -527,6 +620,7 @@ function openSheet(k,i,from){
 function closeSheet(fromPop){
   if (!st) return;
   if (rec && rec.state==="recording") rec.stop();
+  stopPlayer(); stopWave();
   root.classList.remove("open"); document.documentElement.classList.remove("lock");
   st = null;
   if (fromPop!==true && location.hash==="#mensaje") history.back();
@@ -548,6 +642,8 @@ document.querySelectorAll(".lang button").forEach(b=>b.addEventListener("click",
 }));
 if (location.hash==="#mensaje") history.replaceState(null,"",location.search);
 render();
+new MutationObserver(() => { const el = document.querySelector(".hot-c"); if (el && !el.dataset.auto) autoScrollChips(el); }).observe(document.body, {childList:true, subtree:true});
+autoScrollChips(document.querySelector(".hot-c"));
 if (qs.has("m")) openSheet(null, null);   // /go/?m=1 abre directo "Déjanos un mensaje" (lo usa la página principal)
 else if (seg && qs.get("i")) { const i = hotIndex(seg, qs.get("i")); if (i > -1) openSheet(seg, i); }   // /go/?s=tech&i=lock abre ese servicio
 </script>
