@@ -6,7 +6,7 @@
 /* ================= CONFIGURA AQUÍ ================= */
 const CONFIG = {
   PHONE:    "12054908033",   // tu número con código de país, sin + ni espacios
-  FB_PAGE:  "",              // usuario de tu página de Facebook (m.me/usuario). Vacío = sin botón Messenger
+  FB_PAGE:  "61594526717885",            // usuario de tu página de Facebook (m.me/usuario). Vacío = sin botón Messenger
   EMAIL:    "info@fixandgopro.com",   // correo de empresa (Cloudflare Email Routing → tu Gmail)
   ENDPOINT: ""               // URL de la App web de Apps Script (fixandgo-backend.gs). Vacío = sin notas de voz
 };
