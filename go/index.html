@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
 <meta name="theme-color" content="#0E7C86">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="format-detection" content="telephone=no">
@@ -35,7 +36,7 @@
   padding-top:env(safe-area-inset-top,0px);
   padding-bottom:env(safe-area-inset-bottom,0px);
 }
-@media (prefers-color-scheme:dark){
+@media (prefers-color-scheme:none){
   :root:not([data-theme="light"]){
     --paper:#0D1728; --card:#15223A; --line:#24365A; --text:#EEF3F7; --muted:#A6B4C9;
     --tint:#123B45; --mango-t:#3A2C14; --navy:#EEF3F7;
@@ -131,7 +132,7 @@ header{display:flex;justify-content:space-between;align-items:center;padding:14p
 .btn:active{transform:scale(.97)}
 .btn[disabled]{opacity:.6;pointer-events:none}
 .main{flex:1;background:var(--navy);color:var(--paper)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .main{background:var(--mango);color:#14213D}}
+@media (prefers-color-scheme:none){:root:not([data-theme="light"]) .main{background:var(--mango);color:#14213D}}
 .round{width:58px;padding:0;background:var(--sea);color:#fff}
 footer{color:var(--muted);font-size:.8rem;text-align:center;padding:4px 0 20px}
 
