@@ -343,7 +343,7 @@ section{position:relative}
 /* ---------- por qué ---------- */
 .why{display:grid;gap:14px}
 @media (min-width:720px){.why{grid-template-columns:repeat(2,1fr)}}
-@media (min-width:1080px){.why{grid-template-columns:repeat(4,1fr)}}
+@media (min-width:1080px){.why{grid-template-columns:repeat(3,1fr)}}
 .why div{background:var(--card);border:1.5px solid var(--line);border-radius:22px;padding:24px}
 .why .i{width:30px;height:30px;color:var(--sea);margin-bottom:16px}
 .why h3{font-size:1.2rem;font-weight:800}
@@ -736,12 +736,14 @@ footer{background:#0F1A30}
 
 <section class="sec" style="padding-top:0">
   <div class="wrap">
-    <div class="sec-h rv"><span class="eyebrow" data-t="wEye">Por qué Fix &amp; Go</span><h2 data-t="wH">Hecho para nuestra gente.</h2></div>
+    <div class="sec-h rv"><span class="eyebrow" data-t="wEye">Por qué Fix &amp; Go</span><h2 data-t="wH">Más cómodo que ir a una tienda.</h2></div>
     <div class="why">
-      <div class="rv"><svg class="i" viewBox="0 0 24 24"><path d="M3.5 5h9M8 3v2M5.5 5c.6 3 2.6 5.4 5 6.8M10.5 5c-.7 3.3-3 6-6 7.5"/><path d="m13 21 4-9 4 9M14.4 18h5.2"/></svg><h3 data-t="w1">Hablamos tu idioma</h3><p data-t="w1p">Te atendemos en español o en inglés, como te sientas más cómodo.</p></div>
-      <div class="rv"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="3" width="7.5" height="7.5" rx="1.8"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.8"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.8"/><path d="M17.3 13.5V21M13.5 17.3H21"/></svg><h3 data-t="w2">Un solo contacto</h3><p data-t="w2p">Casa, trámites, tecnología, redes sociales y viajes con el mismo equipo.</p></div>
-      <div class="rv"><svg class="i" viewBox="0 0 24 24"><path d="M13 2 4.5 13.5H11L10 22l8.5-11.5H12z"/></svg><h3 data-t="w3">Rápido</h3><p data-t="w3p">Te respondemos el mismo día. Nota de voz, texto o WhatsApp.</p></div>
-      <div class="rv"><svg class="i" viewBox="0 0 24 24"><path d="M12 2.5 19.5 5.5v5.8c0 4.7-3.2 8.6-7.5 10.2-4.3-1.6-7.5-5.5-7.5-10.2V5.5z"/><path d="m9 12 2 2 4-4"/></svg><h3 data-t="w4">Claro desde el inicio</h3><p data-t="w4p">Te cotizamos antes de empezar. Sin sorpresas.</p></div>
+      <div class="rv"><svg class="i" viewBox="0 0 24 24"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7.5" cy="17.5" r="1.8"/><circle cx="17.5" cy="17.5" r="1.8"/></svg><h3 data-t="w1">.</h3><p data-t="w1p">.</p></div>
+      <div class="rv"><svg class="i" viewBox="0 0 24 24"><path d="M3 12V4h8l9 9-8 8z"/><path d="M7.5 8.5h.01"/></svg><h3 data-t="w2">.</h3><p data-t="w2p">.</p></div>
+      <div class="rv"><svg class="i" viewBox="0 0 24 24"><path d="M13 2 4.5 13.5H11L10 22l8.5-11.5H12z"/></svg><h3 data-t="w3">.</h3><p data-t="w3p">.</p></div>
+      <div class="rv"><svg class="i" viewBox="0 0 24 24"><path d="M3.5 5h9M8 3v2M5.5 5c.6 3 2.6 5.4 5 6.8M10.5 5c-.7 3.3-3 6-6 7.5"/><path d="m13 21 4-9 4 9M14.4 18h5.2"/></svg><h3 data-t="w4">.</h3><p data-t="w4p">.</p></div>
+      <div class="rv"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="3" width="7.5" height="7.5" rx="1.8"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.8"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.8"/><path d="M17.3 13.5V21M13.5 17.3H21"/></svg><h3 data-t="w5">.</h3><p data-t="w5p">.</p></div>
+      <div class="rv"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><h3 data-t="w6">.</h3><p data-t="w6p">.</p></div>
     </div>
   </div>
 </section>
@@ -812,11 +814,13 @@ const L = {
     z1:"Birmingham y alrededores", z1p:"Toda la semana: instalaciones en casa, reparaciones, soporte técnico y trámites.",
     z2:"Chamblee, Doraville y Atlanta", z2p:"Los fines de semana. Escríbenos antes y aparta tu día.",
     z3:"En línea, desde donde estés", z3p:"En todo Estados Unidos: soporte técnico, cuentas hackeadas, correos, taxes, pagos y redes sociales.",
-    wEye:"Por qué Fix & Go", wH:"Hecho para nuestra gente.",
-    w1:"Hablamos tu idioma", w1p:"Te atendemos en español o en inglés, como te sientas más cómodo.",
-    w2:"Un solo contacto", w2p:"Casa, trámites, tecnología, redes sociales y viajes con el mismo equipo.",
-    w3:"Rápido", w3p:"Te respondemos el mismo día. Nota de voz, texto o WhatsApp.",
-    w4:"Claro desde el inicio", w4p:"Te cotizamos antes de empezar. Sin sorpresas.",
+    wEye:"Por qué Fix & Go", wH:"Más cómodo que ir a una tienda.",
+    w1:"Recojo gratis", w1p:"Pasamos por tu equipo hasta 20 millas de Birmingham y te lo devolvemos listo.",
+    w2:"Precio claro y bajo", w2p:"Te cotizamos antes de empezar, con precios desde muy por debajo de las cadenas. Sin sorpresas.",
+    w3:"Respuesta el mismo día", w3p:"Nota de voz, texto o WhatsApp. Te contestamos hoy.",
+    w4:"Español e inglés", w4p:"Te atendemos en el idioma con el que estés más cómodo.",
+    w5:"Un solo contacto", w5p:"Casa, tecnología, trámites, redes y viajes con el mismo equipo.",
+    w6:"Trato directo", w6p:"Sin filas ni mostradores: hablas con la persona que te ayuda.",
     fEye:"Preguntas", fH:"Lo que más nos preguntan.",
     faq:[
       ["¿Hablan español?","Sí. Te atendemos en español o en inglés, por mensaje, llamada o en persona."],
@@ -887,11 +891,13 @@ const L = {
     z1:"Birmingham area", z1p:"All week: home installs, repairs, tech support and paperwork.",
     z2:"Chamblee, Doraville & Atlanta", z2p:"On weekends. Message us ahead to book your spot.",
     z3:"Online, wherever you are", z3p:"Anywhere in the US: tech support, hacked accounts, email, taxes, payments and social media.",
-    wEye:"Why Fix & Go", wH:"Made for our community.",
-    w1:"We speak your language", w1p:"English or Spanish, whatever feels most comfortable.",
-    w2:"One contact", w2p:"Home, tech, social media, rides and paperwork with the same team.",
-    w3:"Fast", w3p:"Same-day replies. Voice note, text or WhatsApp.",
-    w4:"Clear from the start", w4p:"We quote before we start. No surprises.",
+    wEye:"Why Fix & Go", wH:"Easier than going to a store.",
+    w1:"Free pickup", w1p:"We pick up your device within 20 miles of Birmingham and bring it back ready to go.",
+    w2:"Clear, low prices", w2p:"We quote before we start, with prices well below the big chains. No surprises.",
+    w3:"Same-day replies", w3p:"Voice note, text or WhatsApp. We answer today.",
+    w4:"English and Spanish", w4p:"We help you in the language you're most comfortable with.",
+    w5:"One contact", w5p:"Home, tech, paperwork, social media and rides with the same team.",
+    w6:"Personal service", w6p:"No lines, no counters: you talk to the person helping you.",
     fEye:"FAQ", fH:"What people ask us most.",
     faq:[
       ["Do you speak Spanish?","Yes. We help you in English or Spanish, by message, call or in person."],
