@@ -31,7 +31,8 @@ label{display:block;font-weight:700;margin:12px 0 6px}
 input[type=text],input[type=email],input[type=tel],textarea{width:100%;min-height:48px;padding:10px 12px;border:1.5px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);font:inherit}
 input:focus-visible,textarea:focus-visible,button:focus-visible{outline:3px solid var(--mango);outline-offset:2px}
 ol{margin:8px 0 0;padding-left:22px}
-li{margin:8px 0}
+li{margin:10px 0;font-size:.95rem;line-height:1.5;list-style:none}
+ol{padding-left:0}
 .agree{display:flex;gap:12px;align-items:flex-start;margin-top:14px;font-weight:600}
 .agree input{width:24px;height:24px;flex:none;margin-top:2px}
 .btn{display:block;width:100%;min-height:52px;border:0;border-radius:14px;background:var(--mango);color:#14213D;font:800 1.05rem system-ui;cursor:pointer;margin-top:16px}
@@ -57,33 +58,37 @@ const T = {
     name:"Tu nombre completo", phone:"Teléfono", email:"Correo (para enviarte tu copia)", optional:"opcional",
     termsH:"Lo que aceptas",
     terms:[
-      "Autorizo a Fix & Go a recoger el equipo descrito arriba, llevarlo a su taller y revisarlo para dar un diagnóstico.",
-      "No se hará ninguna reparación sin que yo apruebe antes una cotización. Si no la apruebo, el equipo se me devuelve.",
-      "Si el diagnóstico tuviera algún costo, se me informará antes de cobrarlo.",
-      "El equipo se recibe en el estado en que se encuentra. Si ya tenía golpes, fallas o piezas faltantes, las he comentado.",
-      "Soy responsable de haber respaldado mi información. Fix & Go no revisará mis archivos personales más de lo necesario para el diagnóstico.",
-      "Fix & Go me avisará cuando el equipo esté listo, y acordaremos la entrega.",
-      "Mi nombre escrito abajo funciona como mi firma electrónica y tiene el mismo valor que una firma en papel."],
-    agree:"He leído y acepto lo anterior, y autorizo el recojo del equipo.", sign:"Firma: escribe tu nombre completo", signHint:"Debe coincidir con tu nombre de arriba.",
-    send:"Firmar y enviar", sending:"Enviando…", errFill:"Completa tu nombre, el equipo, marca la casilla y firma con tu nombre completo.", errMatch:"La firma debe ser igual a tu nombre completo.", errNet:"No pudimos enviarlo. Intenta de nuevo o escríbenos por WhatsApp.",
+      "1. Recojo y revisión. Autorizo a Fix & Go a recoger el equipo descrito arriba, llevarlo a su taller y revisarlo para dar un diagnóstico. Fix & Go puede tomar fotos del estado del equipo al recibirlo, solo para su registro.",
+      "2. Propiedad. Declaro que soy el dueño del equipo o que su dueño me autorizó a entregarlo, y que el equipo no es robado ni tiene bloqueos de cuentas ajenas (por ejemplo iCloud o Google). Fix & Go puede negarse a trabajar en un equipo si tiene dudas sobre esto.",
+      "3. Cotización y aprobación. No se hará ninguna reparación sin que yo apruebe antes una cotización por mensaje, correo o firma. Si no la apruebo, el equipo se me devuelve. Si el diagnóstico tiene algún costo, se me informará antes de cobrarlo.",
+      "4. Estado del equipo y fallas previas. El equipo se recibe tal como está. Si ya tenía golpes, humedad, fallas o piezas faltantes, o si el diagnóstico revela otras fallas, entiendo que un equipo dañado puede empeorar o dejar de encender al abrirlo o probarlo, y que Fix & Go no responde por fallas ya existentes ni por las que salgan a la luz durante la revisión.",
+      "5. Mis datos. Soy responsable de haber respaldado mi información. Puede ser necesario reiniciar o restablecer el equipo, y Fix & Go no responde por la pérdida de datos. Si debo darle una clave o código de acceso, solo se usará para la revisión o reparación y no se guardará.",
+      "6. Límite de responsabilidad. Si Fix & Go llegara a ser responsable de un daño al equipo mientras lo tiene bajo su cuidado, su responsabilidad se limita al valor de mercado del equipo al momento del recojo, hasta donde la ley lo permita. No responde por daños indirectos ni por lucro cesante.",
+      "7. Avisos. Acepto recibir avisos sobre mi equipo al teléfono y al correo que dejé aquí. Un aviso enviado por mensaje de texto o correo a esos datos se considera recibido. Me comprometo a avisar si cambio de número o correo.",
+      "8. Equipo no retirado. Cuando mi equipo esté listo, o cuando yo rechace la reparación, Fix & Go me avisará por escrito (mensaje y correo). Tendré 30 días desde ese aviso para retirarlo. Pasado ese plazo, el equipo quedará guardado otros 60 días, y Fix & Go me enviará un segundo aviso por escrito al comenzar ese periodo. Si tampoco lo retiro en esos 60 días, autorizo a Fix & Go a considerarlo abandonado y a disponer de él (reciclarlo, donarlo o venderlo) para recuperar costos, conforme a la ley aplicable. Cualquier cargo de almacenamiento o costo adeudado se me informará por escrito antes de cobrarse.",
+      "9. Firma electrónica. Mi nombre completo escrito abajo es mi firma electrónica y tiene el mismo valor que una firma en papel. Puedo pedir una copia. Este acuerdo se rige por las leyes del estado de Alabama."],
+    agree:"He leído y acepto lo anterior, y autorizo el recojo del equipo.", agree2:"Entiendo especialmente la cláusula 8: si no retiro mi equipo en los plazos indicados, puede considerarse abandonado.", sign:"Firma: escribe tu nombre completo", signHint:"Debe coincidir con tu nombre de arriba.",
+    send:"Firmar y enviar", sending:"Enviando…", errFill:"Completa tu nombre, el equipo, marca las dos casillas y firma con tu nombre completo.", errMatch:"La firma debe ser igual a tu nombre completo.", errNet:"No pudimos enviarlo. Intenta de nuevo o escríbenos por WhatsApp.",
     okH:"¡Listo, gracias!", okP:"Recibimos tu firma. Ya podemos recoger tu equipo. Te llegará una copia si dejaste tu correo.", fine:"Fix & Go · fixandgopro.com" },
   en:{ title:"Equipment receipt and authorization", sub:"Please review and sign. It takes 1 minute. We can't pick up your equipment without it.", eq:"Equipment to pick up", eqPh:"Describe the equipment (e.g. PS5 with controller)",
     name:"Your full name", phone:"Phone", email:"Email (to send you a copy)", optional:"optional",
     termsH:"What you agree to",
     terms:[
-      "I authorize Fix & Go to pick up the equipment described above, take it to its shop and inspect it to give a diagnosis.",
-      "No repair will be done unless I approve a quote first. If I don't approve it, the equipment is returned to me.",
-      "If the diagnosis has any cost, I will be told before it is charged.",
-      "The equipment is received as-is. If it already had dents, faults or missing parts, I have mentioned them.",
-      "I am responsible for backing up my data. Fix & Go will not look at my personal files beyond what is needed for the diagnosis.",
-      "Fix & Go will let me know when the equipment is ready, and we will arrange delivery.",
-      "My name typed below works as my electronic signature and has the same value as a paper signature."],
-    agree:"I have read and agree to the above, and I authorize the pickup of the equipment.", sign:"Signature: type your full name", signHint:"It must match your name above.",
-    send:"Sign and send", sending:"Sending…", errFill:"Enter your name and the equipment, tick the box and sign with your full name.", errMatch:"The signature must match your full name.", errNet:"We couldn't send it. Try again or message us on WhatsApp.",
+      "1. Pickup and inspection. I authorize Fix & Go to pick up the equipment described above, take it to its shop and inspect it to give a diagnosis. Fix & Go may take photos of the equipment's condition on receipt, for its records only.",
+      "2. Ownership. I state that I own the equipment or that its owner authorized me to hand it over, and that it is not stolen and has no locks tied to someone else's accounts (for example iCloud or Google). Fix & Go may refuse to work on equipment if it has doubts about this.",
+      "3. Quote and approval. No repair will be done unless I approve a quote first by message, email or signature. If I don't approve it, the equipment is returned to me. If the diagnosis has any cost, I will be told before it is charged.",
+      "4. Condition and prior faults. The equipment is received as-is. If it already had dents, moisture damage, faults or missing parts, or if the diagnosis reveals other faults, I understand that damaged equipment can get worse or stop turning on when opened or tested, and that Fix & Go is not responsible for existing faults or for those found during the inspection.",
+      "5. My data. I am responsible for having backed up my information. The equipment may need to be reset or restored, and Fix & Go is not responsible for data loss. If I must give a password or access code, it will be used only for the inspection or repair and will not be stored.",
+      "6. Limit of liability. If Fix & Go is ever responsible for damage to the equipment while in its care, its liability is limited to the market value of the equipment at the time of pickup, to the extent the law allows. It is not liable for indirect damages or lost profits.",
+      "7. Notices. I agree to receive notices about my equipment at the phone number and email I left here. A notice sent by text message or email to those details is considered received. I will tell Fix & Go if my number or email changes.",
+      "8. Unclaimed equipment. When my equipment is ready, or when I decline the repair, Fix & Go will notify me in writing (text and email). I will have 30 days from that notice to pick it up. After that, the equipment will be stored for another 60 days, and Fix & Go will send me a second written notice when that period starts. If I still don't pick it up within those 60 days, I authorize Fix & Go to treat it as abandoned and to dispose of it (recycle, donate or sell it) to recover costs, as allowed by applicable law. Any storage fee or amount owed will be told to me in writing before it is charged.",
+      "9. Electronic signature. My full name typed below is my electronic signature and has the same value as a paper signature. I may request a copy. This agreement is governed by the laws of the State of Alabama."],
+    agree:"I have read and agree to the above, and I authorize the pickup of the equipment.", agree2:"I specifically understand clause 8: if I do not pick up my equipment within the stated deadlines, it may be considered abandoned.", sign:"Signature: type your full name", signHint:"It must match your name above.",
+    send:"Sign and send", sending:"Sending…", errFill:"Enter your name and the equipment, tick both boxes and sign with your full name.", errMatch:"The signature must match your full name.", errNet:"We couldn't send it. Try again or message us on WhatsApp.",
     okH:"All set, thank you!", okP:"We received your signature. We can now pick up your equipment. You'll get a copy if you left your email.", fine:"Fix & Go · fixandgopro.com" }
 };
 const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
-const st = { name: (qs.get("n") || "").slice(0, 80), phone: (qs.get("p") || "").replace(/\D/g, "").slice(-10), email: "", items: (qs.get("e") || "").slice(0, 300), sig: "", agree: false, sent: false };
+const st = { name: (qs.get("n") || "").slice(0, 80), phone: (qs.get("p") || "").replace(/\D/g, "").slice(-10), email: "", items: (qs.get("e") || "").slice(0, 300), sig: "", agree: false, agree2: false, sent: false };
 
 function render(){
   const t = T[lang]; document.documentElement.lang = lang;
@@ -98,22 +103,23 @@ function render(){
     <label for="em">${t.email} <small>(${t.optional})</small></label><input type="email" id="em" autocomplete="email" maxlength="120" value="${esc(st.email)}">
     <h2 style="font-size:1.1rem;margin:20px 0 0">${t.termsH}</h2><ol>${t.terms.map(x => `<li>${esc(x)}</li>`).join("")}</ol>
     <label class="agree"><input type="checkbox" id="ag"${st.agree ? " checked" : ""}><span>${t.agree}</span></label>
+    <label class="agree"><input type="checkbox" id="ag2"${st.agree2 ? " checked" : ""}><span>${t.agree2}</span></label>
     <label for="sg">${t.sign}</label><input type="text" id="sg" autocomplete="off" maxlength="80" value="${esc(st.sig)}"><div class="fine">${t.signHint}</div>
     <input class="hp" type="text" id="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
     <button class="btn" type="submit" id="go">${t.send}</button><div class="msg" id="ms" role="status" aria-live="polite"></div>
   </form><p class="fine">${t.fine}</p>`;
   const $ = id => document.getElementById(id);
-  const sync = () => { st.name = $("nm").value; st.phone = $("ph").value; st.email = $("em").value; st.sig = $("sg").value; st.agree = $("ag").checked; if ($("eqi")) st.items = $("eqi").value; };
+  const sync = () => { st.name = $("nm").value; st.phone = $("ph").value; st.email = $("em").value; st.sig = $("sg").value; st.agree = $("ag").checked; st.agree2 = $("ag2").checked; if ($("eqi")) st.items = $("eqi").value; };
   app.querySelectorAll("input").forEach(i => i.addEventListener("input", sync));
   $("f").addEventListener("submit", async e => {
     e.preventDefault(); sync(); const ms = $("ms"); ms.className = "msg"; ms.textContent = "";
     const items = st.items.trim(), name = st.name.trim(), sig = st.sig.trim();
-    if (name.length < 3 || !items || !st.agree || sig.length < 3){ ms.className = "msg err"; ms.textContent = t.errFill; return; }
+    if (name.length < 3 || !items || !st.agree || !st.agree2 || sig.length < 3){ ms.className = "msg err"; ms.textContent = t.errFill; return; }
     if (sig.toLowerCase() !== name.toLowerCase()){ ms.className = "msg err"; ms.textContent = t.errMatch; $("sg").focus(); return; }
     const go = $("go"); go.disabled = true; go.textContent = t.sending;
     try{
       if (!CONFIG.ENDPOINT) throw new Error("no endpoint");
-      const r = await fetch(CONFIG.ENDPOINT, { method: "POST", body: JSON.stringify({ type: "consent", lang, name, signature: sig, phone: st.phone.replace(/\D/g, ""), email: st.email.trim(), items, agree: true, terms: t.terms, hp: $("hp").value }) });
+      const r = await fetch(CONFIG.ENDPOINT, { method: "POST", body: JSON.stringify({ type: "consent", lang, name, signature: sig, phone: st.phone.replace(/\D/g, ""), email: st.email.trim(), items, agree: true, agree2: true, terms: t.terms, ua: navigator.userAgent.slice(0, 200), v: "1", hp: $("hp").value }) });
       const j = await r.json(); if (!j.ok) throw new Error(j.error || "fail");
       st.sent = true; render(); window.scrollTo(0, 0);
     }catch(err){ go.disabled = false; go.textContent = t.send; ms.className = "msg err"; ms.textContent = t.errNet; }

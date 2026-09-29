@@ -88,7 +88,7 @@ function consent_(d) {
   const clean = (s, n) => String(s || '').replace(/[\u0000-\u001f]/g, ' ').trim().slice(0, n);
   const name = clean(d.name, 80), items = clean(d.items, 400), signed = clean(d.signature, 80), email = clean(d.email, 120);
   const phone = String(d.phone || '').replace(/\D/g, '').slice(-10);
-  if (name.length < 3 || signed.length < 3 || !items || !d.agree) return out_({ ok: false, error: 'data' });
+  if (name.length < 3 || signed.length < 3 || !items || !d.agree || !d.agree2) return out_({ ok: false, error: 'data' });
   if (signed.toLowerCase() !== name.toLowerCase()) return out_({ ok: false, error: 'match' });
   if (!throttle_()) return out_({ ok: false, error: 'busy' });
   const en = d.lang === 'en', when = Utilities.formatDate(new Date(), 'America/Chicago', "yyyy-MM-dd HH:mm 'CT'");
@@ -101,7 +101,7 @@ function consent_(d) {
       ? 'The customer authorized Fix &amp; Go to pick up and inspect the equipment above, agreed that no repair is done without approving a quote first, and accepted the terms shown on the form. Signed electronically by typing their full name.'
       : 'El cliente autorizó a Fix &amp; Go a recoger y revisar el equipo indicado, aceptó que no se repara nada sin aprobar antes una cotización, y aceptó los términos del formulario. Firmado electrónicamente escribiendo su nombre completo.'}</p>
     <p><b>${en ? 'Terms accepted' : 'Términos aceptados'}:</b></p><ul>${(d.terms || []).slice(0, 12).map(x => `<li>${esc_(clean(x, 400))}</li>`).join('')}</ul>
-    <p style="font-size:13px;color:#4A5873">${en ? 'Electronic signature' : 'Firma electrónica'}: <b>${esc_(signed)}</b> · ${esc_(when)}</p></div>`;
+    <p style="font-size:13px;color:#4A5873">${en ? 'Electronic signature' : 'Firma electrónica'}: <b>${esc_(signed)}</b> · ${esc_(when)}<br>${en ? 'Also accepted separately: clause 8 (unclaimed equipment). Form version' : 'Aceptó también por separado la cláusula 8 (equipo no retirado). Versión del formulario'}: ${esc_(clean(d.v, 10))} · ${esc_(clean(d.ua, 200))}</p></div>`;
   const subject = `✅ ${en ? 'Signed' : 'Firmado'} · ${items.slice(0, 50)} · ${name}`;
   const owner = Session.getEffectiveUser().getEmail();
   GmailApp.sendEmail(owner, subject, `${name} - ${items} - ${when}`, { htmlBody: body, name: 'Recibos ' + CFG.BRAND });
