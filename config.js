@@ -8,7 +8,7 @@ const CONFIG = {
   PHONE:    "12054908033",   // tu número con código de país, sin + ni espacios
   FB_PAGE:  "61594526717885",            // usuario de tu página de Facebook (m.me/usuario). Vacío = sin botón Messenger
   EMAIL:    "info@fixandgopro.com",   // correo de empresa (Cloudflare Email Routing → tu Gmail)
-  ENDPOINT: ""               // URL de la App web de Apps Script (fixandgo-backend.gs). Vacío = sin notas de voz
+  ENDPOINT: "https://script.google.com/macros/s/AKfycbzCaTUIxOX9CNWUhCMA24Jal9Y65akvUR0h-pwQyxJvgz2Zsl26u6KgsOQGvXKe-l9zEw/exec"               // URL de la App web de Apps Script (fixandgo-backend.gs). Vacío = sin notas de voz
 };
 const ZONES = {
   bham:{ area:"Birmingham, AL", note:null },
