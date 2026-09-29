@@ -14,3 +14,7 @@ print/
 wrangler.*
 node_modules/
 .wrangler/
+
+fixandgopro/
+*.zip
+pin*

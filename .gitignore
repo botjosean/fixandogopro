@@ -3,3 +3,8 @@ verify/
 __pycache__/
 .DS_Store
 .env
+
+# Carpeta con llaves y copias locales: nunca subir
+fixandgopro/
+*.zip
+pin*

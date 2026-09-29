@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /recibo/
+
+Sitemap: https://fixandgopro.com/sitemap.xml
