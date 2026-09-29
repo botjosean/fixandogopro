@@ -534,6 +534,28 @@ body{background:var(--paper)}
 .final{background:var(--navy)}
 .final .blob,.final .grain{display:none}
 footer{background:#0F1A30}
+
+/* ---- diseño: color por categoría, sombras cálidas ---- */
+[data-k=casa]{--c1:#DDF0F2;--c2:#0E7C86;--c3:#0E7C86}
+[data-k=tramites]{--c1:#FCEBCB;--c2:#9A5A08;--c3:#B26A0B}
+[data-k=tech]{--c1:#E3EAFB;--c2:#3B5BDB;--c3:#3B5BDB}
+[data-k=negocio]{--c1:#F6E1F0;--c2:#A6318A;--c3:#A6318A}
+[data-k=viajes]{--c1:#DDF3E4;--c2:#1E8E3E;--c3:#1E8E3E}
+
+:root{--line:#EBE3D6}
+.pk-t{box-shadow:0 10px 22px -18px rgba(63,45,20,.5)}
+.pk-t:not([aria-selected=true]) .ib{background:var(--c1);color:var(--c2)}
+.pk-t[aria-selected=true]{background:var(--c3);border-color:var(--c3);color:#fff;box-shadow:0 18px 32px -16px var(--c3)}
+.pk-t[aria-selected=true] .ib{background:rgba(255,255,255,.22);color:#fff}
+.pk-panel{border-top:4px solid var(--c3);box-shadow:0 30px 56px -38px rgba(63,45,20,.5)}
+.pk-head h3{color:var(--c3)}
+.pk-list a>.i:first-child{width:40px;height:40px;padding:9px;box-sizing:border-box;border-radius:13px;background:var(--c1);color:var(--c2)}
+.pk-list .pr{background:var(--c1);color:var(--c2)}
+.why div,.zone,.step,.net-p{box-shadow:0 16px 34px -26px rgba(63,45,20,.45)}
+.why div{border-color:var(--line)}
+#como{background:#F4EEE2}
+.faq details,.faq .q{box-shadow:0 12px 26px -22px rgba(63,45,20,.45)}
+.finder label{box-shadow:0 14px 30px -22px rgba(63,45,20,.45)}
 </style>
 </head>
 <body>
@@ -970,7 +992,7 @@ function renderBento(){
     return `<li><a href="${go(`&s=${k}&i=${ic}`)}">${ico(ic)}<span><b>${esc(v[lang][0])}</b>${v[lang][1] ? `<small>${esc(v[lang][1])}</small>` : ""}</span>${pr ? `<em class="pr">${esc(pr)}</em>` : ""}${ico("right","go")}</a></li>`; };
   const k = pickK, c = S[k][lang], n = S[k].items.length, many = n > 6;
   $("#bento").innerHTML = `<div class="pk-tabs" role="tablist" aria-label="${esc(t.sH)}">${ks.map(x => `<button type="button" role="tab" class="pk-t" id="pt-${x}" data-k="${x}" aria-selected="${x===k}" aria-controls="pp" tabindex="${x===k?0:-1}"><span class="ib">${ico(CAT_ICON[x])}</span><b>${esc(t.tags[x])}</b></button>`).join("")}</div>
-  <div class="pk-panel${pickAll?" all":""}" id="pp" role="tabpanel" aria-labelledby="pt-${k}">
+  <div class="pk-panel${pickAll?" all":""}" id="pp" data-k="${k}" role="tabpanel" aria-labelledby="pt-${k}">
     <div class="pk-head"><h3>${esc(c.t)}</h3><p>${esc(c.d)}</p></div>
     <ul class="pk-list">${S[k].items.map(it => item(it, k)).join("")}</ul>
     <div class="pk-acts">${many ? `<button type="button" class="pill" id="pkMore" aria-expanded="${pickAll}">${esc(pickAll ? t.pkLess : t.pkAll.replace("{n}", n))}</button>` : ""}

@@ -203,6 +203,24 @@ textarea:focus,.in:focus{outline:none;border-color:var(--sea)}
 
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 @media (prefers-reduced-motion:no-preference){.hero{animation:rise .45s ease-out both}@keyframes rise{from{transform:translateY(10px);opacity:0}to{transform:none;opacity:1}}}
+
+/* ---- diseño: color por categoría, sombras cálidas ---- */
+[data-k=casa]{--c1:#DDF0F2;--c2:#0E7C86;--c3:#0E7C86}
+[data-k=tramites]{--c1:#FCEBCB;--c2:#9A5A08;--c3:#B26A0B}
+[data-k=tech]{--c1:#E3EAFB;--c2:#3B5BDB;--c3:#3B5BDB}
+[data-k=negocio]{--c1:#F6E1F0;--c2:#A6318A;--c3:#A6318A}
+[data-k=viajes]{--c1:#DDF3E4;--c2:#1E8E3E;--c3:#1E8E3E}
+
+:root{--paper:#FBF8F2;--line:#EBE3D6;--tint:#F2EBDD}
+.hero{background:linear-gradient(135deg,#0E7C86 0%,#0A626B 100%);box-shadow:0 28px 48px -30px rgba(14,124,134,.85)}
+.search,.hotb,.cat,.results,.zone{box-shadow:0 14px 30px -22px rgba(63,45,20,.45)}
+.cat .ib{background:var(--c1);color:var(--c2)}
+.cat.open{border-color:var(--c3)}
+.cat.open .cat-h{background:var(--c3);color:#fff}
+.cat.open .ib{background:rgba(255,255,255,.25);color:#fff}
+.row .ri{width:38px;height:38px;padding:8px;box-sizing:border-box;border-radius:12px;background:var(--c1);color:var(--c2)}
+.row .pr{background:var(--c1);color:var(--c2)}
+.n{background:#F2EBDD}
 </style>
 </head>
 <body>
