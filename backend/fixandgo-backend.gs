@@ -162,7 +162,8 @@ Recibes un contacto de un cliente (puede venir de una transcripción con errores
 nombre, telefono, idioma ("es"|"en"), linea ("casa"|"tech"|"tramites"|"negocio"|"viajes"|"otro"), servicio (corto, en español),
 pedido_original (lo que dijo, en su idioma), resumen (2-3 líneas en español), urgencia ("hoy"|"semana"|"flexible"),
 ubicacion, disponibilidad, soluciones (array, español), materiales (array), precio (SOLO un rango de esta lista o "a cotizar": ${JSON.stringify(CFG.PRICES)}),
-preguntas (array de lo que falta saber), respuesta_sms (mensaje corto listo para enviarle, en SU idioma, cálido y directo, hablando como empresa en plural ("nosotros", nunca "yo"), firmado "${CFG.SIGNATURE}", sin precio exacto).
+preguntas (array de lo que falta saber), respuesta_sms (mensaje corto listo para enviarle, en SU idioma, cálido y directo, hablando como empresa en plural ("nosotros", nunca "yo"), firmado "${CFG.SIGNATURE}", sin precio exacto),
+pedido_es (lo que dijo el cliente traducido al español; si ya está en español, repítelo igual), respuesta_es (traducción al español de respuesta_sms, para que el dueño entienda qué se le envía; si ya está en español, repítela igual).
 Si un dato no aparece, usa "". No inventes.`;
   let t = {};
   try {
@@ -223,8 +224,10 @@ function email_(t) {
   <p><b>Posibles soluciones</b></p><ul>${li(t.soluciones)}</ul>
   <p><b>Llevar</b></p><ul>${li(t.materiales)}</ul>
   <p><b>Preguntar</b></p><ul>${li(t.preguntas)}</ul>
-  <p><b>Respuesta sugerida:</b><br><span style="background:#E6EEF0;display:block;padding:10px 12px;border-radius:10px">${esc_(t.respuesta_sms)}</span></p>
-  <p style="color:#4A5873;font-size:13px"><b>Lo que dijo:</b> ${esc_(t.pedido_original)}</p></div>`;
+  <p><b>Respuesta sugerida${t.idioma === 'en' ? ' (se envía en inglés)' : ''}:</b><br><span style="background:#E6EEF0;display:block;padding:10px 12px;border-radius:10px">${esc_(t.respuesta_sms)}</span></p>
+  ${t.idioma === 'en' && t.respuesta_es ? `<p><b>En español (para ti):</b><br><span style="background:#FDF0DC;display:block;padding:10px 12px;border-radius:10px">${esc_(t.respuesta_es)}</span></p>` : ''}
+  <p style="color:#4A5873;font-size:13px"><b>Lo que dijo${t.idioma === 'en' ? ' (en inglés)' : ''}:</b> ${esc_(t.pedido_original)}</p>
+  ${t.idioma === 'en' && t.pedido_es ? `<p style="color:#4A5873;font-size:13px"><b>En español:</b> ${esc_(t.pedido_es)}</p>` : ''}</div>`;
   const subject = `${U_[t.urgencia] || '⚪'} ${t.servicio || 'Nuevo contacto'} · ${t.ubicacion || 'sin zona'} · ${t.telefono || t.email || ''}`;
   const text = `${t.servicio} | ${t.nombre} ${t.telefono} | ${t.ubicacion}\n${t.resumen}\nPrecio: ${t.precio}\nRespuesta: ${t.respuesta_sms}`;
   GmailApp.sendEmail(Session.getEffectiveUser().getEmail(), subject, text, { htmlBody: html, name: 'Tickets ' + CFG.BRAND });
