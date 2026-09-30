@@ -63,7 +63,8 @@ function doPost(e) {
       return out_({ ok: true, text, aid });
     }
     const phone = String(d.phone || '').replace(/\D/g, '').slice(-10);
-    if (phone.length < 10) return out_({ ok: false, error: 'phone' });
+    const email = String(d.email || '').trim().slice(0, 80);
+    if (email ? !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email) : phone.length < 10) return out_({ ok: false, error: 'phone' });   // basta un contacto: teléfono o correo
     if (!throttle_()) return out_({ ok: false, error: 'busy' });
 
     let transcript = '', audioUrl = '';
@@ -74,12 +75,12 @@ function doPost(e) {
       const bytes = Utilities.base64Decode(d.audio);
       if (bytes.length > 8 * 1024 * 1024) return out_({ ok: false, error: 'size' });
       const ext = mime.indexOf('mp4') > -1 ? 'm4a' : 'webm';
-      const f = folder_().createFile(Utilities.newBlob(bytes, mime, `nota-${phone}-${Date.now()}.${ext}`));
+      const f = folder_().createFile(Utilities.newBlob(bytes, mime, `nota-${phone || 'correo'}-${Date.now()}.${ext}`));
       audioUrl = f.getUrl();
       transcript = d.tx ? '' : deepgram_(bytes, mime);
     }
     // se responde YA al cliente; el ticket (IA + correo) se arma en segundo plano
-    const job = { phone, name: String(d.name || '').slice(0, 80), service: String(d.service || '').slice(0, 120), line: d.line || '', when: d.when || '',
+    const job = { phone, email, name: String(d.name || '').slice(0, 80), service: String(d.service || '').slice(0, 120), line: d.line || '', when: d.when || '',
       lang: d.lang, zone: d.zone, text: String(d.text || '').slice(0, 2000), transcript: transcript.slice(0, 2000), audioUrl, tx: d.tx ? 1 : 0, a: 0 };
     const pr = PropertiesService.getScriptProperties();
     pr.setProperty('job_' + Date.now() + '_' + Math.floor(Math.random() * 1e6), JSON.stringify(job));
@@ -115,9 +116,9 @@ function buildWebTicket_(d) {
   const said = [d.text, d.transcript].filter(Boolean).join('\n') || '(nota de voz sin transcripción, escúchala)';
   const input = `Origen: página web (${d.zone === 'atl' ? 'zona Atlanta/Chamblee' : 'zona Birmingham'})
 Servicio elegido: ${d.service}  | Categoría: ${d.line || 'general'}  | Para cuándo: ${d.when || 'no dijo'}
-Nombre: ${d.name || ''}  | Teléfono: ${d.phone}  | Idioma de la página: ${d.lang}
+Nombre: ${d.name || ''}  | Teléfono: ${d.phone ? fmtPhone_(d.phone) : '(no dio)'}  | Correo: ${d.email || '(no dio)'}  | Idioma de la página: ${d.lang}
 Mensaje${d.transcript ? ' (nota de voz transcrita)' : ''}: ${said}`;
-  const t = ticket_(input, { telefono: fmtPhone_(d.phone), nombre: d.name || '', idioma: d.lang });
+  const t = ticket_(input, { telefono: d.phone ? fmtPhone_(d.phone) : '', email: d.email || '', nombre: d.name || '', idioma: d.lang });
   t.origen = 'Página web' + (d.audioUrl ? ' · nota de voz' : '');
   t.audio = d.audioUrl;
   email_(t);
@@ -253,6 +254,7 @@ Si un dato no aparece, usa "". No inventes.`;
   }
   Object.keys(base).forEach(k => { if (base[k] && !t[k]) t[k] = base[k]; });
   if (base.telefono) t.telefono = base.telefono;
+  if (base.email) t.email = base.email;
   return t;
 }
 
@@ -287,9 +289,10 @@ function email_(t) {
   <div style="background:#0E7C86;color:#fff;border-radius:18px;padding:18px 20px">
     <div style="font-size:13px;opacity:.9">${U_[t.urgencia] || ''} · ${esc_(t.origen)} · ${esc_(t.linea)} · ${esc_((t.idioma || '').toUpperCase())}</div>
     <div style="font-size:22px;font-weight:800;margin:4px 0">${esc_(t.servicio || 'Nuevo contacto')}</div>
-    <div style="font-size:15px">${esc_(t.nombre || 'Sin nombre')} · ${esc_(t.telefono)}${t.email ? ' · ' + esc_(t.email) : ''} · ${esc_(t.ubicacion)}</div>
+    <div style="font-size:15px">${esc_(t.nombre || 'Sin nombre')}${t.telefono ? ' · ' + esc_(t.telefono) : ''}${t.email ? ' · ' + esc_(t.email) : ''} · ${esc_(t.ubicacion)}</div>
   </div>
   <div style="margin:14px 0">
+    ${!n && t.email ? btn('mailto:' + t.email + '?subject=' + encodeURIComponent('Fix & Go') + '&body=' + encodeURIComponent(t.respuesta_sms || ''), '&#9993; Responder por correo', '#2FB344') : ''}
     ${n ? btn('tel:+' + n, '&#128222; Llamar', '#14213D') : ''}
     ${n ? btn('sms:+' + n + '?&body=' + encodeURIComponent(t.respuesta_sms || ''), '&#128172; Enviar respuesta', '#2FB344') : ''}
     ${n ? btn('https://wa.me/' + n + '?text=' + encodeURIComponent(t.respuesta_sms || ''), 'WhatsApp', '#1FA855') : ''}

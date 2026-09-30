@@ -293,9 +293,9 @@ const T = {
     hold:"Mantén pulsado para hablar", prep:"Preparando el micrófono…", slow:"Sigue enviando, un momento… no cierres esta pantalla.", tapstop:"Grabando… toca para parar", micHelp:"No pudimos usar el micrófono. Toca el candado junto a la dirección, permite el micrófono y vuelve a intentar. O escribe tu mensaje.", useText:"Escribir mi mensaje", release:"Suelta cuando termines", typing:"Escribiendo lo que dijiste", check:"Esto entendimos. Corrígelo si hace falta:", txFail:"No pudimos escribirlo. Puedes escribirlo tú o enviar solo la nota de voz.", reach:"¿A dónde te respondemos?", play:"Escuchar", pause:"Pausa",
     micErr:"No se pudo usar el micrófono. Escríbenos aquí abajo.",
     ph:"Cuéntanos qué necesitas. Ej: TV de 65\" en pared de drywall, en Hoover.",
-    name:"Tu nombre", phone:"Tu teléfono (205) 555-1234",
+    name:"Tu nombre", phone:"Tu teléfono o correo",
     send:"Enviar mensaje", sending:"Enviando…",
-    needPhone:"Escribe tu teléfono con los 10 números, por ejemplo (205) 555-1234.", needMsg:"Graba una nota o escribe tu mensaje.",
+    needPhone:"Escribe un teléfono (10 números) o un correo, como tú prefieras.", needMsg:"Graba una nota o escribe tu mensaje.",
     fail:"No se pudo enviar. Escríbenos directo abajo.",
     or:"o cuéntanos más", sms:"Texto", tel:"Llamar", wa:"WhatsApp", fb:"Messenger", mail:"Correo", subj:s=>`Consulta: ${s}`,
     doneT:n=>`¡Listo${n?`, ${n}`:""}!`, doneP:"Recibimos tu mensaje. Te respondemos hoy mismo.", close:"Cerrar",
@@ -315,9 +315,9 @@ const T = {
     hold:"Hold to talk", prep:"Getting the microphone ready…", slow:"Still sending, one moment… please keep this screen open.", tapstop:"Recording… tap to stop", micHelp:"We couldn't use the microphone. Tap the lock next to the address, allow the microphone and try again. Or type your message.", useText:"Type my message", release:"Release when you're done", typing:"Writing what you said", check:"Here's what we heard. Fix it if needed:", txFail:"We couldn't write it out. You can type it or just send the voice note.", reach:"Where can we reply?", play:"Play", pause:"Pause",
     micErr:"Couldn't use the microphone. Type your message below.",
     ph:"Tell us what you need. E.g. 65\" TV on drywall, in Hoover.",
-    name:"Your name", phone:"Your phone (205) 555-1234",
+    name:"Your name", phone:"Your phone or email",
     send:"Send message", sending:"Sending…",
-    needPhone:"Enter your 10-digit phone number, for example (205) 555-1234.", needMsg:"Record a voice note or type your message.",
+    needPhone:"Enter a phone number (10 digits) or an email, whichever you prefer.", needMsg:"Record a voice note or type your message.",
     fail:"Couldn't send. Reach us directly below.",
     or:"or tell us more", sms:"Text", tel:"Call", wa:"WhatsApp", fb:"Messenger", mail:"Email", subj:s=>`Inquiry: ${s}`,
     doneT:n=>`Got it${n?`, ${n}`:""}!`, doneP:"Your message is in. We'll get back to you today.", close:"Close",
@@ -436,6 +436,8 @@ function textMsg(){ const t = T[lang], s = svc(); return t.msg(s?s.name:t.genera
 const fmt = s => `${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,"0")}`;
 /* teléfono: acepta cualquier formato (guiones, puntos, espacios, +1, 1-...) y lo deja como (205) 555-1234 */
 const phDigits = v => { let d = String(v||"").replace(/\D/g,""); if (d.length > 10 && d[0] === "1") d = d.slice(1); return d.slice(-10); };
+const isMail = v => { v = String(v||""); return /@/.test(v) || (/[a-z]/i.test(v) && v.replace(/\D/g,"").length < 10); };   // "@" o letras sin 10 números -> correo
+const okMail = v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(v||"").trim());
 const phFmt = d => d.length <= 3 ? d : d.length <= 6 ? `(${d.slice(0,3)}) ${d.slice(3)}` : `(${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6)}`;
 /* sonidos y vibración del micrófono */
 let sfxCtx = null;
@@ -488,7 +490,7 @@ function fillSheet(){
     <p class="lbl">${t.reach}</p>
     <div class="two">
       <input class="in" id="nm" type="text" autocomplete="given-name" placeholder="${esc(t.name)}" aria-label="${esc(t.name)}" value="${esc(st.name)}">
-      <input class="in" id="ph" type="tel" inputmode="tel" autocomplete="tel" maxlength="60" placeholder="${esc(t.phone)}" aria-label="${esc(t.phone)}" value="${esc(st.phone)}">
+      <input class="in" id="ph" type="text" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" maxlength="80" placeholder="${esc(t.phone)}" aria-label="${esc(t.phone)}" value="${esc(st.phone)}">
     </div>
     <p class="fielderr" id="phErr" role="alert" hidden></p>
     <input class="hp" id="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
@@ -507,11 +509,13 @@ function fillSheet(){
   $("#txt").oninput = e=>{ st.text = e.target.value; const tx = $("#tx"); if (tx) tx.value = st.text; updateLinks(); };
   $("#tx").oninput = e=>{ st.text = e.target.value; $("#txt").value = st.text; updateLinks(); };
   $("#nm").oninput = e=>{ st.name = e.target.value; };
-  $("#ph").oninput = e=>{ const el = e.target, del = /^delete/.test(e.inputType||""), before = phDigits(st.phone||"");
-    let d = phDigits(el.value); if (del && d === before) d = d.slice(0,-1);   // borrar un guion o parentesis borra el número anterior
-    st.phone = phFmt(d); if (el.value !== st.phone){ el.value = st.phone; try{ el.setSelectionRange(st.phone.length, st.phone.length); }catch(_){} }
+  $("#ph").oninput = e=>{ const el = e.target;
+    if (isMail(el.value)){ st.phone = el.value.trim(); }                     // correo: se deja tal cual
+    else { const del = /^delete/.test(e.inputType||""), before = phDigits(st.phone||"");
+      let d = phDigits(el.value); if (del && d === before) d = d.slice(0,-1);   // borrar un guion o parentesis borra el número anterior
+      st.phone = phFmt(d); if (el.value !== st.phone){ el.value = st.phone; try{ el.setSelectionRange(st.phone.length, st.phone.length); }catch(_){} } }
     el.classList.remove("bad"); $("#phErr").hidden = true; };
-  $("#ph").onchange = e=>{ e.target.value = st.phone = phFmt(phDigits(e.target.value)); };
+  $("#ph").onchange = e=>{ if (!isMail(e.target.value)) e.target.value = st.phone = phFmt(phDigits(e.target.value)); else st.phone = e.target.value = e.target.value.trim(); };
   $("#send").onclick = send;
 }
 function setMode(m){
@@ -631,9 +635,9 @@ const b64 = blob => new Promise((ok,ko)=>{ const r = new FileReader(); r.onload 
 
 async function send(){
   const t = T[lang], s = svc(), btn = sheet.querySelector("#send");
-  const phone = phDigits(st.phone), mode = canVoice() ? st.mode : "text";
+  const mail = isMail(st.phone), phone = mail ? "" : phDigits(st.phone), email = mail ? (st.phone||"").trim() : "", mode = canVoice() ? st.mode : "text";
   const hasMsg = mode==="voice" ? !!st.audio : !!(st.text||"").trim();
-  if (phone.length<10){
+  if (mail ? !okMail(email) : phone.length<10){
     const ph = sheet.querySelector("#ph"), pe = sheet.querySelector("#phErr");
     pe.textContent = t.needPhone; pe.hidden = false; ph.classList.add("bad");
     ph.scrollIntoView({block:"center", behavior:"smooth"}); ph.focus({preventScroll:true}); return;
@@ -644,7 +648,7 @@ async function send(){
   const slowT = setTimeout(()=>status(t.slow), 3500);
   try{
     const payload = { v:1, lang, zone:zk, service: s?s.name:t.general, line: st.k??"", when: st.when>=0?t.chips[st.when]:"",
-      name:(st.name||"").trim().slice(0,80), phone, text:(st.text||"").trim().slice(0,2000), tx:(mode==="voice" && st.tx) ? 1 : 0,
+      name:(st.name||"").trim().slice(0,80), phone, email, text:(st.text||"").trim().slice(0,2000), tx:(mode==="voice" && st.tx) ? 1 : 0,
       hp: sheet.querySelector("#hp").value, mime: mode==="voice"?st.audio.mime:"", dur: mode==="voice"?st.audio.dur:0,
       aid: (mode==="voice" && st.aid) ? st.aid : "", audio: (mode==="voice" && !st.aid) ? await b64(st.audio.blob) : "" };
     const r = await fetch(CONFIG.ENDPOINT, {method:"POST", body:JSON.stringify(payload)});
