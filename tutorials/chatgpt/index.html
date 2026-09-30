@@ -1,0 +1,669 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="Guía en español para instalar, configurar y usar ChatGPT en tu iPhone. Por Fix &amp; Go, soporte técnico.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Fix &amp; Go">
+<meta property="og:locale" content="es_US">
+<meta property="og:title" content="ChatGPT paso a paso · Fix &amp; Go">
+<meta property="og:description" content="Guía en español para instalar, configurar y usar ChatGPT en tu iPhone.">
+<meta property="og:url" content="https://fixandgopro.com/tutorials/chatgpt/">
+<meta property="og:image" content="https://fixandgopro.com/tutorials/chatgpt/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="theme-color" content="#14213D">
+<link rel="canonical" href="https://fixandgopro.com/tutorials/chatgpt/">
+<link rel="icon" type="image/png" sizes="32x32" href="/logo/logo-mark-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/logo/logo-mark-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/logo/apple-touch-icon.png">
+<style>[hidden]{display:none!important}img{max-width:100%}</style>
+<title>ChatGPT paso a paso · Fix &amp; Go</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Layout: una columna pensada para el iPhone. Un teléfono dibujado a la izquierda (arriba en móvil)
+   que el cliente toca de verdad, y a la derecha la instrucción del momento. Barra de navegación fija abajo. */
+:root{
+  --navy:#14213D;
+  --bg:#EEF3F9; --surface:#FFFFFF; --fg:#0E1F38; --mute:#4E607A; --line:#D3DDEA;
+  --cta:#14213D; --cta-ink:#FFFFFF;
+  --hot:#EE7F00; --hot-soft:#FFF1DC; --ok:#12805A; --ok-soft:#DDF3EA;
+  --phone:#0A111E; --phone-edge:#33415C;
+  --s-bg:#FFFFFF; --s-fg:#101419; --s-mute:#6A7280; --s-card:#F1F2F4; --s-line:#E2E4E8; --s-blue:#0A7AFF; --s-ok:#2DB55D;
+  --font-display:'Bricolage Grotesque','Avenir Next','Trebuchet MS',system-ui,sans-serif;
+  --font-body:'Figtree',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#08111F; --surface:#111E33; --fg:#EAF0F9; --mute:#9DB0CA; --line:#233650;
+    --cta:#FFA726; --cta-ink:#1A1100;
+    --hot:#FFAA33; --hot-soft:#3A2A10; --ok:#4BD39E; --ok-soft:#123528;
+    --phone:#020509; --phone-edge:#4A5A78;
+    --s-bg:#000000; --s-fg:#F4F5F7; --s-mute:#8E93A0; --s-card:#1C1D21; --s-line:#2B2D33; --s-blue:#3D9BFF; --s-ok:#34C765;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#08111F; --surface:#111E33; --fg:#EAF0F9; --mute:#9DB0CA; --line:#233650;
+  --cta:#FFA726; --cta-ink:#1A1100;
+  --hot:#FFAA33; --hot-soft:#3A2A10; --ok:#4BD39E; --ok-soft:#123528;
+  --phone:#020509; --phone-edge:#4A5A78;
+  --s-bg:#000000; --s-fg:#F4F5F7; --s-mute:#8E93A0; --s-card:#1C1D21; --s-line:#2B2D33; --s-blue:#3D9BFF; --s-ok:#34C765;
+  color-scheme: dark;
+}
+
+*{box-sizing:border-box}
+html{font-size:100%;-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--fg);font:400 1.0625rem/1.55 var(--font-body);margin:0;padding-inline:16px;padding-block:0}
+button{font-family:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--hot);outline-offset:3px}
+h1,h2,h3{text-wrap:balance}
+.app{max-width:1040px;margin-inline:auto;padding-bottom:8px}
+
+/* Encabezado */
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:14px 10px}
+.brand{display:flex;align-items:center;gap:10px;font:800 1.25rem/1 var(--font-display);letter-spacing:-.01em}
+.brand svg{width:40px;height:40px;flex:none;border-radius:10px;box-shadow:0 0 0 1px var(--line)}
+.fs{min-height:44px;min-width:44px;padding:0 14px;border-radius:14px;border:0;background:var(--surface);color:var(--fg);box-shadow:inset 0 0 0 2px var(--line);font:800 1.05rem var(--font-body)}
+.prog{display:flex;gap:6px;padding-block:6px 18px}
+.seg{flex:1;height:12px;border:0;padding:0;border-radius:99px;background:var(--line);position:relative}
+.seg.past{background:var(--ok)}
+.seg.on{background:var(--hot)}
+
+/* Cabeza de cada paso */
+.tag{display:inline-block;font:700 .8rem/1 var(--font-body);letter-spacing:.09em;text-transform:uppercase;color:var(--mute);margin-bottom:10px}
+.head h1{font:800 clamp(2rem,7.4vw,3.3rem)/1.02 var(--font-display);letter-spacing:-.02em;margin:0 0 12px}
+.lead{font-size:1.2rem;color:var(--mute);margin:0;max-width:34em}
+.grid{display:grid;gap:22px;margin-top:22px;grid-template-columns:minmax(0,1fr)}
+.pcol,.scol{min-width:0}
+.scol{display:flex;flex-direction:column;gap:16px}
+@media (min-width:860px){
+  .grid{grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:48px;align-items:start}
+  .pcol{position:sticky;top:16px}
+}
+
+.card{background:var(--surface);border-radius:22px;padding:18px 20px;box-shadow:0 0 0 1px var(--line)}
+.say .lbl{display:inline-block;font:800 .78rem/1 var(--font-body);letter-spacing:.09em;text-transform:uppercase;background:var(--hot-soft);color:var(--hot);padding:6px 10px;border-radius:99px;margin-bottom:10px}
+.say p{margin:0;font-size:1.28rem;line-height:1.4;font-weight:500}
+.say b{font-weight:800}
+.hint{margin-top:10px!important;font-size:1.05rem!important;color:var(--hot);font-weight:700!important}
+.okline{margin-top:12px!important;font-size:1.1rem!important;font-weight:800!important;color:var(--ok)}
+.again{margin-top:10px;background:none;border:0;color:var(--mute);font:700 1rem var(--font-body);text-decoration:underline;padding:6px 0}
+.dots{display:flex;justify-content:center;gap:8px;margin-top:14px}
+.dots i{width:10px;height:10px;border-radius:50%;background:var(--line)}
+.dots i.on{background:var(--hot)}
+.dots i.past{background:var(--ok)}
+
+.tips h2,.cmp h2{font:800 1.25rem/1.2 var(--font-display);margin:0 0 10px}
+details{background:var(--surface);border-radius:16px;box-shadow:0 0 0 1px var(--line);margin-bottom:10px}
+summary{list-style:none;padding:15px 18px;font-weight:700;font-size:1.05rem;cursor:pointer;display:flex;justify-content:space-between;gap:12px;align-items:center;min-height:52px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-size:1.5rem;line-height:1;color:var(--mute)}
+details[open] summary::after{content:"–"}
+details p{margin:0;padding:0 18px 16px;color:var(--mute)}
+
+.cmp .two{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.plan{border-radius:18px;padding:16px 18px;background:var(--surface);box-shadow:0 0 0 1px var(--line)}
+.plan.plus{box-shadow:0 0 0 3px var(--hot)}
+.plan h3{margin:0;font:800 1.2rem var(--font-display)}
+.plan .pr{font:800 1.9rem/1.1 var(--font-display);margin:2px 0 8px}
+.plan .pr small{font:600 .95rem var(--font-body);color:var(--mute)}
+.plan ul{margin:0;padding:0;list-style:none;display:grid;gap:7px;font-size:.98rem}
+.plan li{display:flex;gap:9px;align-items:flex-start}
+.plan li::before{content:"";flex:none;width:.6em;height:.6em;margin-top:.5em;border-radius:50%;background:var(--ok)}
+.plan.free li::before{background:var(--line)}
+.advice{margin:12px 0 0;padding:14px 16px;border-radius:14px;background:var(--hot-soft);font-weight:600}
+
+/* Navegación fija */
+.nav{position:sticky;bottom:0;display:flex;gap:12px;padding:14px 0 calc(14px + env(safe-area-inset-bottom,0px));margin-top:14px;background:linear-gradient(to bottom,transparent,var(--bg) 28%)}
+.btn{min-height:56px;padding:0 24px;border-radius:18px;border:0;font:800 1.1rem var(--font-body)}
+.btn.pri{flex:1;background:var(--cta);color:var(--cta-ink)}
+.btn.sec{background:var(--surface);color:var(--fg);box-shadow:inset 0 0 0 2px var(--line)}
+.btn.pri.ready{animation:beat 1.4s ease-in-out infinite;box-shadow:0 0 0 4px color-mix(in srgb,var(--ok) 50%,transparent)}
+.btn.big{min-height:64px;font-size:1.25rem;width:100%}
+@keyframes beat{50%{transform:scale(1.025)}}
+
+/* Bienvenida */
+.hero{display:grid;gap:26px;margin-top:6px;grid-template-columns:minmax(0,1fr)}
+@media (min-width:860px){.hero{grid-template-columns:minmax(0,1fr) minmax(0,320px);gap:56px;align-items:center}}
+.hero h1{font:800 clamp(2.3rem,9vw,4.1rem)/1 var(--font-display);letter-spacing:-.025em;margin:0 0 16px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0}
+.pill{padding:8px 14px;border-radius:99px;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line);font-weight:700;font-size:.95rem}
+.need{margin:0 0 22px;padding:0;list-style:none;display:grid;gap:10px}
+.need li{display:flex;gap:12px;align-items:flex-start}
+.need svg,.done-list svg{flex:none;width:26px;height:26px;color:var(--ok)}
+
+/* Final */
+.done-list{margin:18px 0 0;padding:0;list-style:none;display:grid;gap:10px;font-weight:600}
+.done-list li{display:flex;gap:12px;align-items:center}
+.contact{margin-top:18px;background:var(--navy);color:#fff;box-shadow:none}
+.contact h2{font:800 1.5rem/1.15 var(--font-display);margin:0 0 6px}
+.contact p{margin:0 0 14px;color:#C9D6EA}
+.num{font:800 2rem/1.1 var(--font-display);letter-spacing:.01em;user-select:all}
+.crow{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.cbtn{min-height:52px;padding:0 20px;border-radius:14px;border:0;background:#FFA726;color:#1A1100;font:800 1rem var(--font-body);display:inline-flex;align-items:center;text-decoration:none}
+.cbtn.ghost{background:transparent;color:#fff;box-shadow:inset 0 0 0 2px #4A6390}
+.next3{display:grid;gap:10px;margin:10px 0 0;padding:0;list-style:none}
+.next3 li{padding:14px 16px;border-radius:14px;background:var(--surface);box-shadow:0 0 0 1px var(--line);font-weight:600}
+.foot{color:var(--mute);font-size:.92rem;padding-block:22px 30px;max-width:40em}
+
+/* ---------- Teléfono ---------- */
+.phone{position:relative;width:min(100%,300px);aspect-ratio:9/18.6;margin-inline:auto;background:var(--phone);border-radius:46px;padding:3.4%;box-shadow:0 0 0 2px var(--phone-edge),0 30px 60px -24px rgba(4,10,24,.6)}
+.phone::before{content:"";position:absolute;right:-4px;top:24%;width:4px;height:11%;border-radius:0 3px 3px 0;background:var(--phone-edge)}
+.screen{position:absolute;inset:3.4%;border-radius:36px;overflow:hidden;background:var(--s-bg);color:var(--s-fg);container-type:inline-size;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Figtree',sans-serif}
+.screen::after{content:"";position:absolute;top:10px;left:50%;width:76px;height:22px;margin-left:-38px;border-radius:12px;background:#000;z-index:5}
+.scr{font-size:4.6cqw;line-height:1.25;height:100%;position:relative;display:flex;flex-direction:column;overflow:hidden}
+.sb{display:flex;justify-content:space-between;align-items:center;height:2.9em;padding:.45em 1.9em 0 2em;font-weight:700;font-size:.92em;flex:none}
+.sb svg{width:3.9em;height:auto}
+.ico{width:100%;aspect-ratio:1;border-radius:22%;display:grid;place-items:center;border:0;padding:0;color:#fff}
+.ico svg{width:58%;height:58%}
+.gpt{background:#0B0B0D;color:#fff;box-shadow:0 0 0 1px var(--s-line)}
+.home{background:linear-gradient(165deg,#2C47C4,#6B3FD6 55%,#DE5C98);color:#fff}
+.hgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.3em .55em;padding:1.1em 1em}
+.app{display:flex;flex-direction:column;align-items:center;gap:.3em}
+.app span{font-size:.66em}
+.dock{margin:auto .7em .8em;padding:.7em;border-radius:1.7em;background:rgba(255,255,255,.24);display:grid;grid-template-columns:repeat(4,1fr);gap:.55em}
+.as-head{padding:.3em 1.2em .5em}
+.as-head small{font-size:.64em;letter-spacing:.07em;color:var(--s-mute);font-weight:700}
+.as-head h3{font-size:2.1em;margin:0;font-weight:800;line-height:1.1}
+.feat{margin:.5em 1em;border-radius:1.1em;padding:1em;height:11.5em;display:flex;flex-direction:column;justify-content:flex-end;color:#fff;gap:.2em}
+.feat small{font-size:.62em;letter-spacing:.06em;opacity:.85;font-weight:700}
+.feat b{font-size:1.2em;line-height:1.15}
+.f1{background:linear-gradient(140deg,#1D4ED8,#7C3AED)}
+.f2{background:linear-gradient(140deg,#F59E0B,#EF4444);height:6.5em}
+.tabs{margin-top:auto;display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--s-line);padding:.5em .3em 1em;background:var(--s-bg)}
+.tab{display:flex;flex-direction:column;align-items:center;gap:.25em;font-size:.68em;color:var(--s-mute);background:none;border:0;padding:.35em 0;border-radius:.7em}
+.tab i{width:1.7em;height:1.7em;border-radius:.5em;background:var(--s-line)}
+.tab.on{color:var(--s-blue)}.tab.on i{background:var(--s-blue)}
+.srch{display:flex;align-items:center;gap:.6em;padding:.4em 1em}
+.field{flex:1;display:flex;align-items:center;gap:.5em;background:var(--s-card);border-radius:.8em;padding:.6em .7em}
+.field svg{width:1.1em;color:var(--s-mute)}
+.canc{color:var(--s-blue);font-size:.9em}
+.res{padding:.5em 1em}
+.row{display:flex;align-items:center;gap:.75em;padding:.8em 0;border-bottom:1px solid var(--s-line)}
+.row .ico{width:3.5em;flex:none}
+.rt{flex:1;min-width:0;display:flex;flex-direction:column}
+.rt small{color:var(--s-mute);font-size:.76em}
+.get{background:var(--s-card);color:var(--s-blue);font-weight:800;border:0;border-radius:2em;padding:.45em 1em;font-size:.9em}
+.get.open{background:var(--s-blue);color:#fff}
+.note{margin:.8em 1em 0;font-size:.82em;color:var(--s-ok);font-weight:700}
+.wel{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:.5em;padding:0 1.4em}
+.wel .ico{width:4.6em}
+.wel h4{font-size:1.5em;margin:.3em 0 0;line-height:1.1}
+.wel p{margin:0;color:var(--s-mute);font-size:.9em}
+.wbt{display:grid;gap:.6em;padding:0 1.2em 1.6em}
+.btn-s{display:block;width:100%;padding:.85em;border-radius:1em;font-weight:700;text-align:center;font-size:1em;background:var(--s-blue);color:#fff;border:0}
+.btn-s.alt{background:var(--s-card);color:var(--s-fg)}
+.btn-s.dark{background:var(--s-fg);color:var(--s-bg)}
+.btn-s.lite{background:var(--s-bg);color:var(--s-fg);box-shadow:inset 0 0 0 1px var(--s-line)}
+.opts{flex:1;display:flex;flex-direction:column;justify-content:center;gap:.7em;padding:0 1.2em}
+.opts h4{font-size:1.4em;margin:0 0 .3em;text-align:center}
+.or{text-align:center;color:var(--s-mute);font-size:.8em}
+.dim{position:absolute;inset:0;background:rgba(0,0,0,.42);display:grid;place-items:center;z-index:2}
+.dim.end{align-items:end}
+.sheet{width:100%;background:var(--s-bg);border-radius:1.5em 1.5em 0 0;padding:1.2em 1.2em 1.4em;display:grid;gap:.8em;text-align:center}
+.sheet h5{margin:0;font-size:1.1em}
+.sheet p{margin:0;color:var(--s-mute);font-size:.86em}
+.fid{width:4em;margin:0 auto;color:var(--s-blue)}
+.form{flex:1;padding:.4em 1.2em;display:grid;align-content:start;gap:.8em}
+.form h4{font-size:1.45em;margin:.5em 0 .1em}
+.fl{display:grid;gap:.3em;font-size:.8em;color:var(--s-mute);font-weight:600}
+.fl div{background:var(--s-card);border-radius:.8em;padding:.75em .8em;font-size:1.15em;color:var(--s-fg);font-weight:500}
+.fill{margin-top:auto;padding:0 1.2em 1.5em}
+.alert{width:72%;border-radius:1.2em;background:color-mix(in srgb,var(--s-bg) 90%,#888);text-align:center;overflow:hidden}
+.alert h5{margin:0;font-size:1em;padding:1em 1em .3em;line-height:1.25}
+.alert p{margin:0;padding:0 1em 1em;font-size:.8em;color:var(--s-mute)}
+.bt{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--s-line)}
+.bt>*{padding:.8em 0;border:0;background:none;color:var(--s-blue);font-size:1em}
+.bt>*:first-child{border-right:1px solid var(--s-line)}
+.bt .strong{font-weight:800}
+.ctop{display:flex;align-items:center;justify-content:space-between;padding:.2em 1em .5em;flex:none}
+.ham{width:2em;height:2em;display:grid;place-items:center}
+.ham svg{width:1.4em}
+.model{background:none;border:0;font-weight:800;font-size:1em;color:var(--s-fg);display:flex;gap:.3em;align-items:center;padding:.35em .7em;border-radius:1em}
+.model svg{width:.9em}
+.cbody{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:0 1.2em;gap:.7em}
+.cbody h4{font-size:1.4em;margin:0}
+.comp{margin:.5em .8em 1em;width:calc(100% - 1.6em);display:flex;align-items:center;gap:.6em;background:var(--s-card);border-radius:2em;padding:.55em .55em .55em .9em;border:0;text-align:left;color:var(--s-fg);flex:none}
+.comp .ph{flex:1;color:var(--s-mute)}
+.comp .tx{flex:1;color:var(--s-fg);line-height:1.25}
+.circ{width:2.2em;height:2.2em;border-radius:50%;display:grid;place-items:center;background:var(--s-fg);color:var(--s-bg);border:0;flex:none;padding:0}
+.circ svg{width:1.15em}
+.circ.hot{width:2.2em}
+.chipz{display:grid;gap:.45em;width:100%}
+.chip{border:1px solid var(--s-line);border-radius:1em;padding:.6em .8em;font-size:.84em;text-align:left;background:var(--s-bg);color:var(--s-fg)}
+.kbd{background:var(--s-card);padding:.6em .3em 1.1em;display:grid;gap:.45em;flex:none}
+.kr{display:flex;gap:.3em;justify-content:center}
+.kr i{width:1.85em;height:2.3em;border-radius:.35em;background:var(--s-bg);box-shadow:0 1px 0 var(--s-line)}
+.msgs{flex:1;display:flex;flex-direction:column;gap:.9em;padding:.5em 1em;overflow:hidden}
+.u{align-self:flex-end;background:var(--s-card);border-radius:1.1em;padding:.6em .85em;max-width:82%}
+.a{align-self:flex-start;max-width:94%;font-size:.94em}
+.a ol{margin:.4em 0 0;padding-left:1.2em}
+.menu{position:absolute;left:1em;right:1em;top:5.2em;background:var(--s-bg);border-radius:1.2em;box-shadow:0 10px 34px rgba(0,0,0,.28);border:1px solid var(--s-line);overflow:hidden;z-index:3}
+.opt{display:flex;gap:.7em;align-items:flex-start;padding:.85em .9em;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--s-line);color:var(--s-fg)}
+.opt:last-child{border-bottom:0}
+.opt b{display:block}
+.opt small{color:var(--s-mute);font-size:.76em;display:block}
+.rec{display:inline-block;background:color-mix(in srgb,var(--s-ok) 20%,transparent);color:var(--s-ok);font-size:.66em;font-weight:800;border-radius:2em;padding:.15em .6em;margin-left:.3em;vertical-align:middle}
+.rad{margin-left:auto;width:1.2em;height:1.2em;border-radius:50%;border:2px solid var(--s-line);flex:none;margin-top:.15em}
+.opt.sel .rad{border-color:var(--s-blue);background:radial-gradient(var(--s-blue) 45%,transparent 50%)}
+.toast{position:absolute;left:50%;top:44%;transform:translateX(-50%);background:var(--s-fg);color:var(--s-bg);padding:.7em 1.1em;border-radius:1em;font-weight:700;z-index:4;white-space:nowrap}
+.side{position:absolute;left:0;top:0;bottom:0;width:82%;background:var(--s-bg);z-index:3;display:flex;flex-direction:column;padding:3em 1em 1em;gap:.35em;box-shadow:6px 0 30px rgba(0,0,0,.25)}
+.side .sr{background:var(--s-card);border-radius:.8em;padding:.6em .8em;color:var(--s-mute);margin-bottom:.5em}
+.side .ch{padding:.5em .3em;font-size:.92em}
+.userrow{margin-top:auto;display:flex;align-items:center;gap:.7em;padding-top:.7em;border-top:1px solid var(--s-line)}
+.av{width:2.4em;height:2.4em;border-radius:50%;background:var(--s-blue);color:#fff;display:grid;place-items:center;font-weight:800}
+.userrow small{display:block;color:var(--s-mute);font-size:.75em}
+.up{background:var(--s-fg);color:var(--s-bg);border:0;border-radius:2em;padding:.7em;font-weight:800;margin-top:.6em}
+.planwrap{flex:1;display:grid;align-content:start;gap:.7em;padding:.4em 1.1em 1em}
+.ptitle{font-size:1.45em;font-weight:800;text-align:center;margin:.3em 0}
+.pcard{border-radius:1.1em;padding:.9em 1em;border:1px solid var(--s-line)}
+.pcard.sel{border:2px solid var(--s-blue)}
+.pcard .ph2{display:flex;justify-content:space-between;align-items:baseline}
+.price{font-size:1.5em;font-weight:800}
+.price small{font-size:.55em;font-weight:600;color:var(--s-mute)}
+.pcard ul{margin:.4em 0 0;padding-left:1.1em;font-size:.86em;color:var(--s-mute)}
+.fine{font-size:.72em;color:var(--s-mute);text-align:center}
+.prow{display:flex;align-items:center;gap:.7em;text-align:left}
+.prow .ico{width:3em;flex:none}
+.prow>div:nth-child(2){flex:1;display:flex;flex-direction:column}
+.prow small{color:var(--s-mute);font-size:.76em}
+.prow.sm{font-size:.86em;justify-content:space-between;color:var(--s-mute);border-top:1px solid var(--s-line);padding-top:.7em}
+.paybtn{display:flex;align-items:center;justify-content:center;gap:.5em;padding:.9em;border-radius:1em;background:var(--s-fg);color:var(--s-bg);border:0;font-weight:800;width:100%}
+.okc{width:4.6em;height:4.6em;border-radius:50%;background:var(--s-ok);color:#fff;display:grid;place-items:center}
+.okc svg{width:55%}
+.okmark{position:absolute;right:.9em;top:3.4em;z-index:6;width:2.6em;height:2.6em;border-radius:50%;background:var(--s-ok);color:#fff;display:grid;place-items:center;font-weight:800;font-size:1.1em;animation:pop .35s ease-out}
+@keyframes pop{from{transform:scale(.3)}}
+.voice{background:#000;color:#fff}
+.orb{width:9em;height:9em;border-radius:50%;background:radial-gradient(circle at 35% 30%,#B7DBFF,#3B82F6 52%,#1E3A8A);animation:breathe 3s ease-in-out infinite;margin:auto}
+@keyframes breathe{50%{transform:scale(1.12)}}
+.vbtn{display:flex;justify-content:center;gap:2em;padding:0 0 2em}
+.vbtn i{width:3.2em;height:3.2em;border-radius:50%;background:#2A2A2E;display:grid;place-items:center}
+.vbtn i svg{width:1.4em}
+
+.kb-go{background:var(--s-blue);color:#fff;border:0;border-radius:.4em;height:2.3em;padding:0 1.1em;font-weight:700;font-size:.9em;flex:none}
+.sugg{padding:.3em 1em}
+.sugg div{padding:.55em 0;border-bottom:1px solid var(--s-line);font-size:.95em}
+.typed{display:inline-block;overflow:hidden;white-space:nowrap;width:3.9em;font-weight:600;animation:typing 1.3s steps(7,end) both}
+@keyframes typing{from{width:0}}
+.dlr{width:2.3em;height:2.3em;position:relative;flex:none}
+.dlr svg{width:100%;display:block}
+.dlr i{position:absolute;inset:36%;background:var(--s-blue);border-radius:.15em}
+.arc{animation:fill 2.6s linear forwards}
+@keyframes fill{to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){.arc{stroke-dashoffset:40}}
+.splash{background:#000;color:#fff;align-items:center;justify-content:center}
+.splash .ico{width:5em;background:#0B0B0D;box-shadow:0 0 0 1px #2B2D33}
+
+.rowbtn{display:flex;align-items:center;gap:.75em;flex:1;min-width:0;background:none;border:0;padding:.3em;text-align:left;color:inherit;border-radius:1em}
+.rowbtn .ico{width:3.5em;flex:none}
+.pp-top{padding:.2em 1.1em .5em;color:var(--s-blue);font-size:.95em}
+.pp-head{display:flex;gap:.9em;padding:.4em 1.1em 1em;align-items:flex-start}
+.pp-head .ico{width:6em;flex:none;border-radius:22%}
+.pp-head .ico svg{width:58%;height:58%}
+.pp-t{display:flex;flex-direction:column;gap:.15em;min-width:0}
+.pp-t b{font-size:1.5em;line-height:1.1}
+.pp-t small{color:var(--s-mute);font-size:.8em}
+.pp-t .get,.pp-t .dlr{margin-top:.55em;align-self:flex-start}
+.get.big{padding:.5em 1.6em;font-size:1.05em}
+.pp-stats{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--s-line);border-bottom:1px solid var(--s-line);text-align:center;margin:0 1em}
+.pp-stats div{padding:.7em .2em;display:flex;flex-direction:column}
+.pp-stats div+div{border-left:1px solid var(--s-line)}
+.pp-stats small{font-size:.6em;color:var(--s-mute);letter-spacing:.05em;text-transform:uppercase}
+.pp-stats b{font-size:.9em}
+.pp-shots{display:grid;grid-template-columns:repeat(3,1fr);gap:.5em;padding:1em 1em 0}
+.pp-shots i{aspect-ratio:9/17;border-radius:.9em;background:linear-gradient(160deg,#20242C,#0B0D11);box-shadow:0 0 0 1px var(--s-line)}
+
+/* Toque */
+.hot{position:relative;outline:3px solid var(--hot);outline-offset:2px;animation:ring 1.6s ease-out infinite}
+.hot::after{content:"";position:absolute;right:10%;bottom:-.6em;width:1.5em;height:1.5em;border-radius:50%;background:color-mix(in srgb,var(--hot) 75%,transparent);border:2px solid #fff;pointer-events:none;animation:tap 1.6s ease-in-out infinite}
+@keyframes ring{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--hot) 65%,transparent)}100%{box-shadow:0 0 0 1.2em transparent}}
+@keyframes tap{50%{transform:scale(.7)}}
+.dud{cursor:pointer}
+.shake{animation:shake .4s}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}
+</style>
+
+</head>
+<body>
+<div class="app" id="app">
+  <header class="top">
+    <div class="brand">
+      <img src="/logo/logo-mark.svg" width="40" height="40" alt="" style="border-radius:10px"><span>Fix &amp; Go</span>
+    </div>
+    <button class="fs" id="fs" type="button" aria-label="Cambiar tamaño de la letra">A+</button>
+  </header>
+  <nav class="prog" id="prog" aria-label="Pasos de la guía"></nav>
+  <main id="main"></main>
+  <p class="foot">Las pantallas de esta guía son dibujos para que practiques. Tu iPhone puede verse un poco distinto según su versión, pero los pasos son los mismos.</p>
+</div>
+
+<script>
+(function(){
+  // Número de contacto de Fix & Go. Si está vacío, no se muestra.
+  var PHONE = "(205) 490-8033";
+  var SITE = "fixandgopro.com";
+
+  var main = document.getElementById('main');
+  var prog = document.getElementById('prog');
+
+  /* ---------- Piezas de dibujo ---------- */
+  var SB = '<div class="sb"><span>9:41</span><svg viewBox="0 0 60 12" fill="currentColor" aria-hidden="true"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="5" y="5" width="3" height="7" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/><path d="M22 4.2a9 9 0 0 1 12 0l-1.5 1.6a6.8 6.8 0 0 0-9 0zM24.7 7a5 5 0 0 1 6.6 0L28 10.4z"/><rect x="39" y="1" width="18" height="10" rx="3" fill="none" stroke="currentColor" opacity=".5"/><rect x="41" y="3" width="12" height="6" rx="1.5"/></svg></div>';
+  var GLYPH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="6.2" r="3.6"/><circle cx="17" cy="9.1" r="3.6"/><circle cx="17" cy="14.9" r="3.6"/><circle cx="12" cy="17.8" r="3.6"/><circle cx="7" cy="14.9" r="3.6"/><circle cx="7" cy="9.1" r="3.6"/></svg>';
+  var IC = {
+    bub:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v7a3 3 0 0 1-3 3H10l-5 4v-4a3 3 0 0 1-1-2z" fill="#fff"/></svg>',
+    pho:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.2" fill="#fff"/><circle cx="8" cy="14" r="3.2" fill="#fff" opacity=".8"/><circle cx="16" cy="14" r="3.2" fill="#fff" opacity=".6"/></svg>',
+    cam:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="12" rx="3" fill="#fff"/><circle cx="12" cy="13" r="3.5" fill="#666"/></svg>',
+    map:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6 6 0 0 0-6 6c0 4.5 6 12 6 12s6-7.5 6-12a6 6 0 0 0-6-6z" fill="#fff"/><circle cx="12" cy="9" r="2.2" fill="#3B82F6"/></svg>',
+    clk:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="#fff"/><path d="M12 7v5l3 2" stroke="#111" stroke-width="2" fill="none" stroke-linecap="round"/></svg>',
+    not:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2" fill="#fff"/><path d="M8 8h8M8 12h8M8 16h5" stroke="#E0A800" stroke-width="1.6"/></svg>',
+    set:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8" fill="#fff"/><circle cx="12" cy="12" r="3" fill="#8E8E93"/></svg>',
+    as:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4l6 12M12 4L6 16M8 13h8" stroke="#fff" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg>'
+  };
+  var SV = {
+    lines:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 8h16M4 16h10"/></svg>',
+    pen:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16zM13 7l4 4"/></svg>',
+    chev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>',
+    wave:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 10v4M8 7v10M12 4v16M16 8v8M20 11v2"/></svg>',
+    up:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V6M6 12l6-6 6 6"/></svg>',
+    lupa:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg>',
+    fid:'<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 16V10a4 4 0 0 1 4-4h6M32 6h6a4 4 0 0 1 4 4v6M42 32v6a4 4 0 0 1-4 4h-6M16 42h-6a4 4 0 0 1-4-4v-6M17 19v4M31 19v4M24 20v6h-2M17 32c4 4 10 4 14 0"/></svg>',
+    x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+    mic:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>',
+    check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+    checkc:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M7.5 12.5l3 3 6-6.5"/></svg>'
+  };
+
+  function H(c,l,x){ return '<button type="button" class="hot '+c+'" data-go="1" '+(x||'')+'>'+l+'</button>'; }
+  function D(c,l,m){ return '<button type="button" class="dud '+c+'" data-dud="'+m+'">'+l+'</button>'; }
+  function app(k,bg,label,hot){
+    var i = hot ? '<button type="button" class="ico hot" data-go="1" style="background:'+bg+'" aria-label="'+label+'">'+IC[k]+'</button>'
+                : '<div class="ico" style="background:'+bg+'">'+IC[k]+'</div>';
+    return '<div class="app">'+i+'<span>'+label+'</span></div>';
+  }
+  function ctop(model, hot){
+    var m = hot ? H('model','ChatGPT '+SV.chev) : '<span class="model">'+model+'</span>';
+    return '<div class="ctop"><span class="ham">'+SV.lines+'</span>'+m+'<span class="ham">'+SV.pen+'</span></div>';
+  }
+  function comp(){ return '<div class="comp"><span>+</span><span class="ph">Pregunta lo que quieras</span><span class="circ">'+SV.wave+'</span></div>'; }
+  function keys(){ return '<div class="kbd"><div class="kr">'+'<i></i>'.repeat(10)+'</div><div class="kr">'+'<i></i>'.repeat(9)+'</div><div class="kr">'+'<i></i>'.repeat(7)+'</div><div class="kr"><i style="width:9em"></i></div></div>'; }
+  function scr(cls, inner){ return '<div class="scr '+cls+'">'+inner+'</div>'; }
+  function gptRow(btn){ return '<div class="row"><div class="ico gpt">'+GLYPH+'</div><div class="rt"><b>ChatGPT</b><small>OpenAI · Productividad</small></div>'+btn+'</div>'; }
+  function ppage(btn, note){ return scr('', SB+'<div class="pp-top">‹ Buscar</div><div class="pp-head"><div class="ico gpt">'+GLYPH+'</div><div class="pp-t"><b>ChatGPT</b><small>OpenAI</small>'+btn+'</div></div><div class="pp-stats"><div><small>Precio</small><b>Gratis</b></div><div><small>Categoría</small><b>Productividad</b></div><div><small>Desarrollador</small><b>OpenAI</b></div></div><div class="pp-shots"><i></i><i></i><i></i></div>'+(note||'')); }
+  function keys2(){ return '<div class="kbd"><div class="kr">'+'<i></i>'.repeat(10)+'</div><div class="kr">'+'<i></i>'.repeat(9)+'</div><div class="kr">'+'<i></i>'.repeat(7)+'</div><div class="kr"><i style="width:5.5em"></i>'+H('kb-go','buscar')+'</div></div>'; }
+  var RING = '<div class="dlr"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15" fill="none" stroke="var(--s-line)" stroke-width="4"/><circle class="arc" cx="18" cy="18" r="15" fill="none" stroke="var(--s-blue)" stroke-width="4" stroke-linecap="round" stroke-dasharray="94.2" stroke-dashoffset="94.2" transform="rotate(-90 18 18)"/></svg><i></i></div>';
+
+  var CHIPS = [
+    {q:'Dame 3 ideas de cena fáciles con pollo', a:'<div>¡Claro! Aquí van tres ideas:</div><ol><li>Pollo al horno con papas</li><li>Pollo salteado con arroz y verduras</li><li>Tacos de pollo con aguacate</li></ol>'},
+    {q:'Explícame qué es el internet como si tuviera 10 años', a:'<div>El internet es como una biblioteca gigante conectada por cables invisibles. Tu teléfono pide una página y la biblioteca te la manda en un segundo.</div>'},
+    {q:'Ayúdame a escribir un mensaje para cambiar mi cita con el doctor', a:'<div>Buenos días. Soy [tu nombre] y tengo cita el jueves. ¿Podríamos moverla para la próxima semana? Muchas gracias.</div>'}
+  ];
+  function chosen(c){ return CHIPS[c.chip < 0 ? 0 : c.chip]; }
+
+  /* ---------- Contenido de los 6 pasos ---------- */
+  var STEPS = [
+    { title:'Descarga la app', lead:'Vamos a bajar la app oficial de ChatGPT. Es gratis y toma un minuto.',
+      frames:[
+        { say:'Busca el ícono azul con una <b>A</b>. Se llama <b>App Store</b>. Tócalo con el dedo.',
+          screen:function(){ return scr('home', SB+'<div class="hgrid">'+app('bub','#34C759','Mensajes')+app('pho','#FF9F0A','Fotos')+app('cam','#8E8E93','Cámara')+app('map','#30B0C7','Mapas')+app('clk','#1C1C1E','Reloj')+app('not','#FFD60A','Notas')+app('set','#636366','Ajustes')+app('as','linear-gradient(#2A9BFF,#0064D6)','App Store',1)+'</div><div class="dock"><div class="ico" style="background:#34C759">'+IC.bub+'</div><div class="ico" style="background:#0A84FF">'+IC.map+'</div><div class="ico" style="background:#2A6FDB">'+IC.not+'</div><div class="ico" style="background:#FF453A">'+IC.pho+'</div></div>'); } },
+        { say:'Abajo a la derecha toca <b>Buscar</b> (la lupa).',
+          screen:function(){ return scr('', SB+'<div class="as-head"><small>HOY EN LA APP STORE</small><h3>Hoy</h3></div><div class="feat f1"><small>LA APP DEL DÍA</small><b>Aprende algo nuevo cada día</b></div><div class="feat f2"><small>SUGERENCIA</small><b>Apps para tu casa</b></div><div class="tabs"><div class="tab on"><i></i>Hoy</div><div class="tab"><i></i>Juegos</div><div class="tab"><i></i>Apps</div><div class="tab"><i></i>Arcade</div><button type="button" class="tab hot" data-go="1"><i></i>Buscar</button></div>'); } },
+        { say:'Toca la barra de arriba y escribe <b>ChatGPT</b>. Cuando termines, toca el botón azul <b>buscar</b> del teclado.',
+          screen:function(){ return scr('', SB+'<div class="srch"><div class="field">'+SV.lupa+'<span class="typed">ChatGPT</span></div><span class="canc">Cancelar</span></div><div class="sugg"><div>ChatGPT</div><div>chatgpt en español</div></div><div style="flex:1"></div>'+keys2()); } },
+        { say:'Sale una lista. Busca el que dice <b>OpenAI</b> debajo del nombre. Toca <b>ChatGPT</b> para entrar a su página.',
+          screen:function(){ return scr('', SB+'<div class="srch"><div class="field">'+SV.lupa+'<span>ChatGPT</span></div><span class="canc">Cancelar</span></div><div class="res"><div class="row"><button type="button" class="hot rowbtn" data-go="1"><div class="ico gpt">'+GLYPH+'</div><div class="rt"><b>ChatGPT</b><small>OpenAI · Productividad</small></div></button><span class="get">Obtener</span></div><div class="row">'+D('rowbtn','<div class="ico" style="background:#7C3AED">'+IC.bub+'</div><div class="rt"><b>Chat IA - Asistente</b><small>Otra empresa · Utilidades</small></div>','Ese no. El correcto dice OpenAI debajo del nombre.')+'<span class="get">Obtener</span></div><div class="row">'+D('rowbtn','<div class="ico" style="background:#0EA5A4">'+IC.not+'</div><div class="rt"><b>GPT Chatbot Pro</b><small>Otra empresa · Utilidades</small></div>','Ese tampoco. Busca el que dice OpenAI debajo del nombre.')+'<span class="get">Obtener</span></div></div>'); } },
+        { say:'Ya estás dentro de la página de ChatGPT. Aquí está el botón para bajarla: el botón azul <b>Obtener</b>. Tócalo.',
+          screen:function(){ return ppage(H('get big','Obtener')); } },
+        { say:'El iPhone quiere confirmar que eres tú. Haz <b>doble clic en el botón lateral</b> (o mira el teléfono si tiene Face ID). Es gratis, no te cobra.',
+          screen:function(){ return ppage('<span class="get big">Instalar</span>','<div class="dim end"><div class="sheet"><div class="prow"><div class="ico gpt">'+GLYPH+'</div><div><b>ChatGPT</b><small>OpenAI</small></div><b>Gratis</b></div><div class="prow sm"><span>Cuenta</span><span>Tu Apple ID</span></div>'+H('paybtn','Instalar con el botón lateral')+'</div></div>'); } },
+        { wait:2800, say:'Espera unos segundos mientras baja. Ese círculo se va llenando y la pantalla avanza sola.',
+          screen:function(){ return ppage(RING,'<div class="note" style="color:var(--s-mute)">Descargando…</div>'); } },
+        { say:'Terminó de bajar. El botón ahora dice <b>Abrir</b>. Tócalo.',
+          screen:function(){ return ppage(H('get big open','Abrir'),'<div class="note">Listo, ya se instaló en tu iPhone.</div>'); } },
+        { auto:1, say:'¡Se abrió! Esta es la pantalla negra con el logo de ChatGPT. En un momento sale la bienvenida. Toca <b>Siguiente paso</b>.',
+          screen:function(){ return scr('splash', '<div class="ico gpt">'+GLYPH+'</div>'); } }
+      ],
+      tips:[
+        {q:'Me pide mi contraseña de Apple', a:'Es normal. Es la contraseña de tu Apple ID, la misma de iCloud. Si tienes Face ID o Touch ID, basta con mirar el teléfono o poner el dedo.'},
+        {q:'¿Cuánto tarda en bajar?', a:'Con Wi-Fi son unos segundos. Con datos puede tardar un poco más. Solo espera a que el círculo se llene.'},
+        {q:'No me sale nada al buscar', a:'Revisa que tengas internet (Wi-Fi o datos). Escribe ChatGPT todo junto, sin espacio.'}
+      ] },
+
+    { title:'Ábrela y crea tu cuenta', lead:'Con tu Apple ID no tienes que inventar otra contraseña. Es lo más fácil.',
+      frames:[
+        { say:'Si la app no se abrió sola, busca en tu pantalla el ícono negro de <b>ChatGPT</b> y tócalo.',
+          screen:function(){ return scr('home', SB+'<div class="hgrid">'+app('bub','#34C759','Mensajes')+app('pho','#FF9F0A','Fotos')+app('cam','#8E8E93','Cámara')+app('map','#30B0C7','Mapas')+app('clk','#1C1C1E','Reloj')+app('not','#FFD60A','Notas')+app('set','#636366','Ajustes')+app('as','linear-gradient(#2A9BFF,#0064D6)','App Store')+'<div class="app"><button type="button" class="ico gpt hot" data-go="1" aria-label="ChatGPT">'+GLYPH+'</button><span>ChatGPT</span></div></div><div class="dock"><div class="ico" style="background:#34C759">'+IC.bub+'</div><div class="ico" style="background:#0A84FF">'+IC.map+'</div><div class="ico" style="background:#2A6FDB">'+IC.not+'</div><div class="ico" style="background:#FF453A">'+IC.pho+'</div></div>'); } },
+        { say:'La primera vez sale una bienvenida. Toca <b>Registrarse</b>.',
+          screen:function(){ return scr('', SB+'<div class="wel"><div class="ico gpt">'+GLYPH+'</div><h4>Bienvenido a ChatGPT</h4><p>Pregunta, escribe, traduce y aprende.</p></div><div class="wbt">'+H('btn-s dark','Registrarse')+'<div class="btn-s alt">Iniciar sesión</div></div>'); } },
+        { say:'Toca <b>Continuar con Apple</b>. Así usas tu Apple ID y no necesitas otra contraseña.',
+          screen:function(){ return scr('', SB+'<div class="opts"><h4>Crea tu cuenta</h4>'+H('btn-s dark','Continuar con Apple')+D('btn-s lite','Continuar con Google','También sirve, pero con Apple es más fácil: no necesitas otra contraseña.')+'<div class="or">o</div>'+D('btn-s lite','Continuar con correo','También sirve, pero con Apple es más fácil: no necesitas otra contraseña.')+'</div>'); } },
+        { say:'El iPhone pregunta si quieres entrar con tu Apple ID. Toca <b>Continuar</b> y mira el teléfono (Face ID) o pon tu contraseña.',
+          screen:function(){ return scr('', SB+'<div class="wel"><div class="ico gpt">'+GLYPH+'</div><h4>Bienvenido a ChatGPT</h4></div><div class="dim end"><div class="sheet"><div class="fid">'+SV.fid+'</div><h5>Registrarse con Apple ID</h5><p>Se usará tu Apple ID para entrar a ChatGPT.</p>'+H('btn-s','Continuar')+'</div></div>'); } },
+        { say:'Escribe tu nombre y tu fecha de nacimiento. Luego toca <b>Continuar</b>.',
+          screen:function(){ return scr('', SB+'<div class="form"><h4>Cuéntanos de ti</h4><div class="fl">Nombre<div>María</div></div><div class="fl">Fecha de nacimiento<div>15 / 03 / 1975</div></div></div><div class="fill">'+H('btn-s dark','Continuar')+'</div>'); } }
+      ],
+      tips:[
+        {q:'¿Y si prefiero Google o mi correo?', a:'También funciona. Toca esa opción y sigue lo que pida la pantalla. Con Apple es más rápido porque no hay que crear otra contraseña.'},
+        {q:'Me pide un código', a:'Te llega por correo o por mensaje de texto. Escríbelo tal cual en la app.'}
+      ] },
+
+    { title:'Acepta los permisos', lead:'El iPhone te va a preguntar si la app puede hacer algunas cosas. Aquí te decimos qué tocar.',
+      frames:[
+        { say:'Sale un cuadro que habla de <b>notificaciones</b>. Toca <b>Permitir</b> para que la app te avise. Este permiso es opcional.',
+          screen:function(){ return scr('', SB+ctop('ChatGPT')+'<div class="cbody"><h4>¿En qué puedo ayudarte?</h4></div>'+comp()+'<div class="dim"><div class="alert"><h5>“ChatGPT” quiere enviarte notificaciones</h5><p>Pueden incluir alertas, sonidos y globos.</p><div class="bt">'+D('','No permitir','Es opcional y también está bien. Para seguir la guía, toca Permitir.')+H('strong','Permitir')+'</div></div></div>'); } },
+        { say:'Ahora pregunta por el <b>micrófono</b>. Toca <b>Permitir</b>. Sin esto no podrás hablarle.',
+          screen:function(){ return scr('', SB+ctop('ChatGPT')+'<div class="cbody"><h4>¿En qué puedo ayudarte?</h4></div>'+comp()+'<div class="dim"><div class="alert"><h5>“ChatGPT” quiere acceder al micrófono</h5><p>Para que puedas hablar con ChatGPT.</p><div class="bt">'+D('','No permitir','Si tocas No permitir no podrás hablarle. Mejor toca Permitir.')+H('strong','Permitir')+'</div></div></div>'); } }
+      ],
+      tips:[
+        {q:'Toqué “No permitir” sin querer', a:'No pasa nada. Abre Ajustes del iPhone, baja hasta encontrar ChatGPT, tócalo y activa Micrófono.'},
+        {q:'¿Es seguro darle el micrófono?', a:'Solo lo usa cuando tú tocas el botón de hablar. Lo puedes apagar cuando quieras en Ajustes.'}
+      ] },
+
+    { title:'Elige el modelo', lead:'El modelo es el cerebro que contesta. Déjalo en Auto y ya no tienes que pensar en esto.',
+      frames:[
+        { say:'Arriba está el nombre <b>ChatGPT</b> con una flechita. Tócalo.',
+          screen:function(){ return scr('', SB+ctop('ChatGPT',1)+'<div class="cbody"><h4>¿En qué puedo ayudarte?</h4></div>'+comp()); } },
+        { say:'Toca <b>Auto</b>. ChatGPT decide solo si contesta rápido o si piensa más.',
+          screen:function(){ return scr('', SB+ctop('ChatGPT')+'<div class="cbody"><h4>¿En qué puedo ayudarte?</h4></div>'+comp()+'<div class="menu"><button type="button" class="opt sel hot" data-go="1"><span><b>Auto <span class="rec">Recomendado</span></b><small>Elige por ti la mejor forma de contestar</small></span><span class="rad"></span></button><button type="button" class="opt dud" data-dud="Ese sirve para casos especiales. Para empezar, elige Auto."><span><b>Rápido</b><small>Respuestas al instante</small></span><span class="rad"></span></button><button type="button" class="opt dud" data-dud="Ese sirve para preguntas difíciles. Para empezar, elige Auto."><span><b>Pensar</b><small>Para preguntas difíciles</small></span><span class="rad"></span></button></div>'); } },
+        { auto:1, say:'Listo. Queda guardado y no tienes que volver a tocarlo.',
+          screen:function(){ return scr('', SB+ctop('ChatGPT Auto')+'<div class="cbody"><h4>¿En qué puedo ayudarte?</h4></div><div class="toast">✓ Modelo Auto elegido</div>'+comp()); } }
+      ],
+      tips:[
+        {q:'No veo la opción “Auto”', a:'Los nombres cambian con el tiempo. Deja marcada la que diga “recomendado” o la que ya viene elegida. Es la mejor para empezar.'},
+        {q:'¿Cuándo uso “Pensar”?', a:'Para preguntas difíciles: cuentas largas, planes o decisiones importantes. Para todo lo demás, Auto es suficiente.'}
+      ] },
+
+    { title:'Paga Plus (opcional)', lead:'Puedes empezar gratis. Plus cuesta $20 al mes y te da más de todo. Aquí ves cómo pagarlo.',
+      extra:'<div class="cmp"><h2>Gratis o Plus</h2><div class="two"><div class="plan free"><h3>Gratis</h3><div class="pr">$0</div><ul><li>Preguntas y conversaciones de todos los días</li><li>Ayuda para escribir y traducir</li><li>Con límite de mensajes al día</li></ul></div><div class="plan plus"><h3>Plus</h3><div class="pr">$20 <small>al mes</small></div><ul><li>Muchos más mensajes y respuestas más rápidas</li><li>Los modelos más avanzados</li><li>Conversaciones por voz, imágenes y archivos</li><li>Prioridad cuando hay mucha gente conectada</li></ul></div></div><p class="advice">Mi consejo: empieza gratis unos días. Si te quedas sin mensajes o quieres más, sube a Plus.</p></div>',
+      frames:[
+        { say:'Toca las tres rayitas de arriba a la izquierda para abrir el menú. Abajo toca <b>Mejorar plan</b>.',
+          screen:function(){ return scr('', SB+ctop('ChatGPT')+'<div class="cbody"><h4>¿En qué puedo ayudarte?</h4></div>'+comp()+'<div class="dim" style="place-items:start end"></div><div class="side"><div class="sr">Buscar</div><div class="ch">Recetas fáciles</div><div class="ch">Mensaje para el doctor</div><div class="ch">Ideas de regalo</div>'+H('up','Mejorar plan')+'<div class="userrow"><div class="av">M</div><div><b>María</b><small>Plan Gratis</small></div></div></div>'); } },
+        { say:'Aquí ves lo que incluye Plus: <b>$20 al mes</b>. Toca <b>Suscribirse a Plus</b>.',
+          screen:function(){ return scr('', SB+'<div class="planwrap"><div class="ptitle">Elige tu plan</div><div class="pcard sel"><div class="ph2"><b>Plus</b><span class="price">$20<small>/mes</small></span></div><ul><li>Más mensajes y más rápido</li><li>Voz, imágenes y archivos</li><li>Los modelos más avanzados</li></ul></div><div class="pcard"><div class="ph2"><b>Gratis</b><small>Tu plan actual</small></div></div>'+H('btn-s dark','Suscribirse a Plus')+'<div class="fine">Se cobra cada mes a tu Apple ID. Cancelas cuando quieras.</div></div>'); } },
+        { say:'El iPhone te muestra el cobro. Revisa el precio y confirma con <b>doble clic en el botón lateral</b> (o con Face ID).',
+          screen:function(){ return scr('', SB+'<div class="planwrap"></div><div class="dim end"><div class="sheet"><div class="prow"><div class="ico gpt">'+GLYPH+'</div><div><b>ChatGPT Plus</b><small>Suscripción mensual</small></div><b>$20.00</b></div><div class="prow sm"><span>Cuenta</span><span>Tu Apple ID</span></div><div class="prow sm"><span>Pago</span><span>Tu tarjeta o Apple Pay</span></div>'+H('paybtn','Confirmar con el botón lateral')+'</div></div>'); } },
+        { auto:1, say:'¡Listo! Ya eres Plus. El cobro se hace solo cada mes a tu Apple ID.',
+          screen:function(){ return scr('', SB+'<div class="wel"><div class="okc">'+SV.check+'</div><h4>¡Gracias!</h4><p>Ya tienes ChatGPT Plus.</p></div><div class="fill"><div class="btn-s dark">Empezar</div></div>'); } }
+      ],
+      tips:[
+        {q:'¿Cómo lo cancelo?', a:'En el iPhone: Ajustes, toca tu nombre arriba, Suscripciones, ChatGPT y Cancelar suscripción. Sigues con Plus hasta que termine el mes que ya pagaste.'},
+        {q:'¿Por qué me cobra un poco distinto de $20?', a:'En la App Store el precio puede salir con impuestos o con centavos de diferencia. Siempre mira el precio en la pantalla antes de confirmar.'},
+        {q:'No tengo tarjeta en mi Apple ID', a:'Apple te va a pedir que agregues una tarjeta o Apple Pay. Solo lo haces una vez.'}
+      ] },
+
+    { title:'Tu primera conversación', lead:'Ya está todo listo. Haz tu primera pregunta como si le escribieras a un amigo.',
+      frames:[
+        { say:'Toca una de las ideas, o toca la barra de abajo que dice <b>Pregunta lo que quieras</b>.',
+          screen:function(){ return scr('', SB+ctop('ChatGPT Auto')+'<div class="cbody"><h4>¿En qué puedo ayudarte?</h4><div class="chipz"><button type="button" class="chip" data-chip="0">'+CHIPS[0].q+'</button><button type="button" class="chip" data-chip="1">'+CHIPS[1].q+'</button><button type="button" class="chip" data-chip="2">'+CHIPS[2].q+'</button></div></div>'+H('comp','<span>+</span><span class="ph">Pregunta lo que quieras</span><span class="circ">'+SV.wave+'</span>')); } },
+        { say:'Así se escribe la pregunta. Cuando termines, toca la <b>flecha hacia arriba</b> para enviarla.',
+          screen:function(c){ return scr('', SB+ctop('ChatGPT Auto')+'<div class="cbody"></div><div class="comp"><span>+</span><span class="tx">'+chosen(c).q+'</span>'+H('circ','<span style="display:contents">'+SV.up+'</span>')+'</div>'+keys()); } },
+        { say:'¡Ahí contesta! Ahora prueba hablarle: toca el ícono de <b>ondas</b> abajo a la derecha.',
+          screen:function(c){ return scr('', SB+ctop('ChatGPT Auto')+'<div class="msgs"><div class="u">'+chosen(c).q+'</div><div class="a">'+chosen(c).a+'</div></div><div class="comp"><span>+</span><span class="ph">Pregunta lo que quieras</span>'+H('circ','<span style="display:contents">'+SV.wave+'</span>')+'</div>'); } },
+        { auto:1, say:'Habla normal, como con una persona. Te contesta con voz. Para terminar, toca la <b>X</b>.',
+          screen:function(){ return scr('voice', SB+'<div style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:1.4em"><div class="orb"></div><div style="opacity:.8">Te escucho…</div></div><div class="vbtn"><i>'+SV.mic+'</i><i>'+SV.x+'</i></div>'); } }
+      ],
+      tips:[
+        {q:'¿Puedo hablarle en español?', a:'Sí. Escríbele o háblale en español y te contesta en español.'},
+        {q:'No entendí la respuesta', a:'Dile “explícamelo más fácil” o “hazlo más corto”. Puedes pedirle lo mismo las veces que quieras.'},
+        {q:'¿Qué no debo escribirle?', a:'No le pongas contraseñas, números de tarjeta ni datos como el Seguro Social. Para preguntas del día a día no los necesitas.'}
+      ] }
+  ];
+
+  /* ---------- Estado ---------- */
+  var cur = 0, F = 0, done = false, ctx = {chip:-1}, waitT = null;
+  try { var sv = parseInt(localStorage.getItem('fg-chatgpt-step'), 10); if (sv >= 0 && sv <= 7) cur = sv; } catch(e){}
+  function save(){ try { localStorage.setItem('fg-chatgpt-step', String(cur)); } catch(e){} }
+
+  function renderProg(){
+    var h = '';
+    for (var i = 1; i <= 6; i++){
+      h += '<button type="button" class="seg '+(i < cur ? 'past' : (i === cur ? 'on' : ''))+'" data-jump="'+i+'" aria-label="Paso '+i+'"></button>';
+    }
+    prog.innerHTML = h;
+  }
+  function go(n){
+    cur = n; F = 0; done = false; ctx = {chip:-1};
+    save(); render();
+    window.scrollTo(0,0);
+  }
+  function render(){
+    renderProg();
+    if (cur === 0) welcome();
+    else if (cur === 7) finale();
+    else stepView();
+  }
+
+  function welcome(){
+    main.innerHTML =
+      '<section class="hero"><div>' +
+        '<span class="tag">Guía de Fix &amp; Go</span>' +
+        '<h1>ChatGPT en tu iPhone, paso a paso</h1>' +
+        '<p class="lead">Instálalo, ábrelo, déjalo bien configurado, aprende a pagar tu plan y haz tu primera pregunta. En cada pantalla solo tienes que tocar lo que brilla.</p>' +
+        '<div class="chips"><span class="pill">6 pasos</span><span class="pill">Unos 10 minutos</span><span class="pill">Todo en español</span></div>' +
+        '<h2 style="font:800 1.2rem var(--font-display);margin:0 0 10px">Ten a la mano</h2>' +
+        '<ul class="need">' +
+          '<li>'+SV.checkc+'<span>Tu iPhone con internet (mejor con Wi-Fi).</span></li>' +
+          '<li>'+SV.checkc+'<span>Tu Apple ID: el correo y la contraseña con que abres tu iPhone.</span></li>' +
+          '<li>'+SV.checkc+'<span>Una tarjeta o Apple Pay, solo si vas a pagar Plus (paso 5).</span></li>' +
+        '</ul>' +
+        '<button type="button" class="btn pri big" id="start">Empezar</button>' +
+      '</div>' +
+      '<div><div class="phone"><div class="screen">' + scr('', SB+ctop('ChatGPT Auto')+'<div class="msgs" style="justify-content:flex-end"><div class="u">Hola, ¿me ayudas con una receta?</div><div class="a"><div>¡Claro! ¿Qué ingredientes tienes en casa?</div></div></div>'+comp()) + '</div></div></div>' +
+      '</section>';
+  }
+
+  function stepView(){
+    var s = STEPS[cur-1];
+    var tips = s.tips.map(function(t){ return '<details><summary>'+t.q+'</summary><p>'+t.a+'</p></details>'; }).join('');
+    main.innerHTML =
+      '<section class="step">' +
+        '<div class="head"><span class="tag">Paso '+cur+' de 6</span><h1>'+s.title+'</h1><p class="lead">'+s.lead+'</p></div>' +
+        '<div class="grid">' +
+          '<div class="pcol"><div class="phone"><div class="screen" id="scr"></div></div><div class="dots" id="dots" aria-hidden="true"></div></div>' +
+          '<div class="scol">' +
+            '<div class="card say" aria-live="polite"><span class="lbl">Ahora</span><p id="say"></p><p class="hint" id="hint" hidden></p><p class="okline" id="okline" hidden>✓ Muy bien. Toca «Siguiente paso».</p><button type="button" class="again" id="again" hidden>Ver este paso otra vez</button></div>' +
+            (s.extra || '') +
+            '<div class="tips"><h2>¿Y si…?</h2>'+tips+'</div>' +
+          '</div>' +
+        '</div>' +
+      '</section>' +
+      '<div class="nav"><button type="button" class="btn sec" id="back">Atrás</button><button type="button" class="btn pri" id="next">'+(cur === 6 ? 'Terminar' : 'Siguiente paso')+'</button></div>';
+    paint();
+  }
+
+  function paint(){
+    clearTimeout(waitT);
+    var s = STEPS[cur-1], fs = s.frames, fr = fs[F];
+    var screenEl = document.getElementById('scr');
+    screenEl.innerHTML = fr.screen(ctx) + (done && !fr.auto ? '<div class="okmark">✓</div>' : '');
+    document.getElementById('say').innerHTML = fr.say;
+    var hint = document.getElementById('hint'); hint.hidden = true;
+    document.getElementById('okline').hidden = !done;
+    document.getElementById('again').hidden = !done;
+    document.getElementById('next').classList.toggle('ready', done);
+    var d = '';
+    for (var i = 0; i < fs.length; i++){ d += '<i class="'+(done || i < F ? 'past' : (i === F ? 'on' : ''))+'"></i>'; }
+    document.getElementById('dots').innerHTML = d;
+    if (fr.wait) { var sc = cur, sf = F; waitT = setTimeout(function(){ if (cur === sc && F === sf) advance(); }, fr.wait); }
+  }
+  function focusHot(){
+    var h = document.querySelector('#scr .hot');
+    if (h) { try { h.focus({preventScroll:true}); } catch(e){} }
+  }
+  function advance(){
+    var fs = STEPS[cur-1].frames;
+    if (F < fs.length - 1) F++; else done = true;
+    if (fs[F].auto) done = true;
+    paint(); focusHot();
+  }
+
+  function finale(){
+    var items = ['Instalaste ChatGPT','Creaste tu cuenta','Aceptaste los permisos','Dejaste el modelo en Auto','Viste cómo pagar Plus','Hiciste tu primera pregunta'];
+    var list = items.map(function(t){ return '<li>'+SV.checkc+'<span>'+t+'</span></li>'; }).join('');
+    var phoneBlock = '';
+    if (PHONE) {
+      var tel = PHONE.replace(/[^0-9+]/g,'');
+      phoneBlock = '<div class="num" id="pnum">'+PHONE+'</div><div class="crow"><button type="button" class="cbtn" id="copy">Copiar número</button><a class="cbtn ghost" href="tel:'+tel+'">Llamar</a></div>';
+    }
+    main.innerHTML =
+      '<section class="step">' +
+        '<div class="head"><span class="tag">Guía terminada</span><h1>¡Lo lograste!</h1><p class="lead">Ya tienes ChatGPT listo en tu iPhone. Esto fue lo que hiciste:</p><ul class="done-list">'+list+'</ul></div>' +
+        '<div class="grid" style="margin-top:26px"><div class="scol">' +
+          '<div class="tips"><h2>Ideas para probar hoy</h2><ul class="next3"><li>Pídele que te ayude a escribir un mensaje.</li><li>Pídele que te traduzca algo al inglés.</li><li>Cuéntale qué hay en tu nevera y pídele una receta.</li></ul></div>' +
+        '</div><div class="scol">' +
+          '<div class="card contact"><h2>¿Algo no salió? Te ayudamos.</h2><p>Fix &amp; Go, soporte técnico en español.</p>'+phoneBlock+'<div class="crow"><a class="cbtn ghost" href="https://'+SITE+'" target="_blank" rel="noopener">'+SITE+'</a></div></div>' +
+        '</div></div>' +
+      '</section>' +
+      '<div class="nav"><button type="button" class="btn sec" id="back">Atrás</button><button type="button" class="btn pri" id="restart">Volver al inicio</button></div>';
+  }
+
+  /* ---------- Eventos ---------- */
+  main.addEventListener('click', function(e){
+    var t = e.target.closest('button'); if (!t) return;
+    if (t.dataset.go) { advance(); return; }
+    if (t.dataset.chip) { ctx.chip = parseInt(t.dataset.chip, 10); advance(); return; }
+    if (t.dataset.dud) {
+      t.classList.remove('shake'); void t.offsetWidth; t.classList.add('shake');
+      var hint = document.getElementById('hint'); hint.textContent = t.dataset.dud; hint.hidden = false;
+      return;
+    }
+    switch (t.id) {
+      case 'start': go(1); break;
+      case 'next': go(cur + 1); break;
+      case 'back': go(cur - 1); break;
+      case 'restart': go(0); break;
+      case 'again': F = 0; done = false; ctx = {chip:-1}; paint(); break;
+      case 'copy':
+        var num = document.getElementById('pnum');
+        var ok = function(){ t.textContent = 'Copiado ✓'; };
+        var fallback = function(){ var r = document.createRange(); r.selectNodeContents(num); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); t.textContent = 'Número seleccionado'; };
+        try { navigator.clipboard.writeText(num.textContent).then(ok, fallback); } catch(err){ fallback(); }
+        break;
+    }
+  });
+  prog.addEventListener('click', function(e){
+    var t = e.target.closest('button'); if (t && t.dataset.jump) go(parseInt(t.dataset.jump, 10));
+  });
+
+  var big = false;
+  try { big = localStorage.getItem('fg-chatgpt-big') === '1'; } catch(e){}
+  function applySize(){ document.documentElement.style.fontSize = big ? '118%' : '100%'; document.getElementById('fs').textContent = big ? 'A−' : 'A+'; }
+  document.getElementById('fs').addEventListener('click', function(){
+    big = !big; applySize();
+    try { localStorage.setItem('fg-chatgpt-big', big ? '1' : '0'); } catch(e){}
+  });
+  applySize();
+  render();
+})();
+</script>
+
+</body>
+</html>
