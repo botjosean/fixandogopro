@@ -293,9 +293,9 @@ const T = {
     hold:"Mantén pulsado para hablar", prep:"Preparando el micrófono…", slow:"Sigue enviando, un momento… no cierres esta pantalla.", tapstop:"Grabando… toca para parar", micHelp:"No pudimos usar el micrófono. Toca el candado junto a la dirección, permite el micrófono y vuelve a intentar. O escribe tu mensaje.", useText:"Escribir mi mensaje", release:"Suelta cuando termines", typing:"Escribiendo lo que dijiste", check:"Esto entendimos. Corrígelo si hace falta:", txFail:"No pudimos escribirlo. Puedes escribirlo tú o enviar solo la nota de voz.", reach:"¿A dónde te respondemos?", play:"Escuchar", pause:"Pausa",
     micErr:"No se pudo usar el micrófono. Escríbenos aquí abajo.",
     ph:"Cuéntanos qué necesitas. Ej: TV de 65\" en pared de drywall, en Hoover.",
-    name:"Tu nombre", phone:"Tu teléfono",
+    name:"Tu nombre", phone:"Tu teléfono (205) 555-1234",
     send:"Enviar mensaje", sending:"Enviando…",
-    needPhone:"Pon tu teléfono para poder responderte.", needMsg:"Graba una nota o escribe tu mensaje.",
+    needPhone:"Escribe tu teléfono con los 10 números, por ejemplo (205) 555-1234.", needMsg:"Graba una nota o escribe tu mensaje.",
     fail:"No se pudo enviar. Escríbenos directo abajo.",
     or:"o cuéntanos más", sms:"Texto", tel:"Llamar", wa:"WhatsApp", fb:"Messenger", mail:"Correo", subj:s=>`Consulta: ${s}`,
     doneT:n=>`¡Listo${n?`, ${n}`:""}!`, doneP:"Recibimos tu mensaje. Te respondemos hoy mismo.", close:"Cerrar",
@@ -315,9 +315,9 @@ const T = {
     hold:"Hold to talk", prep:"Getting the microphone ready…", slow:"Still sending, one moment… please keep this screen open.", tapstop:"Recording… tap to stop", micHelp:"We couldn't use the microphone. Tap the lock next to the address, allow the microphone and try again. Or type your message.", useText:"Type my message", release:"Release when you're done", typing:"Writing what you said", check:"Here's what we heard. Fix it if needed:", txFail:"We couldn't write it out. You can type it or just send the voice note.", reach:"Where can we reply?", play:"Play", pause:"Pause",
     micErr:"Couldn't use the microphone. Type your message below.",
     ph:"Tell us what you need. E.g. 65\" TV on drywall, in Hoover.",
-    name:"Your name", phone:"Your phone",
+    name:"Your name", phone:"Your phone (205) 555-1234",
     send:"Send message", sending:"Sending…",
-    needPhone:"Add your phone so we can get back to you.", needMsg:"Record a voice note or type your message.",
+    needPhone:"Enter your 10-digit phone number, for example (205) 555-1234.", needMsg:"Record a voice note or type your message.",
     fail:"Couldn't send. Reach us directly below.",
     or:"or tell us more", sms:"Text", tel:"Call", wa:"WhatsApp", fb:"Messenger", mail:"Email", subj:s=>`Inquiry: ${s}`,
     doneT:n=>`Got it${n?`, ${n}`:""}!`, doneP:"Your message is in. We'll get back to you today.", close:"Close",
@@ -434,6 +434,25 @@ const root = document.getElementById("sheetRoot"), sheet = document.getElementBy
 function svc(){ if (!st || st.k==null) return null; const [ic,v] = S[st.k].items[st.i]; return {ic, name:v[lang][0], sub:v[lang][1]}; }
 function textMsg(){ const t = T[lang], s = svc(); return t.msg(s?s.name:t.general, st.when>=0?t.chips[st.when]:"", (st.text||"").trim()); }
 const fmt = s => `${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,"0")}`;
+/* teléfono: acepta cualquier formato (guiones, puntos, espacios, +1, 1-...) y lo deja como (205) 555-1234 */
+const phDigits = v => { let d = String(v||"").replace(/\D/g,""); if (d.length > 10 && d[0] === "1") d = d.slice(1); return d.slice(-10); };
+const phFmt = d => d.length <= 3 ? d : d.length <= 6 ? `(${d.slice(0,3)}) ${d.slice(3)}` : `(${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6)}`;
+/* sonidos y vibración del micrófono */
+let sfxCtx = null;
+function sfx(kind){
+  try{
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (AC){
+      sfxCtx = sfxCtx || new AC(); if (sfxCtx.state === "suspended") sfxCtx.resume();
+      const seq = {start:[[660,0,.09],[880,.1,.13]], stop:[[880,0,.09],[587,.1,.15]], done:[[784,0,.1],[1047,.11,.17]], sent:[[523,0,.1],[659,.11,.1],[784,.22,.2]]}[kind];
+      const t0 = sfxCtx.currentTime + .01;
+      seq.forEach(([f,dl,len])=>{ const o = sfxCtx.createOscillator(), g = sfxCtx.createGain(); o.type = "sine"; o.frequency.value = f;
+        g.gain.setValueAtTime(0, t0+dl); g.gain.linearRampToValueAtTime(.2, t0+dl+.012); g.gain.exponentialRampToValueAtTime(.0001, t0+dl+len);
+        o.connect(g); g.connect(sfxCtx.destination); o.start(t0+dl); o.stop(t0+dl+len+.03); });
+    }
+  }catch(e){}
+  try{ navigator.vibrate && navigator.vibrate(kind==="start" ? 25 : kind==="stop" ? [15,40,15] : 12); }catch(e){}
+}
 
 function fillSheet(){
   const t = T[lang], s = svc();
@@ -469,7 +488,7 @@ function fillSheet(){
     <p class="lbl">${t.reach}</p>
     <div class="two">
       <input class="in" id="nm" type="text" autocomplete="given-name" placeholder="${esc(t.name)}" aria-label="${esc(t.name)}" value="${esc(st.name)}">
-      <input class="in" id="ph" type="tel" inputmode="tel" autocomplete="tel" placeholder="${esc(t.phone)}" aria-label="${esc(t.phone)}" value="${esc(st.phone)}">
+      <input class="in" id="ph" type="tel" inputmode="tel" autocomplete="tel" maxlength="60" placeholder="${esc(t.phone)}" aria-label="${esc(t.phone)}" value="${esc(st.phone)}">
     </div>
     <p class="fielderr" id="phErr" role="alert" hidden></p>
     <input class="hp" id="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
@@ -488,7 +507,11 @@ function fillSheet(){
   $("#txt").oninput = e=>{ st.text = e.target.value; const tx = $("#tx"); if (tx) tx.value = st.text; updateLinks(); };
   $("#tx").oninput = e=>{ st.text = e.target.value; $("#txt").value = st.text; updateLinks(); };
   $("#nm").oninput = e=>{ st.name = e.target.value; };
-  $("#ph").oninput = e=>{ st.phone = e.target.value; e.target.classList.remove("bad"); const pe = $("#phErr"); pe.hidden = true; };
+  $("#ph").oninput = e=>{ const el = e.target, del = /^delete/.test(e.inputType||""), before = phDigits(st.phone||"");
+    let d = phDigits(el.value); if (del && d === before) d = d.slice(0,-1);   // borrar un guion o parentesis borra el número anterior
+    st.phone = phFmt(d); if (el.value !== st.phone){ el.value = st.phone; try{ el.setSelectionRange(st.phone.length, st.phone.length); }catch(_){} }
+    el.classList.remove("bad"); $("#phErr").hidden = true; };
+  $("#ph").onchange = e=>{ e.target.value = st.phone = phFmt(phDigits(e.target.value)); };
   $("#send").onclick = send;
 }
 function setMode(m){
@@ -521,12 +544,12 @@ function bindRec(b){
   b.onpointerdown = e=>{
     sawPointer = true; e.preventDefault(); try{ b.setPointerCapture(e.pointerId); }catch(_){}
     if (rec && rec.state==="recording"){ rec.stop(); pressT = 0; held = false; return; }   // segundo toque: parar
-    pressT = Date.now(); held = true; startRec();
+    pressT = Date.now(); held = true; sfx("start"); startRec();
   };
   const up = ()=>{ held = false; if (rec && rec.state==="recording" && pressT && Date.now()-pressT > 650) rec.stop(); else if (rec && rec.state==="recording") sheet.querySelector("#recS").textContent = T[lang].tapstop; pressT = 0; };
   b.onpointerup = up; b.onpointercancel = up;
-  b.onclick = e=>{ if (!sawPointer) toggle(); };            // navegadores sin eventos de puntero
-  b.onkeydown = e=>{ if (e.key==="Enter" || e.key===" "){ e.preventDefault(); toggle(); } };
+  b.onclick = e=>{ if (!sawPointer){ if (!(rec && rec.state==="recording")) sfx("start"); toggle(); } };            // navegadores sin eventos de puntero
+  b.onkeydown = e=>{ if (e.key==="Enter" || e.key===" "){ e.preventDefault(); if (!(rec && rec.state==="recording")) sfx("start"); toggle(); } };
 }
 function micFail(err){
   const t = T[lang], S = sel => sheet.querySelector(sel);
@@ -540,7 +563,7 @@ async function startRec(){
   const t = T[lang], b = sheet.querySelector("#rec"), box = sheet.querySelector("#recbox");
   if (micBusy || (rec && rec.state==="recording")) return;
   stopPlayer();
-  if (st.audio){ URL.revokeObjectURL(st.audio.url); st.audio = null; sheet.querySelector("#recP").innerHTML = ""; }
+  if (st.audio){ URL.revokeObjectURL(st.audio.url); st.audio = null; st.aid = ""; sheet.querySelector("#recP").innerHTML = ""; }
   const owner = st; micBusy = true;
   // respuesta inmediata: el boton reacciona al instante aunque el navegador tarde en dar el micrófono
   b.classList.add("on"); b.innerHTML = ico("stop"); box.classList.add("rec"); sheet.querySelector("#txWrap").hidden = true; status("");
@@ -548,6 +571,8 @@ async function startRec(){
   try{ stream = await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}}); }
   catch(e){ micBusy = false; if (st===owner) micFail(e); return; }
   micBusy = false;
+  if (st!==owner){ stream.getTracks().forEach(x=>x.stop()); return; }
+  await new Promise(r=>setTimeout(r, 260));   // deja terminar el "beep" de inicio para que no quede en la grabación
   if (st!==owner){ stream.getTracks().forEach(x=>x.stop()); return; }
   let mr, mime = "";
   try{
@@ -559,6 +584,7 @@ async function startRec(){
   rec.onstop = ()=>{
     clearInterval(tick); stopWave(); ms.getTracks().forEach(x=>x.stop());
     if (st!==owner) return;
+    sfx("stop");
     const blob = new Blob(chunks, {type: mr.mimeType || mime || "audio/webm"});
     b.classList.remove("on"); b.innerHTML = ico("mic"); box.classList.remove("rec");
     if (secs < .6){ sheet.querySelector("#recT").textContent = "0:00"; sheet.querySelector("#recS").textContent = t.hold; return; }
@@ -578,12 +604,12 @@ async function transcribe(owner){
   try{
     const ac = new AbortController(), to = setTimeout(()=>ac.abort(), 15000);
     const r = await fetch(CONFIG.ENDPOINT, {method:"POST", signal:ac.signal, body:JSON.stringify({type:"transcribe", mime:st.audio.mime, audio:await b64(st.audio.blob)})});
-    clearTimeout(to); const j = await r.json(); ok = !!j.ok; text = (j.text||"").trim();
+    clearTimeout(to); const j = await r.json(); ok = !!j.ok; text = (j.text||"").trim(); if (ok && j.aid) st.aid = j.aid;
   }catch(e){}
   if (st!==owner) return;
   S("#rec").disabled = false;
   if (text){ st.text = text; st.tx = 1; }
-  showRecDone(ok && !!text);
+  sfx("done"); showRecDone(ok && !!text);
 }
 function showRecDone(good){
   const t = T[lang], S = sel => sheet.querySelector(sel), d = st.audio.dur;
@@ -605,7 +631,7 @@ const b64 = blob => new Promise((ok,ko)=>{ const r = new FileReader(); r.onload 
 
 async function send(){
   const t = T[lang], s = svc(), btn = sheet.querySelector("#send");
-  const phone = (st.phone||"").replace(/\D/g,""), mode = canVoice() ? st.mode : "text";
+  const phone = phDigits(st.phone), mode = canVoice() ? st.mode : "text";
   const hasMsg = mode==="voice" ? !!st.audio : !!(st.text||"").trim();
   if (phone.length<10){
     const ph = sheet.querySelector("#ph"), pe = sheet.querySelector("#phErr");
@@ -620,10 +646,10 @@ async function send(){
     const payload = { v:1, lang, zone:zk, service: s?s.name:t.general, line: st.k??"", when: st.when>=0?t.chips[st.when]:"",
       name:(st.name||"").trim().slice(0,80), phone, text:(st.text||"").trim().slice(0,2000), tx:(mode==="voice" && st.tx) ? 1 : 0,
       hp: sheet.querySelector("#hp").value, mime: mode==="voice"?st.audio.mime:"", dur: mode==="voice"?st.audio.dur:0,
-      audio: mode==="voice" ? await b64(st.audio.blob) : "" };
+      aid: (mode==="voice" && st.aid) ? st.aid : "", audio: (mode==="voice" && !st.aid) ? await b64(st.audio.blob) : "" };
     const r = await fetch(CONFIG.ENDPOINT, {method:"POST", body:JSON.stringify(payload)});
     const j = await r.json(); if (!j.ok) throw new Error(j.error||"fail");
-    clearTimeout(slowT); st.sent = true; fillSheet();
+    clearTimeout(slowT); st.sent = true; sfx("sent"); fillSheet();
   }catch(e){
     clearTimeout(slowT); btn.disabled = false; btn.lastElementChild.textContent = t.send; status(t.fail, true);
   }

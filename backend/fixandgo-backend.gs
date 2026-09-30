@@ -41,6 +41,7 @@ function setup() {
   ScriptApp.getProjectTriggers().forEach(t => ScriptApp.deleteTrigger(t));
   ScriptApp.newTrigger('processVoice').timeBased().everyMinutes(5).create();
   ScriptApp.newTrigger('processEmail').timeBased().everyMinutes(5).create();
+  ScriptApp.newTrigger('processJobs').timeBased().everyMinutes(1).create();   // cola de mensajes de la página web
   processVoice();
   processEmail();
 }
@@ -55,37 +56,71 @@ function doPost(e) {
       if (!throttle_()) return out_({ ok: false, error: 'busy' });
       const tb = Utilities.base64Decode(d.audio || '');
       if (!tb.length || tb.length > 8 * 1024 * 1024) return out_({ ok: false, error: 'size' });
-      return out_({ ok: true, text: deepgram_(tb, String(d.mime || 'audio/webm').split(';')[0]) });
+      const tm = String(d.mime || 'audio/webm').split(';')[0];
+      const text = deepgram_(tb, tm);
+      let aid = '';
+      try { aid = folder_().createFile(Utilities.newBlob(tb, tm, `nota-${Date.now()}.${tm.indexOf('mp4') > -1 ? 'm4a' : 'webm'}`)).getId(); } catch (e) { console.error(e); }
+      return out_({ ok: true, text, aid });
     }
     const phone = String(d.phone || '').replace(/\D/g, '').slice(-10);
     if (phone.length < 10) return out_({ ok: false, error: 'phone' });
     if (!throttle_()) return out_({ ok: false, error: 'busy' });
 
     let transcript = '', audioUrl = '';
-    if (d.audio) {
+    if (d.aid) {                                                // el audio ya se guardó al transcribir: no se vuelve a subir
+      try { audioUrl = DriveApp.getFileById(String(d.aid)).getUrl(); } catch (e) { console.error(e); }
+    } else if (d.audio) {
       const mime = String(d.mime || 'audio/webm').split(';')[0];
       const bytes = Utilities.base64Decode(d.audio);
       if (bytes.length > 8 * 1024 * 1024) return out_({ ok: false, error: 'size' });
       const ext = mime.indexOf('mp4') > -1 ? 'm4a' : 'webm';
       const f = folder_().createFile(Utilities.newBlob(bytes, mime, `nota-${phone}-${Date.now()}.${ext}`));
       audioUrl = f.getUrl();
-      transcript = d.tx ? '' : deepgram_(bytes, mime);   // si el cliente ya mandó el texto transcrito, no se repite
+      transcript = d.tx ? '' : deepgram_(bytes, mime);
     }
-    const said = [d.text, transcript].filter(Boolean).join('\n') || '(nota de voz sin transcripción, escúchala)';
-    const input = `Origen: página web (${d.zone === 'atl' ? 'zona Atlanta/Chamblee' : 'zona Birmingham'})
-Servicio elegido: ${d.service}  | Categoría: ${d.line || 'general'}  | Para cuándo: ${d.when || 'no dijo'}
-Nombre: ${d.name || ''}  | Teléfono: ${phone}  | Idioma de la página: ${d.lang}
-Mensaje${transcript ? ' (nota de voz transcrita)' : ''}: ${said}`;
-
-    const t = ticket_(input, { telefono: fmtPhone_(phone), nombre: d.name || '', idioma: d.lang });
-    t.origen = 'Página web' + (audioUrl ? ' · nota de voz' : '');
-    t.audio = audioUrl;
-    email_(t);
+    // se responde YA al cliente; el ticket (IA + correo) se arma en segundo plano
+    const job = { phone, name: String(d.name || '').slice(0, 80), service: String(d.service || '').slice(0, 120), line: d.line || '', when: d.when || '',
+      lang: d.lang, zone: d.zone, text: String(d.text || '').slice(0, 2000), transcript: transcript.slice(0, 2000), audioUrl, tx: d.tx ? 1 : 0, a: 0 };
+    const pr = PropertiesService.getScriptProperties();
+    pr.setProperty('job_' + Date.now() + '_' + Math.floor(Math.random() * 1e6), JSON.stringify(job));
+    if (!pr.getProperty('oneshot_id')) {                        // arranque inmediato; el trigger de cada minuto queda de respaldo
+      try { pr.setProperty('oneshot_id', ScriptApp.newTrigger('processJobs').timeBased().after(1500).create().getUniqueId()); } catch (e) { console.error(e); }
+    }
     return out_({ ok: true });
   } catch (err) {
     console.error(err);
     return out_({ ok: false, error: 'server' });
   }
+}
+
+/* cola: arma el ticket de cada mensaje recibido de la página (reintenta hasta 3 veces) */
+function processJobs() {
+  const lock = LockService.getScriptLock();
+  if (!lock.tryLock(25000)) return;
+  try {
+    const pr = PropertiesService.getScriptProperties(), oid = pr.getProperty('oneshot_id');
+    if (oid) { ScriptApp.getProjectTriggers().filter(t => t.getUniqueId() === oid).forEach(t => ScriptApp.deleteTrigger(t)); pr.deleteProperty('oneshot_id'); }
+    const all = pr.getProperties();
+    Object.keys(all).filter(k => k.indexOf('job_') === 0).sort().forEach(k => {
+      let j; try { j = JSON.parse(all[k]); } catch (e) { pr.deleteProperty(k); return; }
+      j.a = (j.a || 0) + 1;
+      if (j.a > 3) { pr.deleteProperty(k); console.error('ticket descartado tras 3 intentos', k); return; }
+      pr.setProperty(k, JSON.stringify(j));
+      try { buildWebTicket_(j); pr.deleteProperty(k); } catch (e) { console.error(e); }
+    });
+  } finally { lock.releaseLock(); }
+}
+
+function buildWebTicket_(d) {
+  const said = [d.text, d.transcript].filter(Boolean).join('\n') || '(nota de voz sin transcripción, escúchala)';
+  const input = `Origen: página web (${d.zone === 'atl' ? 'zona Atlanta/Chamblee' : 'zona Birmingham'})
+Servicio elegido: ${d.service}  | Categoría: ${d.line || 'general'}  | Para cuándo: ${d.when || 'no dijo'}
+Nombre: ${d.name || ''}  | Teléfono: ${d.phone}  | Idioma de la página: ${d.lang}
+Mensaje${d.transcript ? ' (nota de voz transcrita)' : ''}: ${said}`;
+  const t = ticket_(input, { telefono: fmtPhone_(d.phone), nombre: d.name || '', idioma: d.lang });
+  t.origen = 'Página web' + (d.audioUrl ? ' · nota de voz' : '');
+  t.audio = d.audioUrl;
+  email_(t);
 }
 function doGet() { return out_({ ok: true, service: CFG.BRAND }); }
 
@@ -108,7 +143,7 @@ function consent_(d) {
       : 'El cliente autorizó a Fix &amp; Go a recoger y revisar el equipo indicado, aceptó que no se repara nada sin aprobar antes una cotización, y aceptó los términos del formulario. Firmado electrónicamente escribiendo su nombre completo.'}</p>
     <p><b>${en ? 'Terms accepted' : 'Términos aceptados'}:</b></p><ul>${(d.terms || []).slice(0, 12).map(x => `<li>${esc_(clean(x, 400))}</li>`).join('')}</ul>
     <p style="font-size:13px;color:#4A5873">${en ? 'Electronic signature' : 'Firma electrónica'}: <b>${esc_(signed)}</b> · ${esc_(when)}<br>${en ? 'Also accepted separately: clause 8 (unclaimed equipment). Form version' : 'Aceptó también por separado la cláusula 8 (equipo no retirado). Versión del formulario'}: ${esc_(clean(d.v, 10))} · ${esc_(clean(d.ua, 200))}</p></div>`;
-  const subject = `✅ ${en ? 'Signed' : 'Firmado'} · ${items.slice(0, 50)} · ${name}`;
+  const subject = `[${en ? 'SIGNED' : 'FIRMADO'}] ${items.slice(0, 50)} · ${name}`;
   const owner = Session.getEffectiveUser().getEmail();
   GmailApp.sendEmail(owner, subject, `${name} - ${items} - ${when}`, { htmlBody: body, name: 'Recibos ' + CFG.BRAND });
   if (/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
@@ -221,10 +256,15 @@ Si un dato no aparece, usa "". No inventes.`;
   return t;
 }
 
+// vocabulario propio: mejora el reconocimiento de estas palabras en español e inglés (máx. ~100 palabras)
+const KEYTERMS = ['PlayStation 5', 'PS5', 'PlayStation', 'Xbox', 'Nintendo Switch', 'iPhone', 'iPad', 'MacBook', 'iMac', 'Windows', 'laptop',
+  'WiFi', 'router', 'HDMI', 'Alexa', 'Google Home', 'Ring', 'Wyze', 'Eufy', 'Fix and Go', 'LLC', 'ITIN', 'taxes', 'TikTok', 'Instagram',
+  'Facebook', 'WhatsApp', 'Gmail', 'iCloud', 'Homewood', 'Hoover', 'Birmingham', 'Chamblee', 'Doraville', 'Atlanta'];
 function deepgram_(bytes, mime) {
   const key = prop_('DEEPGRAM_KEY'); if (!key) return '';
   try {
-    const r = UrlFetchApp.fetch('https://api.deepgram.com/v1/listen?model=nova-3&language=multi&smart_format=true', {
+    const kt = KEYTERMS.map(k => '&keyterm=' + encodeURIComponent(k)).join('');
+    const r = UrlFetchApp.fetch('https://api.deepgram.com/v1/listen?model=nova-3&language=multi&smart_format=true' + kt, {
       method: 'post', contentType: mime, payload: bytes, muteHttpExceptions: true,
       headers: { Authorization: 'Token ' + key },
     });
@@ -234,7 +274,8 @@ function deepgram_(bytes, mime) {
 }
 
 /* ---------- correo ---------- */
-const U_ = { hoy: '🔴 HOY', semana: '🟠 Semana', flexible: '🟢 Flexible' };
+const U_ = { hoy: '&#128308; HOY', semana: '&#128992; Semana', flexible: '&#128994; Flexible' };   // entidades HTML: los emoji directos salían rotos en Gmail
+const UT_ = { hoy: 'HOY', semana: 'SEMANA', flexible: 'FLEXIBLE' };
 const esc_ = s => String(s || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const digits_ = p => { const d = String(p || '').replace(/\D/g, '').slice(-10); return d.length === 10 ? '1' + d : ''; };
 
@@ -249,12 +290,12 @@ function email_(t) {
     <div style="font-size:15px">${esc_(t.nombre || 'Sin nombre')} · ${esc_(t.telefono)}${t.email ? ' · ' + esc_(t.email) : ''} · ${esc_(t.ubicacion)}</div>
   </div>
   <div style="margin:14px 0">
-    ${n ? btn('tel:+' + n, '📞 Llamar', '#14213D') : ''}
-    ${n ? btn('sms:+' + n + '?&body=' + encodeURIComponent(t.respuesta_sms || ''), '💬 Enviar respuesta', '#2FB344') : ''}
+    ${n ? btn('tel:+' + n, '&#128222; Llamar', '#14213D') : ''}
+    ${n ? btn('sms:+' + n + '?&body=' + encodeURIComponent(t.respuesta_sms || ''), '&#128172; Enviar respuesta', '#2FB344') : ''}
     ${n ? btn('https://wa.me/' + n + '?text=' + encodeURIComponent(t.respuesta_sms || ''), 'WhatsApp', '#1FA855') : ''}
-    ${t.audio ? btn(t.audio, '🎧 Escuchar nota', '#F2A541') : ''}
-    ${n && t.equipo ? btn('sms:+' + n + '?&body=' + encodeURIComponent(consentMsg_(t)), '📝 Enviar consentimiento', '#8A5CF6') : ''}
-    ${t.draft ? btn(t.draft, '✉️ Ver borrador de respuesta', '#0E7C86') : ''}
+    ${t.audio ? btn(t.audio, '&#127911; Escuchar nota', '#F2A541') : ''}
+    ${n && t.equipo ? btn('sms:+' + n + '?&body=' + encodeURIComponent(consentMsg_(t)), '&#128221; Enviar consentimiento', '#8A5CF6') : ''}
+    ${t.draft ? btn(t.draft, '&#9993; Ver borrador de respuesta', '#0E7C86') : ''}
   </div>
   ${t.draft && !t.alias ? `<p style="background:#FDF0DC;padding:10px 12px;border-radius:10px;font-size:13px">⚠️ Gmail no tiene el alias ${esc_(CFG.SUPPORT)} en "Enviar como": no se mandó acuse al cliente y el borrador saldría desde tu Gmail personal. Configúralo (README → Correo de empresa).</p>` : ''}
   <p><b>Resumen:</b> ${esc_(t.resumen)}</p>
@@ -266,7 +307,7 @@ function email_(t) {
   ${t.idioma === 'en' && t.respuesta_es ? `<p><b>En español (para ti):</b><br><span style="background:#FDF0DC;display:block;padding:10px 12px;border-radius:10px">${esc_(t.respuesta_es)}</span></p>` : ''}
   <p style="color:#4A5873;font-size:13px"><b>Lo que dijo${t.idioma === 'en' ? ' (en inglés)' : ''}:</b> ${esc_(t.pedido_original)}</p>
   ${t.idioma === 'en' && t.pedido_es ? `<p style="color:#4A5873;font-size:13px"><b>En español:</b> ${esc_(t.pedido_es)}</p>` : ''}</div>`;
-  const subject = `${U_[t.urgencia] || '⚪'} ${t.servicio || 'Nuevo contacto'} · ${t.ubicacion || 'sin zona'} · ${t.telefono || t.email || ''}`;
+  const subject = `[${UT_[t.urgencia] || 'NUEVO'}] ${t.servicio || 'Nuevo contacto'} · ${t.ubicacion || 'sin zona'} · ${t.telefono || t.email || ''}`;
   const text = `${t.servicio} | ${t.nombre} ${t.telefono} | ${t.ubicacion}\n${t.resumen}\nPrecio: ${t.precio}\nRespuesta: ${t.respuesta_sms}`;
   GmailApp.sendEmail(Session.getEffectiveUser().getEmail(), subject, text, { htmlBody: html, name: 'Tickets ' + CFG.BRAND });
 }
