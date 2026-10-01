@@ -19,6 +19,7 @@ ap.add_argument("--out", default=".")
 ap.add_argument("--placa-sin-nfc", action="store_true", help="solo la placa del carro, sin la parte NFC, en PNG 600 dpi")
 ap.add_argument("--opciones", default="abc", help="opciones de mecánica en la placa: a, b y/o c")
 ap.add_argument("--volante", action="store_true", help="volante 4x6 para entregar (PNG 600 dpi) + hoja carta con 2")
+ap.add_argument("--hoja4", action="store_true", help="hoja carta 8.5x11 con 4 volantes de 4.25x5.5 (JPG y PNG 300 dpi)")
 a = ap.parse_args()
 
 P = a.phone
@@ -230,6 +231,17 @@ def render_png(page, w_in, h_in, path, dpi=600):
 
 os.makedirs(a.out, exist_ok=True)
 suf = f"-{a.zone}" if a.zone else ""
+if a.hoja4:   # hoja carta 8.5x11 con 4 volantes de 4.25x5.5" (para "Business Flyer" de Walgreens); se corta en cruz
+    z = 5.5 / 7.25
+    one = plate(nfc=False, v="c").replace('<div class="pg plate vc">', f'<div class="pg plate vc" style="zoom:{z:.4f};width:{4.25 / z:.3f}in;height:7.25in">', 1)
+    cell = f'<div style="width:4.25in;height:5.5in;overflow:hidden">{one}</div>'
+    sheet = f'<div style="width:8.5in;height:11in;display:grid;grid-template-columns:4.25in 4.25in">{cell * 4}</div>'
+    png = os.path.join(a.out, f"volantes-4-por-hoja-carta{suf}.png")
+    render_png(sheet, 8.5, 11, png, dpi=300)
+    from PIL import Image
+    Image.open(png).convert("RGB").save(png[:-4] + ".jpg", quality=95, dpi=(300, 300))
+    print("OK", png[:-4] + ".jpg")
+    raise SystemExit
 if a.volante:   # volante 4x6" (con 1/8" de sangrado) + hoja carta con 2 volantes para imprimir en casa
     render_png(flyer(), 4.25, 6.25, os.path.join(a.out, f"volante-4x6{suf}.png"))
     one = flyer()
