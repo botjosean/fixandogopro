@@ -328,6 +328,7 @@ function email_(t) {
     ${n ? btn('tel:+' + n, '&#128222; Llamar', '#14213D') : ''}
     ${n ? btn('sms:+' + n + '?&body=' + encodeURIComponent(t.respuesta_sms || ''), '&#128172; Enviar respuesta', '#2FB344') : ''}
     ${n ? btn('https://wa.me/' + n + '?text=' + encodeURIComponent(t.respuesta_sms || ''), 'WhatsApp', '#1FA855') : ''}
+    ${n && !t.cita ? btn(t.idioma === 'en' ? 'sms:+' + n + '?&body=' + encodeURIComponent(citaInvite_(t)) : 'https://wa.me/' + n + '?text=' + encodeURIComponent(citaInvite_(t)), '&#128197; Mandar link de cita', '#C2410C') : ''}
     ${t.audio ? btn(t.audio, '&#127911; Escuchar nota', '#F2A541') : ''}
     ${n && t.equipo ? btn('sms:+' + n + '?&body=' + encodeURIComponent(consentMsg_(t)), '&#128221; Enviar consentimiento', '#8A5CF6') : ''}
     ${t.draft ? btn(t.draft, '&#9993; Ver borrador de respuesta', '#0E7C86') : ''}
@@ -424,11 +425,12 @@ function citaDesdeTicket_(t, pedida) {
   } catch (e) { console.error('cita', e); }
 }
 function crearCita_(t, c) {
-  const [a, b] = FR_()[c.f], lleno = ocupadas_(c) >= CFG.CITAS.MAX;
+  const [a, b] = FR_()[c.f], lleno = ocupadas_(c) >= CFG.CITAS.MAX, n = digits_(t.telefono);
   const ev = citasCal_().createEvent(`⏳ Por confirmar · ${t.servicio || 'Cita'} · ${t.nombre || t.telefono || t.email || 'Cliente'}`, dt_(c.d, a), dt_(c.d, b), {
     location: t.ubicacion || '',
     description: [`Cliente: ${t.nombre || '—'}`, `Teléfono: ${t.telefono || '—'}`, `Correo: ${t.email || '—'}`, `Dónde: ${t.ubicacion || '—'}`,
-      `Pedido: ${t.resumen || t.pedido_es || ''}`, `Origen: ${t.origen || ''}`].join('\n') });
+      `Pedido: ${t.resumen || t.pedido_es || ''}`, `Origen: ${t.origen || ''}`,
+      n ? `\nWhatsApp: https://wa.me/${n}\nLlamar o texto: +${n}` : (t.email ? `\nEscribirle: ${t.email}` : '')].join('\n') });
   ev.setColor(CalendarApp.EventColor.YELLOW);
   const tag = { nombre: t.nombre, telefono: t.telefono, email: t.email, idioma: t.idioma, servicio: t.servicio, estado: 'pendiente' };
   Object.keys(tag).forEach(k => ev.setTag('fg_' + k, String(tag[k] || '').slice(0, 200)));
@@ -449,6 +451,14 @@ function citaMsg_(t, c, tipo) {
   return tipo === 'rec'
     ? `¡Hola${hi}! Te recordamos tu cita de mañana${para}: ${when}. ¿Necesitas cambiarla? Responde este mensaje.\n${CFG.SIGNATURE}`
     : `¡Hola${hi}! Tu cita${para} quedó confirmada: ${when}. Te escribimos antes de la cita. ¿Necesitas cambiarla? Responde este mensaje.\n${CFG.SIGNATURE}`;
+}
+
+// invitación a apartar cita (botón "Mandar link de cita" del ticket)
+function citaInvite_(t) {
+  const first = String(t.nombre || '').trim().split(/\s+/)[0], hi = first ? ' ' + first : '';
+  return t.idioma === 'en'
+    ? `Hi${hi}! Book your appointment here, just pick the day and time: https://fixandgopro.com/book\n${CFG.BRAND} Team`
+    : `¡Hola${hi}! Aparta tu cita aquí, solo eliges el día y la hora: https://fixandgopro.com/cita\n${CFG.SIGNATURE}`;
 }
 
 // botones del correo: firmados para que nadie más pueda confirmar o cancelar
