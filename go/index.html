@@ -306,7 +306,7 @@ textarea:focus,.in:focus{outline:none;border-color:var(--sea)}
   <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="shTitle" tabindex="-1"></div>
 </div>
 
-<script src="/config.js?v=16"></script>
+<script src="/config.js?v=17"></script>
 <script>
 /* Si Cloudflare entrega un config.js viejo, la página sigue funcionando (sin "Lo más pedido" y con el orden de siempre) */
 if (typeof hotIndex === "undefined") window.hotIndex = (k, ic) => S[k].items.findIndex(x => x[0] === ic);
@@ -438,15 +438,16 @@ function render(){
 let toastT = null;
 function promoToast(){
   const el = document.getElementById("toast"), k = cats().find(x => S[x][lang].promo);
-  let seen = 0; try{ seen = +localStorage.getItem("promoX") || 0; }catch(e){}
+  let seen = 0; try{ seen = +localStorage.getItem("promoX_"+k) || 0; }catch(e){}
   if (!k || seg === k || Date.now() - seen < 3*864e5){ el.classList.remove("on"); return; }
   const c = S[k][lang], m = (c.promo.match(/\d+%/) || [""])[0];
   el.dataset.k = k;
-  el.innerHTML = `<button type="button" class="tgo"><span class="ib">${ico(CAT_ICON[k])}</span><span><b>${esc(T[lang].tag[k] || c.t)}${m?`<em>−${m}</em>`:""}</b><small>${esc(c.promo)}</small></span></button>
+  const pi = S[k].promoItem ? hotIndex(k, S[k].promoItem) : -1;   // servicio de la oferta (p. ej. soporte en línea)
+  el.innerHTML = `<button type="button" class="tgo"><span class="ib">${ico(pi > -1 ? S[k].items[pi][0] : CAT_ICON[k])}</span><span><b>${esc(c.promoTag || T[lang].tag[k] || c.t)}${m?`<em>−${m}</em>`:""}</b><small>${esc(c.promoSub || c.promo)}</small></span></button>
     <button type="button" class="x" aria-label="${esc(T[lang].close)}">${ico("close")}</button>`;
-  const hide = () => { el.classList.remove("on"); try{ localStorage.setItem("promoX", Date.now()); }catch(e){} };
+  const hide = () => { el.classList.remove("on"); try{ localStorage.setItem("promoX_"+k, Date.now()); }catch(e){} };
   el.querySelector(".x").onclick = hide;
-  el.querySelector(".tgo").onclick = () => { hide(); if (openCat !== k) toggleCat(k); else document.querySelector(`.cat[data-k="${k}"] .cat-h`).scrollIntoView({behavior:"smooth",block:"start"}); };
+  el.querySelector(".tgo").onclick = () => { hide(); if (pi > -1) { openSheet(k, pi, el); return; } if (openCat !== k) toggleCat(k); else document.querySelector(`.cat[data-k="${k}"] .cat-h`).scrollIntoView({behavior:"smooth",block:"start"}); };
   if (!el.classList.contains("on")){ clearTimeout(toastT); toastT = setTimeout(() => el.classList.add("on"), 2500); }
 }
 function onClick(e){

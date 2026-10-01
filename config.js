@@ -94,7 +94,9 @@ const I = {
   wall:'<rect x="3" y="4" width="18" height="16" rx="1.5"/><path d="M3 9.5h18M3 15h18M9 4v5.5M15 9.5V15M9 15v5"/>',
   drop:'<path d="M3 4h18"/><path d="M12 8s-4.2 4.6-4.2 7.6a4.2 4.2 0 0 0 8.4 0C16.2 12.6 12 8 12 8z"/>',
   crack:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="m10.5 3 2 5-3 4 4 4-2 5"/>',
-  studs:'<path d="M4 21V3M12 21V3M20 21V3M3 7h18M3 17h18"/>'
+  studs:'<path d="M4 21V3M12 21V3M20 21V3M3 7h18M3 17h18"/>',
+  radiator:'<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M7.5 6v13M12 6v13M16.5 6v13M9 3h6"/>',
+  shocks:'<path d="M12 2v3M12 19v3"/><path d="M7.5 5h9l-9 2.8h9l-9 2.8h9l-9 2.8h9l-9 2.8h9"/>'
 };
 const ico = (k, c="") => `<svg class="i ${c}" viewBox="0 0 24 24" aria-hidden="true">${I[k]||I.msg}</svg>`;
 const CAT_ICON = {casa:"home", tech:"laptop", tramites:"file", negocio:"share", viajes:"car", auto:"wrench"};
@@ -111,11 +113,13 @@ const catsFor = l => (ORDER[l] || ORDER.es).filter(k => S[k]).concat(Object.keys
 /* Lo más pedido: accesos directos que salen primero (categoría, ícono del servicio, nombre corto), por idioma. */
 const HOT = {
   es:[
+    ["tech","headset","Soporte en línea −20%"],
     ["casa","cam","Cámaras y timbres"],
     ["casa","wall","Drywall"],
     ["tramites","receipt","Taxes"],
     ["tech","phone","iPhone"],
-    ["auto","brake","Frenos −20%"],
+    ["auto","brake","Frenos"],
+    ["auto","pin","GPS"],
     ["tech","gamepad","PS5"],
     ["tech","laptop","PC lenta"],
     ["tech","mac","Mac"],
@@ -124,11 +128,13 @@ const HOT = {
     ["tramites","file","Tu LLC"]
   ],
   en:[
+    ["tech","headset","Online support −20%"],
     ["casa","cam","Cameras"],
     ["casa","wall","Drywall repair"],
     ["casa","tv","TV mounting"],
     ["tech","phone","iPhone"],
-    ["auto","brake","Brakes −20%"],
+    ["auto","brake","Brakes"],
+    ["auto","pin","GPS tracker"],
     ["tech","gamepad","PS5"],
     ["tech","laptop","Slow PC"],
     ["tech","mac","Mac tune-up"],
@@ -157,9 +163,11 @@ const hotIndex = (k, ic) => S[k].items.findIndex(x => x[0] === ic);
 
 const S = {
   tech:{
-    es:{t:"¿Lenta, caliente o no prende? La arreglamos", d:"iPhone, PS5, PC y Mac, cuentas hackeadas, correos y datos perdidos. En tu casa o a distancia.", tile:"iPhone, PS5, PC y Mac, cuentas hackeadas y datos"},
-    en:{t:"Slow, overheating or dead? We'll fix it", d:"iPhone, PS5, PCs and Macs, hacked accounts, email and lost data. At your place or remote.", tile:"iPhone, PS5, PC and Mac, hacked accounts and data"},
+    promoItem:"headset",   // el aviso de la oferta abre directo este servicio
+    es:{t:"¿Lenta, caliente o no prende? La arreglamos", d:"iPhone, PS5, PC y Mac, cuentas hackeadas, correos y datos perdidos. En tu casa o a distancia.", tile:"iPhone, PS5, PC y Mac, cuentas hackeadas y datos", promo:"20% de descuento en soporte en línea", promoTag:"Soporte en línea", promoSub:"Mac, Windows, Linux e iPhone, a distancia"},
+    en:{t:"Slow, overheating or dead? We'll fix it", d:"iPhone, PS5, PCs and Macs, hacked accounts, email and lost data. At your place or remote.", tile:"iPhone, PS5, PC and Mac, hacked accounts and data", promo:"20% off online tech support", promoTag:"Online tech support", promoSub:"Mac, Windows, Linux & iPhone, remotely"},
     items:[
+      ["headset",{es:["Soporte técnico en línea: Mac, Windows, Linux e iPhone","Lo arreglamos a distancia, estés donde estés · 20% de descuento"],en:["Online tech support: Mac, Windows, Linux & iPhone","Fixed remotely, wherever you are · 20% off"],kw:"remoto online en linea distancia ayuda tecnologica soporte remote support help desk windows linux mac macos apple computadora laptop software programa instalar"}],
       ["phone",{es:["Tu iPhone con fallas, lento o lleno","Reparación, iCloud, fotos, respaldo y optimización"],en:["iPhone acting up, slow or full?","Repair, iCloud, photos, backup and tune-up"],kw:"celular telefono apple ios pantalla bateria"}],
       ["gamepad",{es:["PS5 o Xbox que suena como avión","Limpieza interna, pasta térmica, puerto HDMI"],en:["PS5 or Xbox loud as a jet engine","Deep cleaning, thermal paste, HDMI port repair"],kw:"playstation consola"}],
       ["laptop",{es:["Tu computadora lenta o que no prende","Limpieza, reparación y que no se caliente"],en:["Slow computer or won't turn on?","Cleanup, repair, no more overheating"],kw:"pc laptop windows reparacion limpieza"}],
@@ -172,7 +180,6 @@ const S = {
       ["joy",{es:["Control que se mueve solo","Reparamos el drift, botones y batería"],en:["Controller moving on its own?","Stick drift, buttons and battery repair"]}],
       ["bolt",{es:["Más velocidad sin comprar otra PC","SSD, memoria RAM, tarjeta de video"],en:["More speed without buying a new PC","SSD, RAM and graphics upgrades"]}],
       ["tablet",{es:["Tablet o teléfono nuevo, listo para usar","Pasar datos, control parental, configuración"],en:["New phone or tablet, ready to go","Data transfer, parental controls, setup"]}],
-      ["headset",{es:["Soporte técnico a distancia, en todo Estados Unidos","Te lo arreglamos en línea, estés donde estés"],en:["Remote tech support anywhere in the US","Fixed online, wherever you are"],kw:"remoto online distancia ayuda tecnologica"}],
       ["cpu",{es:["Te armamos tu PC gamer o de trabajo",""],en:["Custom gaming or work PC build",""]}]
     ]
   },
@@ -217,17 +224,16 @@ const S = {
     ]
   },
   auto:{
-    es:{t:"¿Problemas con tu carro? Te lo arreglamos", d:"Vamos a donde está tu carro o nos lo traes. Mantenimiento y cambio de aceite, frenos, luz de check engine, batería y alternador, arranque, aire acondicionado y correas. Trabajo honesto, buen precio y te cotizamos antes de empezar.", tile:"Aceite, frenos, check engine y más. Vamos a donde estés", promo:"20% de descuento en mano de obra"},
-    en:{t:"Car trouble? We'll fix it for less", d:"We come to you, or you bring it to us. Oil changes and maintenance, brakes, check engine light, batteries and alternators, starters, A/C and belts. Honest work, fair prices and a quote before we start.", tile:"Oil changes, brakes, check engine and more. We come to you", promo:"Save 20% on labor"},
+    es:{t:"¿Problemas con tu carro? Te lo arreglamos", d:"Vamos a donde está tu carro o nos lo traes. Mantenimiento anual con productos Lucas, frenos, alternador, arranque, radiador y amortiguadores, y GPS para verlo en tu teléfono. Trabajo honesto, buen precio y te cotizamos antes de empezar.", tile:"Mantenimiento, frenos, alternador, radiador, GPS y más. Vamos a donde estés"},
+    en:{t:"Car trouble? We'll fix it for less", d:"We come to you, or you bring it to us. Annual maintenance with Lucas products, brakes, alternators, starters, radiators and shocks, plus GPS so you can see your car on your phone. Honest work, fair prices and a quote before we start.", tile:"Maintenance, brakes, alternators, radiators, GPS and more. We come to you"},
     items:[
-      ["brake",{es:["¿Tus frenos chillan o rechinan?","Cambio de pastillas y discos"],en:["Brakes squeaking or grinding?","Brake pads and rotors replaced"],kw:"freno frenos pastillas discos balatas rechinan chillan brakes brake pads rotors grinding mecanica mecanico carro auto car mechanic repair mobile mechanic a domicilio"}],
-      ["oil",{es:["Mantenimiento general y cambio de aceite","Aceite y filtro, limpieza del motor y aditivo Lucas para la gasolina. Con tu aceite o el que te recomendemos"],en:["Oil change and full maintenance","Oil and filter, engine flush and Lucas fuel treatment. Your oil, or the one we recommend"],kw:"aceite filtro mantenimiento enjuague limpieza motor aditivo gasolina lucas oil change filter maintenance engine flush fuel additive treatment tune up mecanica carro auto car"}],
-      ["gauge",{es:["¿Se prendió la luz de check engine?","La revisamos con escáner y te decimos qué tiene"],en:["Check engine light on?","We scan it and tell you what's wrong"],kw:"revision diagnostico escaner check engine luz inspection diagnostic scan mecanica mecanico carro auto car mechanic repair mobile mechanic a domicilio"}],
-      ["battery",{es:["¿La batería se descarga sola?","Cambio de alternador y batería"],en:["Battery keeps dying?","Alternator and battery replacement"],kw:"alternador bateria carga descarga alternator battery dying charging mecanica carro auto car repair"}],
+      ["oil",{es:["Mantenimiento anual para que tu carro funcione perfecto","Cambio de aceite y filtro, limpieza del motor y del tanque de gasolina con productos Lucas"],en:["Annual maintenance to keep your car running right","Oil and filter change, engine flush and fuel system cleaning with Lucas products"],kw:"aceite filtro mantenimiento anual enjuague limpieza motor tanque gasolina aditivo lucas oil change filter maintenance engine flush fuel system cleaning tune up service mecanica mecanico carro auto car mechanic mobile mechanic a domicilio"}],
+      ["brake",{es:["¿Tus frenos chillan o vibran?","Cambio de discos y pastillas de freno"],en:["Brakes squeaking or shaking?","Brake rotor and pad replacement"],kw:"freno frenos pastillas discos balatas rechinan chillan vibran brakes brake pads rotors grinding mecanica mecanico carro auto car mechanic repair mobile mechanic a domicilio"}],
+      ["pin",{es:["Mira tu carro en vivo desde el teléfono","Instalamos un GPS y lo ves en nuestra app, con avisos si se mueve"],en:["See your car live on your phone","We install a GPS tracker and you watch it in our app, with alerts"],kw:"gps rastreo rastreador localizador tracker tracking ubicacion robo seguridad app flota"}],
+      ["battery",{es:["¿La batería se descarga sola?","Cambio de alternador"],en:["Battery keeps dying?","Alternator replacement"],kw:"alternador bateria carga descarga alternator battery dying charging mecanica carro auto car repair"}],
       ["key",{es:["¿Hace clic y no prende?","Cambio de motor de arranque"],en:["Car clicks but won't start?","Starter replacement"],kw:"arranque marcha starter no prende no arranca won't start mecanica carro auto car repair"}],
-      ["snow",{es:["¿El aire acondicionado no enfría?","Recarga del gas y cambio de compresor"],en:["A/C blowing warm air?","A/C recharge and compressor replacement"],kw:"aire acondicionado compresor gas freon recarga ac a/c compressor recharge caliente mecanica carro auto car repair"}],
-      ["plug",{es:["¿El motor tiembla o falla?","Cambio de bobinas y bujías"],en:["Engine shaking or misfiring?","Ignition coils and spark plugs"],kw:"bobina bobinas bujias coil coils spark plugs misfire tiembla falla mecanica carro auto car repair"}],
-      ["belt",{es:["¿Ya te toca la correa del tiempo?","Correa del tiempo y de accesorios, antes de que dañe el motor"],en:["Timing belt or serpentine belt due?","Replace it before it damages your engine"],kw:"correa banda tiempo distribucion timing belt serpentine mecanica carro auto car repair"}],
+      ["radiator",{es:["¿Se calienta el motor?","Cambio de radiador"],en:["Engine overheating?","Radiator replacement"],kw:"radiador calienta recalienta temperatura refrigerante radiator overheating coolant mecanica carro auto car repair"}],
+      ["shocks",{es:["¿El carro rebota o se siente flojo?","Cambio de amortiguadores"],en:["Bouncy or rough ride?","Shock absorber replacement"],kw:"amortiguadores suspension rebota golpea shocks struts bouncy mecanica carro auto car repair"}],
     ]
   },
   casa:{
