@@ -16,6 +16,7 @@ ap.add_argument("--phone", default="2054908033", help="10 dígitos, sin +1")
 ap.add_argument("--name", default="", help="nombre en el reverso; vacío = solo la marca Fix & Go")
 ap.add_argument("--zone", default="", help="atl para tarjetas de Chamblee/Atlanta")
 ap.add_argument("--out", default=".")
+ap.add_argument("--placa-sin-nfc", action="store_true", help="solo la placa del carro, sin la parte NFC, en PDF y PNG 600 dpi")
 a = ap.parse_args()
 
 P = a.phone
@@ -115,6 +116,8 @@ h1,h2,.b{font-family:'Bricolage Grotesque','Arial Narrow',Arial,sans-serif}
 .qrbig{background:#fff;border-radius:.18in;padding:.16in;aspect-ratio:1}
 .qrbig svg{width:100%;height:100%;display:block}
 .tap{aspect-ratio:1;border-radius:50%;background:#fff;border:.07in dashed var(--mango);padding:.28in}
+.solo{justify-content:center}
+.solo .col{flex:none;width:2.05in}
 """
 
 NFC = '<svg class="nfc" viewBox="0 0 48 48" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round"><path d="M14 16c3 4.5 3 11.5 0 16"/><path d="M22 11c5 7.5 5 18.5 0 26"/><path d="M30 6c7 10.5 7 25.5 0 36"/></svg>'
@@ -170,16 +173,18 @@ PHONE_SVG = """<svg viewBox="0 0 120 120" width="100%" height="100%" fill="none"
     <path d="M90 42c6 9 6 27 0 36"/><path d="M100 32c10 14 10 42 0 56"/>
   </g></svg>"""
 
-def plate():
+def plate(nfc=True):
     # la placa es bilingüe: sin lang, así la página sale en el idioma del teléfono
+    # nfc=False: sin el círculo "Tap here" (para imprimir antes de tener las etiquetas NFC); el QR queda solo y más grande
     url = f"https://{a.domain}/go/" + (f"?z={a.zone}" if a.zone else "")
+    tap = f'<div class="col"><div class="tap">{PHONE_SVG}</div><b>Tap here</b><span>Hold your phone here</span></div>' if nfc else ""
     return f'''<div class="pg plate"><div class="tx">
       <div class="logo">{logo_white()}</div><h1>Need a hand?<br>We&#39;ve got you.</h1><h2>Home, tech, social media, rides and paperwork.</h2>
       <p class="pill">Free pickup &middot; Recojo gratis</p>
       <p class="ph">(205) 490-8033</p><p class="phs">Call or text &middot; Llama o escribe &middot; Se habla espa&ntilde;ol</p></div>
-      <div class="duo">
+      <div class="duo{'' if nfc else ' solo'}">
         <div class="col"><div class="qrbig">{qr(url)}</div><b>Scan</b><span>Open your camera</span></div>
-        <div class="col"><div class="tap">{PHONE_SVG}</div><b>Tap here</b><span>Hold your phone here</span></div>
+        {tap}
       </div></div>'''
 
 def render(pages, size, path):
@@ -191,8 +196,23 @@ def render(pages, size, path):
         b.close()
     print("OK", path)
 
+def render_png(page, w_in, h_in, path, dpi=600):
+    """PNG de alta resolución (por defecto 600 dpi) del mismo diseño, para imprimir en cualquier tienda."""
+    html = f"<html><head><meta charset='utf-8'><style>{CSS}</style></head><body>{page}</body></html>"
+    with sync_playwright() as p:
+        b = p.chromium.launch()
+        pg = b.new_page(viewport={"width": round(w_in * 96), "height": round(h_in * 96)}, device_scale_factor=dpi / 96)
+        pg.set_content(html, wait_until="networkidle"); pg.wait_for_timeout(800)
+        pg.screenshot(path=path, clip={"x": 0, "y": 0, "width": w_in * 96, "height": h_in * 96})
+        b.close()
+    print("OK", path)
+
 os.makedirs(a.out, exist_ok=True)
 suf = f"-{a.zone}" if a.zone else ""
+if a.placa_sin_nfc:   # solo la placa del carro, sin la parte NFC ("Tap here")
+    render([plate(nfc=False)], "5.25in 7.25in", os.path.join(a.out, f"placa-carro-sin-nfc{suf}.pdf"))
+    render_png(plate(nfc=False), 5.25, 7.25, os.path.join(a.out, f"placa-carro-sin-nfc{suf}.png"))
+    raise SystemExit
 for lang in ("en", "es"):
     render([front_general(lang), back(lang)], "3.625in 2.125in", os.path.join(a.out, f"tarjeta-{lang}{suf}.pdf"))
 render([plate()], "5.25in 7.25in", os.path.join(a.out, f"placa-carro{suf}.pdf"))
