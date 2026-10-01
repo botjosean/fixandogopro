@@ -130,6 +130,7 @@ header{display:flex;justify-content:space-between;align-items:center;padding:14p
 .btn{display:flex;justify-content:center;align-items:center;gap:10px;text-decoration:none;font-weight:700;border-radius:18px;
   min-height:58px;padding:0 18px;font-size:1.03rem;transition:transform .12s ease,opacity .15s}
 .btn:active{transform:scale(.97)}
+#leave{touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}   /* se puede mantener pulsado para grabar */
 .btn[disabled]{opacity:.6;pointer-events:none}
 .main{flex:1;background:var(--navy);color:var(--paper)}
 @media (prefers-color-scheme:none){:root:not([data-theme="light"]) .main{background:var(--mango);color:#14213D}}
@@ -706,7 +707,25 @@ function closeSheet(fromPop){
   if (fromPop!==true && location.hash==="#mensaje") history.back();
   if (lastFocus) lastFocus.focus({preventScroll:true});
 }
-document.getElementById("leave").onclick = e=>openSheet(null, null, e.currentTarget);
+/* "Déjanos un mensaje": un toque abre la hoja como siempre; si lo mantienen pulsado, abre la hoja grabando
+   y al soltar se escribe la nota (suena al terminar) y quedan listos el nombre y el contacto */
+const leave = document.getElementById("leave");
+let lvT = 0, lvHold = false;
+leave.oncontextmenu = e=>e.preventDefault();
+leave.onpointerdown = e=>{
+  lvHold = false; clearTimeout(lvT);
+  if (!canVoice() || e.button > 0) return;
+  try{ leave.setPointerCapture(e.pointerId); }catch(_){}
+  try{ const AC = window.AudioContext || window.webkitAudioContext; if (AC){ sfxCtx = sfxCtx || new AC(); if (sfxCtx.state === "suspended") sfxCtx.resume(); } }catch(_){}   // el sonido queda habilitado desde el toque
+  lvT = setTimeout(()=>{ lvHold = true; openSheet(null, null, leave); held = true; pressT = Date.now(); sfx("start"); startRec(); }, 380);
+};
+const leaveUp = ()=>{
+  clearTimeout(lvT); if (!lvHold || !st) return;
+  held = false; pressT = 0;
+  if (rec && rec.state==="recording") rec.stop();   // si soltó antes de que arrancara el micrófono (p. ej. al dar permiso), sigue grabando y se para con un toque
+};
+leave.onpointerup = leaveUp; leave.onpointercancel = leaveUp;
+leave.onclick = e=>{ if (lvHold){ lvHold = false; return; } openSheet(null, null, e.currentTarget); };
 document.getElementById("scrim").onclick = closeSheet;
 addEventListener("popstate", ()=>closeSheet(true));
 addEventListener("keydown", e=>{ if (e.key==="Escape") closeSheet(); });
