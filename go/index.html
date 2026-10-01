@@ -216,6 +216,7 @@ textarea:focus,.in:focus{outline:none;border-color:var(--sea)}
 .done .ok .i{width:34px;height:34px;stroke-width:2.6}
 .done h3{margin:0 0 6px;font-size:1.5rem;letter-spacing:-.02em}
 .done p{margin:0 0 18px;color:var(--muted)}
+.done .save{width:100%;background:var(--mango);color:#14213D;margin-bottom:10px}
 .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
 
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
@@ -305,7 +306,7 @@ textarea:focus,.in:focus{outline:none;border-color:var(--sea)}
   <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="shTitle" tabindex="-1"></div>
 </div>
 
-<script src="/config.js?v=14"></script>
+<script src="/config.js?v=15"></script>
 <script>
 /* Si Cloudflare entrega un config.js viejo, la página sigue funcionando (sin "Lo más pedido" y con el orden de siempre) */
 if (typeof hotIndex === "undefined") window.hotIndex = (k, ic) => S[k].items.findIndex(x => x[0] === ic);
@@ -321,7 +322,7 @@ const T = {
     when:"¿Para cuándo?", chips:["Hoy","Esta semana","Sin apuro"],
     pickDay:"Apartar cita", pickHint:"Elige el día y la hora que te quedan mejor:", pickWait:"Buscando días libres…", today:"Hoy",
     fr:{manana:["Mañana","8–12"],tarde:["Tarde","12–5"],noche:["Noche","5–8"]}, full:"Lleno", needCita:"Elige el día y la hora de tu cita.",
-    citaW:s=>`Cita: ${s}`, doneCita:s=>`Apartaste tu cita para el ${s}. Te confirmamos hoy mismo.`,
+    citaW:s=>`Cita: ${s}`, doneCita:s=>`Apartaste tu cita para el ${s}. Te confirmamos hoy mismo.`, saveC:"Guarda nuestro contacto",
     voice:"Nota de voz", write:"Escribir",
     recIdle:"Toca para grabar (hasta 90 s)", recOn:"Grabando… toca para parar", recDone:"Lista. Escúchala o envíala.", redo:"Grabar de nuevo",
     hold:"Mantén pulsado para hablar", prep:"Preparando el micrófono…", slow:"Sigue enviando, un momento… no cierres esta pantalla.", tapstop:"Grabando… toca para parar", micHelp:"No pudimos usar el micrófono. Toca el candado junto a la dirección, permite el micrófono y vuelve a intentar. O escribe tu mensaje.", useText:"Escribir mi mensaje", release:"Suelta cuando termines", typing:"Escribiendo lo que dijiste", check:"Esto entendimos. Corrígelo si hace falta:", txFail:"No pudimos escribirlo. Puedes escribirlo tú o enviar solo la nota de voz.", reach:"¿A dónde te respondemos?", play:"Escuchar", pause:"Pausa",
@@ -346,7 +347,7 @@ const T = {
     when:"When do you need it?", chips:["Today","This week","No rush"],
     pickDay:"Book a time", pickHint:"Pick the day and time that work best for you:", pickWait:"Finding open days…", today:"Today",
     fr:{manana:["Morning","8–12"],tarde:["Afternoon","12–5"],noche:["Evening","5–8"]}, full:"Full", needCita:"Pick the day and time for your appointment.",
-    citaW:s=>`Appointment: ${s}`, doneCita:s=>`Your appointment is set for ${s}. We'll confirm today.`,
+    citaW:s=>`Appointment: ${s}`, doneCita:s=>`Your appointment is set for ${s}. We'll confirm today.`, saveC:"Save our contact",
     voice:"Voice note", write:"Type it",
     recIdle:"Tap to record (up to 90s)", recOn:"Recording… tap to stop", recDone:"Ready. Play it back or send it.", redo:"Record again",
     hold:"Hold to talk", prep:"Getting the microphone ready…", slow:"Still sending, one moment… please keep this screen open.", tapstop:"Recording… tap to stop", micHelp:"We couldn't use the microphone. Tap the lock next to the address, allow the microphone and try again. Or type your message.", useText:"Type my message", release:"Release when you're done", typing:"Writing what you said", check:"Here's what we heard. Fix it if needed:", txFail:"We couldn't write it out. You can type it or just send the voice note.", reach:"Where can we reply?", play:"Play", pause:"Pause",
@@ -554,6 +555,7 @@ function fillSheet(){
       <button type="button" class="x" id="x" aria-label="${t.close}">${ico("close")}</button></div>`;
   if (st.sent){
     sheet.innerHTML = head + `<div class="done"><div class="ok">${ico(st.cita?"cal":"check")}</div><h3>${esc(t.doneT(st.name))}</h3><p>${st.cita ? esc(t.doneCita(citaLabel(st.cita))) : t.doneP}</p>
+      <a class="btn save" href="/contacto.vcf">${ico("addc")}<span>${t.saveC}</span></a>
       <button type="button" class="btn send" id="doneBtn">${t.close}</button></div>`;
     sheet.querySelector("#x").onclick = closeSheet; sheet.querySelector("#doneBtn").onclick = closeSheet; return;
   }

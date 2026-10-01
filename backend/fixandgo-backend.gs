@@ -252,8 +252,8 @@ function isAutomated_(m) {
 function ack_(t) {
   const first = String(t.nombre || '').trim().split(/\s+/)[0];
   return t.idioma === 'en'
-    ? `Hi${first ? ' ' + first : ''},\n\nWe got your message. We'll get back to you today.\n\n${CFG.BRAND} Team\nfixandgopro.com`
-    : `Hola${first ? ' ' + first : ''}:\n\nRecibimos tu mensaje. Te respondemos hoy mismo.\n\n${CFG.SIGNATURE}\nfixandgopro.com`;
+    ? `Hi${first ? ' ' + first : ''},\n\nWe got your message. We'll get back to you today.\n\n${CFG.BRAND} Team\nfixandgopro.com\nSave our contact: fixandgopro.com/contact`
+    : `Hola${first ? ' ' + first : ''}:\n\nRecibimos tu mensaje. Te respondemos hoy mismo.\n\n${CFG.SIGNATURE}\nfixandgopro.com\nGuarda nuestro contacto: fixandgopro.com/contacto`;
 }
 
 /* ---------- IA ---------- */
@@ -287,7 +287,15 @@ Si un dato no aparece, usa "". No inventes.`;
   Object.keys(base).forEach(k => { if (base[k] && !t[k]) t[k] = base[k]; });
   if (base.telefono) t.telefono = base.telefono;
   if (base.email) t.email = base.email;
+  if (t.respuesta_sms) t.respuesta_sms = conContacto_(t.respuesta_sms, t.idioma);
+  if (t.respuesta_es) t.respuesta_es = conContacto_(t.respuesta_es, 'es');
   return t;
+}
+
+// cada mensaje al cliente termina invitando a guardar el contacto de Fix & Go (archivo de contacto con un toque)
+function conContacto_(texto, idioma) {
+  const linea = idioma === 'en' ? 'Save our contact: fixandgopro.com/contact' : 'Guarda nuestro contacto: fixandgopro.com/contacto';
+  return /fixandgopro\.com\/contact/.test(texto) ? texto : `${String(texto).trim()}\n${linea}`;
 }
 
 // vocabulario propio: mejora el reconocimiento de estas palabras en español e inglés (máx. ~100 palabras)
@@ -447,13 +455,13 @@ const tagsDe_ = ev => ['nombre', 'telefono', 'email', 'idioma', 'servicio'].redu
 // mensaje al cliente: tipo "ok" (confirmada) o "rec" (recordatorio del día antes); siempre como empresa
 function citaMsg_(t, c, tipo) {
   const en = t.idioma === 'en', first = String(t.nombre || '').trim().split(/\s+/)[0], hi = first ? ' ' + first : '', when = citaTexto_(c, en ? 'en' : 'es');
-  if (en) return tipo === 'rec'
+  if (en) return conContacto_(tipo === 'rec'
     ? `Hi${hi}! Just a reminder: we'll see you tomorrow, ${when}. Need to change it? Just reply to this message.\n${CFG.BRAND} Team`
-    : `Hi${hi}! Your appointment is confirmed: ${when}. We'll text you before the appointment. Need to change it? Just reply to this message.\n${CFG.BRAND} Team`;
+    : `Hi${hi}! Your appointment is confirmed: ${when}. We'll text you before the appointment. Need to change it? Just reply to this message.\n${CFG.BRAND} Team`, 'en');
   const para = t.servicio ? ` para ${String(t.servicio).toLowerCase()}` : '';
-  return tipo === 'rec'
+  return conContacto_(tipo === 'rec'
     ? `¡Hola${hi}! Te recordamos tu cita de mañana${para}: ${when}. ¿Necesitas cambiarla? Responde este mensaje.\n${CFG.SIGNATURE}`
-    : `¡Hola${hi}! Tu cita${para} quedó confirmada: ${when}. Te escribimos antes de la cita. ¿Necesitas cambiarla? Responde este mensaje.\n${CFG.SIGNATURE}`;
+    : `¡Hola${hi}! Tu cita${para} quedó confirmada: ${when}. Te escribimos antes de la cita. ¿Necesitas cambiarla? Responde este mensaje.\n${CFG.SIGNATURE}`, 'es');
 }
 
 // invitación a apartar cita (botón "Mandar link de cita" del ticket)

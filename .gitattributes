@@ -1,0 +1,2 @@
+# la tarjeta de contacto se guarda tal cual (saltos de línea CRLF que pide el formato vCard)
+*.vcf binary
