@@ -88,7 +88,8 @@ const I = {
   snow:'<path d="M12 2.5v19M3.8 7.2l16.4 9.6M20.2 7.2 3.8 16.8"/><path d="m9.5 4 2.5 2.5L14.5 4M9.5 20l2.5-2.5 2.5 2.5"/>',
   belt:'<circle cx="7" cy="8" r="3.5"/><circle cx="16.5" cy="15.5" r="4.5"/><path d="M4.4 10.4l8.9 8.4M9.6 5.6l10.1 6.7"/>',
   oil:'<path d="M12 3s-5.5 6.2-5.5 10.5a5.5 5.5 0 0 0 11 0C17.5 9.2 12 3 12 3z"/><path d="M9.5 14a2.5 2.5 0 0 0 2.5 2.5"/>',
-  gauge:'<path d="M3.5 17.5a9 9 0 1 1 17 0"/><path d="m12 15 4-5"/><circle cx="12" cy="15" r="1.3"/>'
+  gauge:'<path d="M3.5 17.5a9 9 0 1 1 17 0"/><path d="m12 15 4-5"/><circle cx="12" cy="15" r="1.3"/>',
+  cal:'<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="M8 14h2M14 14h2M8 17.5h2"/>'
 };
 const ico = (k, c="") => `<svg class="i ${c}" viewBox="0 0 24 24" aria-hidden="true">${I[k]||I.msg}</svg>`;
 const CAT_ICON = {casa:"home", tech:"laptop", tramites:"file", negocio:"share", viajes:"car", auto:"wrench"};

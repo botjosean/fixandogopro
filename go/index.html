@@ -162,6 +162,22 @@ footer{color:var(--muted);font-size:.8rem;text-align:center;padding:4px 0 20px}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
 .chip{padding:9px 14px;border-radius:999px;border:1.5px solid var(--line);font-weight:700;font-size:.9rem;min-height:42px}
 .chip[aria-pressed="true"]{background:var(--sea);border-color:var(--sea);color:#fff}
+.chip .i{width:18px;height:18px;vertical-align:-4px;margin-right:5px}
+/* apartar cita: días y franjas libres */
+.pick{margin:-4px 0 16px}
+.pick .ph{font-size:.86rem;color:var(--muted);margin:0 0 8px}
+.days{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 8px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.days::-webkit-scrollbar{display:none}
+.dchip{flex:none;min-width:60px;padding:8px 6px;border-radius:16px;border:1.5px solid var(--line);text-align:center;font-weight:700;line-height:1.15}
+.dchip small{display:block;font-size:.72rem;color:var(--muted);text-transform:capitalize}
+.dchip b{display:block;font-size:1.2rem}
+.frs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px}
+.fchip{padding:9px 4px;border-radius:14px;border:1.5px solid var(--line);text-align:center;font-weight:700;font-size:.92rem;min-height:54px;line-height:1.2}
+.fchip small{display:block;font-size:.74rem;color:var(--muted);font-weight:700}
+.dchip[aria-pressed="true"],.fchip[aria-pressed="true"]{background:var(--sea);border-color:var(--sea);color:#fff}
+.dchip[aria-pressed="true"] small,.fchip[aria-pressed="true"] small{color:rgba(255,255,255,.85)}
+.dchip:disabled,.fchip:disabled{opacity:.42;cursor:default}
+.pick .wait{color:var(--muted);font-size:.88rem;padding:10px 0}
 .segc{display:grid;grid-template-columns:1fr 1fr;background:var(--paper);border-radius:16px;padding:4px;margin-bottom:12px}
 .segc button{display:flex;align-items:center;justify-content:center;gap:8px;min-height:46px;border-radius:12px;font-weight:700;font-size:.95rem;color:var(--muted)}
 .segc button .i{width:20px;height:20px}
@@ -289,7 +305,7 @@ textarea:focus,.in:focus{outline:none;border-color:var(--sea)}
   <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="shTitle" tabindex="-1"></div>
 </div>
 
-<script src="/config.js?v=13"></script>
+<script src="/config.js?v=14"></script>
 <script>
 /* Si Cloudflare entrega un config.js viejo, la página sigue funcionando (sin "Lo más pedido" y con el orden de siempre) */
 if (typeof hotIndex === "undefined") window.hotIndex = (k, ic) => S[k].items.findIndex(x => x[0] === ic);
@@ -303,6 +319,9 @@ const T = {
     leave:"Déjanos un mensaje", leaveTitle:"Déjanos un mensaje", leaveSub:"Nota de voz o escrito. Te respondemos hoy.",
     leaveSubNoVoice:"Escríbenos y te respondemos hoy mismo.", quick:"Escríbenos ahora",
     when:"¿Para cuándo?", chips:["Hoy","Esta semana","Sin apuro"],
+    pickDay:"Apartar cita", pickHint:"Elige el día y la hora que te quedan mejor:", pickWait:"Buscando días libres…", today:"Hoy",
+    fr:{manana:["Mañana","8–12"],tarde:["Tarde","12–5"],noche:["Noche","5–8"]}, full:"Lleno", needCita:"Elige el día y la hora de tu cita.",
+    citaW:s=>`Cita: ${s}`, doneCita:s=>`Apartaste tu cita para el ${s}. Te confirmamos hoy mismo.`,
     voice:"Nota de voz", write:"Escribir",
     recIdle:"Toca para grabar (hasta 90 s)", recOn:"Grabando… toca para parar", recDone:"Lista. Escúchala o envíala.", redo:"Grabar de nuevo",
     hold:"Mantén pulsado para hablar", prep:"Preparando el micrófono…", slow:"Sigue enviando, un momento… no cierres esta pantalla.", tapstop:"Grabando… toca para parar", micHelp:"No pudimos usar el micrófono. Toca el candado junto a la dirección, permite el micrófono y vuelve a intentar. O escribe tu mensaje.", useText:"Escribir mi mensaje", release:"Suelta cuando termines", typing:"Escribiendo lo que dijiste", check:"Esto entendimos. Corrígelo si hace falta:", txFail:"No pudimos escribirlo. Puedes escribirlo tú o enviar solo la nota de voz.", reach:"¿A dónde te respondemos?", play:"Escuchar", pause:"Pausa",
@@ -325,6 +344,9 @@ const T = {
     leave:"Leave us a message", leaveTitle:"Leave us a message", leaveSub:"Voice note or text. We'll get back to you today.",
     leaveSubNoVoice:"Message us and we'll get back to you today.", quick:"Message us now",
     when:"When do you need it?", chips:["Today","This week","No rush"],
+    pickDay:"Book a time", pickHint:"Pick the day and time that work best for you:", pickWait:"Finding open days…", today:"Today",
+    fr:{manana:["Morning","8–12"],tarde:["Afternoon","12–5"],noche:["Evening","5–8"]}, full:"Full", needCita:"Pick the day and time for your appointment.",
+    citaW:s=>`Appointment: ${s}`, doneCita:s=>`Your appointment is set for ${s}. We'll confirm today.`,
     voice:"Voice note", write:"Type it",
     recIdle:"Tap to record (up to 90s)", recOn:"Recording… tap to stop", recDone:"Ready. Play it back or send it.", redo:"Record again",
     hold:"Hold to talk", prep:"Getting the microphone ready…", slow:"Still sending, one moment… please keep this screen open.", tapstop:"Recording… tap to stop", micHelp:"We couldn't use the microphone. Tap the lock next to the address, allow the microphone and try again. Or type your message.", useText:"Type my message", release:"Release when you're done", typing:"Writing what you said", check:"Here's what we heard. Fix it if needed:", txFail:"We couldn't write it out. You can type it or just send the voice note.", reach:"Where can we reply?", play:"Play", pause:"Pause",
@@ -463,7 +485,42 @@ let st = null, lastFocus = null, rec = null, stream = null, tick = null, micBusy
 const root = document.getElementById("sheetRoot"), sheet = document.getElementById("sheet");
 
 function svc(){ if (!st || st.k==null) return null; const [ic,v] = S[st.k].items[st.i]; return {ic, name:v[lang][0], sub:v[lang][1]}; }
-function textMsg(){ const t = T[lang], s = svc(); return t.msg(s?s.name:t.general, st.when>=0?t.chips[st.when]:"", (st.text||"").trim()); }
+function textMsg(){ const t = T[lang], s = svc(); return t.msg(s?s.name:t.general, whenText(), (st.text||"").trim()); }
+function whenText(){ const t = T[lang]; if (st.when===3) return st.cita ? t.citaW(citaLabel(st.cita)) : ""; return st.when>=0 ? t.chips[st.when] : ""; }
+
+/* apartar cita: días y franjas libres del calendario "Fix & Go – Citas" (si no responde, se muestran todos los días) */
+const canPick = () => !!CONFIG.ENDPOINT;
+const localYmd = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const dateOf = s => new Date(s + "T12:00:00");
+const loc = () => lang==="es" ? "es-US" : "en-US";
+function citaLabel(c){ const t = T[lang]; return `${dateOf(c.d).toLocaleDateString(loc(),{weekday:"short",day:"numeric",month:"short"})} · ${t.fr[c.f][0].toLowerCase()} (${t.fr[c.f][1]})`; }
+let slotsData = null, slotsLoading = null;
+function localDays(){ const out = []; for (let i = 0; i < 14; i++){ const d = new Date(); d.setDate(d.getDate()+i); out.push({d:localYmd(d), f:{manana:1,tarde:1,noche:1}}); } return out; }
+function loadSlots(){
+  if (slotsData || slotsLoading) return;
+  slotsLoading = fetch(CONFIG.ENDPOINT, {method:"POST", body:JSON.stringify({type:"slots"})}).then(r=>r.json())
+    .then(j=>{ if (!j.ok || !Array.isArray(j.dias) || !j.dias.length) throw 0; slotsData = j.dias; })
+    .catch(()=>{ slotsData = localDays(); })
+    .finally(()=>{ slotsLoading = null; if (st && st.when===3) renderPick(); });
+}
+function renderPick(){
+  const box = sheet.querySelector("#pick"); if (!box) return;
+  box.hidden = st.when!==3; if (st.when!==3) return;
+  const t = T[lang];
+  if (!slotsData){ box.innerHTML = `<p class="wait">${t.pickWait}<span class="dots"><i></i><i></i><i></i></span></p>`; loadSlots(); return; }
+  const open = x => Object.keys(t.fr).some(k=>x.f[k]);
+  if (!st.cday || !slotsData.some(x=>x.d===st.cday && open(x))) st.cday = (slotsData.find(open)||{}).d;
+  const day = slotsData.find(x=>x.d===st.cday);
+  if (st.cita && (st.cita.d!==st.cday || !day || !day.f[st.cita.f])) st.cita = null;
+  const prev = box.querySelector(".days"), keep = prev ? prev.scrollLeft : null, today = localYmd(new Date());
+  box.innerHTML = `<p class="ph">${t.pickHint}</p>
+    <div class="days">${slotsData.map(x=>{ const dt = dateOf(x.d);
+      return `<button type="button" class="dchip" data-d="${x.d}" aria-pressed="${x.d===st.cday}" ${open(x)?"":"disabled"}><small>${x.d===today?t.today:dt.toLocaleDateString(loc(),{weekday:"short"}).replace(".","")}</small><b>${dt.getDate()}</b><small>${dt.toLocaleDateString(loc(),{month:"short"}).replace(".","")}</small></button>`; }).join("")}</div>
+    <div class="frs">${Object.keys(t.fr).map(k=>{ const ok = !!(day && day.f[k]);
+      return `<button type="button" class="fchip" data-f="${k}" aria-pressed="${!!(st.cita && st.cita.f===k)}" ${ok?"":"disabled"}>${t.fr[k][0]}<small>${ok?t.fr[k][1]:t.full}</small></button>`; }).join("")}</div>`;
+  const row = box.querySelector(".days"), sel = row.querySelector('[aria-pressed="true"]');
+  row.scrollLeft = keep!=null ? keep : (sel ? Math.max(0, sel.offsetLeft - 24) : 0);
+}
 const fmt = s => `${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,"0")}`;
 /* teléfono: acepta cualquier formato (guiones, puntos, espacios, +1, 1-...) y lo deja como (205) 555-1234 */
 const phDigits = v => { let d = String(v||"").replace(/\D/g,""); if (d.length > 10 && d[0] === "1") d = d.slice(1); return d.slice(-10); };
@@ -496,7 +553,7 @@ function fillSheet(){
       <div><h3 id="shTitle">${esc(s?s.name:t.leaveTitle)}</h3><p>${esc(s?(s.sub||subDefault):subDefault)}</p></div>
       <button type="button" class="x" id="x" aria-label="${t.close}">${ico("close")}</button></div>`;
   if (st.sent){
-    sheet.innerHTML = head + `<div class="done"><div class="ok">${ico("check")}</div><h3>${esc(t.doneT(st.name))}</h3><p>${t.doneP}</p>
+    sheet.innerHTML = head + `<div class="done"><div class="ok">${ico(st.cita?"cal":"check")}</div><h3>${esc(t.doneT(st.name))}</h3><p>${st.cita ? esc(t.doneCita(citaLabel(st.cita))) : t.doneP}</p>
       <button type="button" class="btn send" id="doneBtn">${t.close}</button></div>`;
     sheet.querySelector("#x").onclick = closeSheet; sheet.querySelector("#doneBtn").onclick = closeSheet; return;
   }
@@ -506,7 +563,8 @@ function fillSheet(){
     ${directRow}
     <p class="or">${t.or}</p>
     <p class="lbl">${t.when}</p>
-    <div class="chips">${t.chips.map((c,j)=>`<button type="button" class="chip" data-j="${j}" aria-pressed="${j===st.when}">${c}</button>`).join("")}</div>
+    <div class="chips">${t.chips.map((c,j)=>`<button type="button" class="chip" data-j="${j}" aria-pressed="${j===st.when}">${c}</button>`).join("")}${canPick()?`<button type="button" class="chip" data-j="3" aria-pressed="${st.when===3}">${ico("cal")}${t.pickDay}</button>`:""}</div>
+    <div class="pick" id="pick" ${st.when===3?"":"hidden"}></div>
     ${voice?`<div class="segc" role="tablist">
       <button type="button" role="tab" data-m="voice" aria-selected="${mode==="voice"}">${ico("mic")}${t.voice}</button>
       <button type="button" role="tab" data-m="text" aria-selected="${mode==="text"}">${ico("pen")}${t.write}</button></div>`:""}
@@ -534,7 +592,13 @@ function fillSheet(){
   $("#x").onclick = closeSheet;
   $(".chips").onclick = e=>{ const c = e.target.closest(".chip"); if (!c) return;
     st.when = st.when===+c.dataset.j ? -1 : +c.dataset.j;
-    sheet.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed", String(+x.dataset.j===st.when))); updateLinks(); };
+    if (st.when!==3) st.cita = null;
+    sheet.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed", String(+x.dataset.j===st.when))); renderPick(); updateLinks(); };
+  $("#pick").onclick = e=>{
+    const dc = e.target.closest(".dchip"); if (dc && !dc.disabled){ st.cday = dc.dataset.d; st.cita = null; renderPick(); updateLinks(); return; }
+    const fc = e.target.closest(".fchip"); if (fc && !fc.disabled){ st.cita = {d:st.cday, f:fc.dataset.f}; renderPick(); updateLinks(); status(""); }
+  };
+  renderPick();
   if (voice) $(".segc").onclick = e=>{ const b = e.target.closest("[data-m]"); if (!b) return; setMode(b.dataset.m); };
   bindRec($("#rec"));
   $("#txt").oninput = e=>{ st.text = e.target.value; const tx = $("#tx"); if (tx) tx.value = st.text; updateLinks(); };
@@ -668,20 +732,22 @@ async function send(){
   const t = T[lang], s = svc(), btn = sheet.querySelector("#send");
   const mail = isMail(st.phone), phone = mail ? "" : phDigits(st.phone), email = mail ? (st.phone||"").trim() : "", mode = canVoice() ? st.mode : "text";
   const hasMsg = mode==="voice" ? !!st.audio : !!(st.text||"").trim();
+  const voiceMsg = mode==="voice" && !!st.audio;   // con cita apartada, la nota de voz es opcional
   if (mail ? !okMail(email) : phone.length<10){
     const ph = sheet.querySelector("#ph"), pe = sheet.querySelector("#phErr");
     pe.textContent = t.needPhone; pe.hidden = false; ph.classList.add("bad");
     ph.scrollIntoView({block:"center", behavior:"smooth"}); ph.focus({preventScroll:true}); return;
   }
-  if (!hasMsg){ status(t.needMsg, true); return; }
+  if (st.when===3 && !st.cita){ status(t.needCita, true); const p = sheet.querySelector("#pick"); if (p) p.scrollIntoView({block:"center", behavior:"smooth"}); return; }
+  if (!hasMsg && !st.cita){ status(t.needMsg, true); return; }
   if (!CONFIG.ENDPOINT){ location.href = links[order()[0]](textMsg() + (st.name?` — ${st.name}`:"") + ` (${st.phone})`); return; }
   btn.disabled = true; btn.lastElementChild.textContent = t.sending; status("");
   const slowT = setTimeout(()=>status(t.slow), 3500);
   try{
-    const payload = { v:1, lang, zone:zk, service: s?s.name:t.general, line: st.k??"", when: st.when>=0?t.chips[st.when]:"",
-      name:(st.name||"").trim().slice(0,80), phone, email, text:(st.text||"").trim().slice(0,2000), tx:(mode==="voice" && st.tx) ? 1 : 0,
-      hp: sheet.querySelector("#hp").value, mime: mode==="voice"?st.audio.mime:"", dur: mode==="voice"?st.audio.dur:0,
-      aid: (mode==="voice" && st.aid) ? st.aid : "", audio: (mode==="voice" && !st.aid) ? await b64(st.audio.blob) : "" };
+    const payload = { v:1, lang, zone:zk, service: s?s.name:t.general, line: st.k??"", when: whenText(), cita: st.when===3 ? st.cita : null,
+      name:(st.name||"").trim().slice(0,80), phone, email, text:(st.text||"").trim().slice(0,2000), tx:(voiceMsg && st.tx) ? 1 : 0,
+      hp: sheet.querySelector("#hp").value, mime: voiceMsg?st.audio.mime:"", dur: voiceMsg?st.audio.dur:0,
+      aid: (voiceMsg && st.aid) ? st.aid : "", audio: (voiceMsg && !st.aid) ? await b64(st.audio.blob) : "" };
     const r = await fetch(CONFIG.ENDPOINT, {method:"POST", body:JSON.stringify(payload)});
     const j = await r.json(); if (!j.ok) throw new Error(j.error||"fail");
     clearTimeout(slowT); st.sent = true; sfx("sent"); fillSheet();
@@ -691,7 +757,7 @@ async function send(){
 }
 
 function openSheet(k,i,from){
-  st = {k, i, when:-1, mode:"voice", text:"", name:"", phone:"", audio:null, sent:false};
+  st = {k, i, when:-1, mode:"voice", text:"", name:"", phone:"", audio:null, sent:false, cita:null, cday:null};
   lastFocus = from || document.activeElement;
   fillSheet(); sheet.scrollTop = 0;
   root.classList.add("open"); document.documentElement.classList.add("lock");
@@ -743,7 +809,8 @@ if (location.hash==="#mensaje") history.replaceState(null,"",location.search);
 render();
 new MutationObserver(() => { const el = document.querySelector(".hot-c"); if (el && !el.dataset.auto) autoScrollChips(el); }).observe(document.body, {childList:true, subtree:true});
 autoScrollChips(document.querySelector(".hot-c"));
-if (qs.has("m")) openSheet(null, null);   // /go/?m=1 abre directo "Déjanos un mensaje" (lo usa la página principal)
+if (qs.has("cita") && canPick()) { openSheet(null, null); st.when = 3; fillSheet(); }   // /go/?cita=1 abre directo "Apartar cita" (para compartir el link)
+else if (qs.has("m")) openSheet(null, null);   // /go/?m=1 abre directo "Déjanos un mensaje" (lo usa la página principal)
 else if (seg && qs.get("i")) { const i = hotIndex(seg, qs.get("i")); if (i > -1) openSheet(seg, i); }   // /go/?s=tech&i=lock abre ese servicio
 </script>
 </body>

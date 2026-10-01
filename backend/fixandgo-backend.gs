@@ -15,6 +15,7 @@
  * 5. Google Voice → Configuración: buzón por correo con transcripción + reenviar mensajes al correo.
  * 6. Correo de empresa: sigue la sección "Correo de empresa" del README (Cloudflare Email Routing +
  *    Gmail "Enviar como" info@). Si ya habías ejecutado setup(), ejecútalo otra vez para crear el trigger.
+ * 7. Citas: ejecuta instalarCitas() una vez (crea el calendario "Fix & Go – Citas" y el recordatorio diario).
  */
 const CFG = {
   MODEL: 'google/gemini-2.5-flash',
@@ -31,6 +32,12 @@ const CFG = {
     'Limpieza PS5/Xbox': '$60–$90', 'Reparación control (drift)': '$35–$60', 'Limpieza y optimización PC': '$60–$100',
     'Perfil de Google para negocio': '$150–$300', 'Viaje a Atlanta ida y vuelta con espera': '$180–$260',
   },
+  // CITAS: calendario aparte dentro de tu Google. Abierto todos los días, por franjas; máximo MAX citas por franja.
+  CITAS: {
+    CAL: 'Fix & Go – Citas', TZ: 'America/Chicago', DIAS: 14, MAX: 2,
+    FRANJAS: { manana: [8, 12, 'Mañana', 'Morning'], tarde: [12, 17, 'Tarde', 'Afternoon'], noche: [17, 20, 'Noche', 'Evening'] },
+  },
+  WEBAPP: 'https://script.google.com/macros/s/AKfycbzCaTUIxOX9CNWUhCMA24Jal9Y65akvUR0h-pwQyxJvgz2Zsl26u6KgsOQGvXKe-l9zEw/exec',   // la misma URL de config.js
 };
 
 /* ---------- instalación ---------- */
@@ -52,6 +59,7 @@ function doPost(e) {
     const d = JSON.parse(e.postData.contents || '{}');
     if (d.hp) return out_({ ok: true });                       // bot atrapado
     if (d.type === 'consent') return consent_(d);
+    if (d.type === 'slots') return out_({ ok: true, dias: slots_() });   // días y franjas libres para apartar cita
     if (d.type === 'transcribe') {                              // solo escribe lo que se dijo; no crea ticket
       if (!throttle_()) return out_({ ok: false, error: 'busy' });
       const tb = Utilities.base64Decode(d.audio || '');
@@ -81,7 +89,8 @@ function doPost(e) {
     }
     // se responde YA al cliente; el ticket (IA + correo) se arma en segundo plano
     const job = { phone, email, name: String(d.name || '').slice(0, 80), service: String(d.service || '').slice(0, 120), line: d.line || '', when: d.when || '',
-      lang: d.lang, zone: d.zone, text: String(d.text || '').slice(0, 2000), transcript: transcript.slice(0, 2000), audioUrl, tx: d.tx ? 1 : 0, a: 0 };
+      lang: d.lang, zone: d.zone, text: String(d.text || '').slice(0, 2000), transcript: transcript.slice(0, 2000), audioUrl, tx: d.tx ? 1 : 0,
+      cita: cleanCita_(d.cita), a: 0 };
     const pr = PropertiesService.getScriptProperties();
     pr.setProperty('job_' + Date.now() + '_' + Math.floor(Math.random() * 1e6), JSON.stringify(job));
     if (!pr.getProperty('oneshot_id')) {                        // arranque inmediato; el trigger de cada minuto queda de respaldo
@@ -113,17 +122,22 @@ function processJobs() {
 }
 
 function buildWebTicket_(d) {
-  const said = [d.text, d.transcript].filter(Boolean).join('\n') || '(nota de voz sin transcripción, escúchala)';
+  const said = [d.text, d.transcript].filter(Boolean).join('\n') || (d.audioUrl ? '(nota de voz sin transcripción, escúchala)' : '(apartó la cita sin dejar mensaje)');
   const input = `Origen: página web (${d.zone === 'atl' ? 'zona Atlanta/Chamblee' : 'zona Birmingham'})
-Servicio elegido: ${d.service}  | Categoría: ${d.line || 'general'}  | Para cuándo: ${d.when || 'no dijo'}
+Servicio elegido: ${d.service}  | Categoría: ${d.line || 'general'}  | Para cuándo: ${d.when || 'no dijo'}${d.cita ? '  | Cita que apartó: ' + citaTexto_(d.cita, 'es') : ''}
 Nombre: ${d.name || ''}  | Teléfono: ${d.phone ? fmtPhone_(d.phone) : '(no dio)'}  | Correo: ${d.email || '(no dio)'}  | Idioma de la página: ${d.lang}
 Mensaje${d.transcript ? ' (nota de voz transcrita)' : ''}: ${said}`;
   const t = ticket_(input, { telefono: d.phone ? fmtPhone_(d.phone) : '', email: d.email || '', nombre: d.name || '', idioma: d.lang });
   t.origen = 'Página web' + (d.audioUrl ? ' · nota de voz' : '');
   t.audio = d.audioUrl;
+  citaDesdeTicket_(t, d.cita);
   email_(t);
 }
-function doGet() { return out_({ ok: true, service: CFG.BRAND }); }
+function doGet(e) {
+  const p = (e && e.parameter) || {};
+  if (p.a && p.id) return citaPagina_(p);                    // botones "Confirmar / Cancelar cita" del correo del ticket
+  return out_({ ok: true, service: CFG.BRAND });
+}
 
 /* ---------- consentimiento firmado en línea (recibo de equipo) ---------- */
 function consent_(d) {
@@ -165,6 +179,7 @@ function processVoice() {
       const ph = (subject + ' ' + body).match(/\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}/);
       const t = ticket_(`Origen: Google Voice\nAsunto: ${subject}\n\n${body}`, { telefono: ph ? ph[0] : '' });
       t.origen = /voicemail|buz/i.test(subject) ? 'Buzón de voz' : 'SMS';
+      citaDesdeTicket_(t);
       email_(t);
       th.addLabel(lab);
     } catch (e) { console.error(e); }
@@ -196,6 +211,7 @@ function processEmail() {
       t.draft = `https://mail.google.com/mail/?authuser=${encodeURIComponent(me)}#all/${th.getId()}`;
       t.alias = alias;
 
+      citaDesdeTicket_(t);
       email_(t);
       th.addLabel(lab);   // etiquetar ANTES del acuse: si algo falla después, nunca se le escribe dos veces al cliente
 
@@ -250,7 +266,9 @@ pedido_original (lo que dijo, en su idioma), resumen (2-3 líneas en español), 
 ubicacion, disponibilidad, soluciones (array, español), materiales (array), precio (SOLO un rango de esta lista o "a cotizar": ${JSON.stringify(CFG.PRICES)}),
 preguntas (array de lo que falta saber), respuesta_sms (mensaje corto listo para enviarle, en SU idioma, cálido y directo, hablando como empresa en plural ("nosotros", nunca "yo"), firmado "${CFG.SIGNATURE}", sin precio exacto),
 equipo (lista corta del equipo o aparato que hay que recoger para revisar, en el idioma del cliente, p. ej. "PS5 con control"; "" si el trabajo es en sitio o no hay equipo),
-pedido_es (lo que dijo el cliente traducido al español; si ya está en español, repítelo igual), respuesta_es (traducción al español de respuesta_sms, para que el dueño entienda qué se le envía; si ya está en español, repítela igual).
+pedido_es (lo que dijo el cliente traducido al español; si ya está en español, repítelo igual), respuesta_es (traducción al español de respuesta_sms, para que el dueño entienda qué se le envía; si ya está en español, repítela igual),
+cita_fecha ("AAAA-MM-DD" SOLO si el cliente pide un día concreto o relativo como "mañana", "el viernes", "el 15"; hoy es ${Utilities.formatDate(new Date(), CFG.CITAS.TZ, "EEEE yyyy-MM-dd")}; si no pide día, ""),
+cita_franja ("manana" 8am-12pm | "tarde" 12-5pm | "noche" 5-8pm, según la hora que pida; "" si no dice hora).
 Si un dato no aparece, usa "". No inventes.`;
   let t = {};
   try {
@@ -314,6 +332,12 @@ function email_(t) {
     ${n && t.equipo ? btn('sms:+' + n + '?&body=' + encodeURIComponent(consentMsg_(t)), '&#128221; Enviar consentimiento', '#8A5CF6') : ''}
     ${t.draft ? btn(t.draft, '&#9993; Ver borrador de respuesta', '#0E7C86') : ''}
   </div>
+  ${t.cita ? `<div style="background:${t.cita.lleno ? '#FDE4D8' : '#FDF0DC'};border-radius:14px;padding:12px 14px;margin:0 0 12px">
+    <b>&#128197; Cita por confirmar:</b> ${esc_(t.cita.texto)}${t.cita.lleno ? '<br><b>Ojo:</b> esa franja ya estaba llena. Confírmala igual o propónle otra hora.' : ''}
+    <div style="font-size:13px;color:#4A5873;margin:4px 0 6px">Ya está en tu calendario "${esc_(CFG.CITAS.CAL)}" en amarillo. Al confirmar se pone en verde${t.email ? ' y le llega la confirmación por correo' : ''}.</div>
+    ${btn(citaLink_('ok', t.cita.id), '&#9989; Confirmar cita', '#1E8E3E')}${btn(citaLink_('no', t.cita.id), '&#10006; Cancelar cita', '#C2410C')}
+    ${n ? btn('sms:+' + n + '?&body=' + encodeURIComponent(citaMsg_(t, t.cita, 'ok')), '&#128172; Enviar confirmación', '#2FB344') : ''}${n ? btn('https://wa.me/' + n + '?text=' + encodeURIComponent(citaMsg_(t, t.cita, 'ok')), 'Confirmar por WhatsApp', '#1FA855') : ''}
+  </div>` : ''}
   ${t.draft && !t.alias ? `<p style="background:#FDF0DC;padding:10px 12px;border-radius:10px;font-size:13px">⚠️ Gmail no tiene el alias ${esc_(CFG.SUPPORT)} en "Enviar como": no se mandó acuse al cliente y el borrador saldría desde tu Gmail personal. Configúralo (README → Correo de empresa).</p>` : ''}
   <p><b>Resumen:</b> ${esc_(t.resumen)}</p>
   <p><b>Disponibilidad:</b> ${esc_(t.disponibilidad || '—')} &nbsp; <b>Precio:</b> ${esc_(t.precio || 'a cotizar')}</p>
@@ -324,7 +348,7 @@ function email_(t) {
   ${t.idioma === 'en' && t.respuesta_es ? `<p><b>En español (para ti):</b><br><span style="background:#FDF0DC;display:block;padding:10px 12px;border-radius:10px">${esc_(t.respuesta_es)}</span></p>` : ''}
   <p style="color:#4A5873;font-size:13px"><b>Lo que dijo${t.idioma === 'en' ? ' (en inglés)' : ''}:</b> ${esc_(t.pedido_original)}</p>
   ${t.idioma === 'en' && t.pedido_es ? `<p style="color:#4A5873;font-size:13px"><b>En español:</b> ${esc_(t.pedido_es)}</p>` : ''}</div>`;
-  const subject = `[${UT_[t.urgencia] || 'NUEVO'}] ${t.servicio || 'Nuevo contacto'} · ${t.ubicacion || 'sin zona'} · ${t.telefono || t.email || ''}`;
+  const subject = `[${t.cita ? 'CITA ' + citaCorta_(t.cita) : UT_[t.urgencia] || 'NUEVO'}] ${t.servicio || 'Nuevo contacto'} · ${t.ubicacion || 'sin zona'} · ${t.telefono || t.email || ''}`;
   const text = `${t.servicio} | ${t.nombre} ${t.telefono} | ${t.ubicacion}\n${t.resumen}\nPrecio: ${t.precio}\nRespuesta: ${t.respuesta_sms}`;
   GmailApp.sendEmail(Session.getEffectiveUser().getEmail(), subject, text, { htmlBody: html, name: 'Tickets ' + CFG.BRAND });
 }
@@ -336,6 +360,165 @@ function consentMsg_(t) {
   return en
     ? `Hi${first ? ' ' + first : ''}! Before we pick up your equipment, please review and sign this short form (1 minute): ${url}\n${CFG.BRAND} Team`
     : `¡Hola${first ? ' ' + first : ''}! Antes de recoger tu equipo, revisa y firma este formulario corto (1 minuto): ${url}\n${CFG.SIGNATURE}`;
+}
+
+/* ---------- 4) citas: calendario "Fix & Go – Citas" ---------- */
+// Ejecútalo una vez: crea el calendario y el resumen/recordatorio diario de las 9 am.
+function instalarCitas() {
+  const cal = citasCal_();
+  ScriptApp.getProjectTriggers().filter(x => x.getHandlerFunction() === 'recordatorios').forEach(x => ScriptApp.deleteTrigger(x));
+  ScriptApp.newTrigger('recordatorios').timeBased().everyDays(1).atHour(9).inTimezone(CFG.CITAS.TZ).create();
+  sign_('inicio');   // crea la clave secreta de los botones de confirmar/cancelar
+  console.log('Listo: calendario "' + cal.getName() + '" y recordatorio diario a las 9 am.');
+}
+function citasCal_() {
+  return CalendarApp.getCalendarsByName(CFG.CITAS.CAL)[0] ||
+    CalendarApp.createCalendar(CFG.CITAS.CAL, { color: CalendarApp.Color.ORANGE, timeZone: CFG.CITAS.TZ, summary: 'Citas apartadas por clientes de ' + CFG.BRAND });
+}
+const FR_ = () => CFG.CITAS.FRANJAS;
+const dt_ = (d, h) => Utilities.parseDate(`${d} ${h}:00`, CFG.CITAS.TZ, 'yyyy-MM-dd H:mm');
+const hoy_ = () => Utilities.formatDate(new Date(), CFG.CITAS.TZ, 'yyyy-MM-dd');
+const masDias_ = (d, n) => Utilities.formatDate(new Date(dt_(d, 12).getTime() + n * 864e5), CFG.CITAS.TZ, 'yyyy-MM-dd');
+const hora_ = h => h === 12 ? '12 pm' : h > 12 ? (h - 12) + ' pm' : h + ' am';
+const DIAS_ES_ = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'];
+const MESES_ES_ = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+
+function cleanCita_(c) {
+  if (!c || !/^\d{4}-\d{2}-\d{2}$/.test(String(c.d || '')) || !FR_()[c.f]) return null;
+  return c.d >= hoy_() && c.d <= masDias_(hoy_(), 60) ? { d: String(c.d), f: String(c.f) } : null;
+}
+function citaTexto_(c, lang) {
+  const f = FR_()[c.f], x = dt_(c.d, 12), g = p => Utilities.formatDate(x, CFG.CITAS.TZ, p), h = `${hora_(f[0])}–${hora_(f[1])}`;
+  return lang === 'en' ? `${g('EEEE, MMMM d')}, in the ${f[3].toLowerCase()} (${h})`
+    : `${DIAS_ES_[+g('u') - 1]} ${+g('d')} de ${MESES_ES_[+g('M') - 1]}, en la ${f[2].toLowerCase()} (${h})`;
+}
+function citaCorta_(c) { const g = p => Utilities.formatDate(dt_(c.d, 12), CFG.CITAS.TZ, p); return `${DIAS_ES_[+g('u') - 1].slice(0, 3)} ${+g('d')} ${FR_()[c.f][2].toLowerCase()}`; }
+
+// franjas libres de los próximos días (para la página); se guarda 1 minuto en caché
+function slots_() {
+  const cache = CacheService.getScriptCache(), hit = cache.get('slots'); if (hit) return JSON.parse(hit);
+  const hoy = hoy_(), evs = citasCal_().getEvents(dt_(hoy, 0), dt_(masDias_(hoy, CFG.CITAS.DIAS), 0)), now = Date.now(), dias = [];
+  for (let i = 0; i < CFG.CITAS.DIAS; i++) {
+    const d = masDias_(hoy, i), f = {};
+    Object.keys(FR_()).forEach(k => {
+      const s = dt_(d, FR_()[k][0]).getTime(), e = dt_(d, FR_()[k][1]).getTime();
+      const n = evs.filter(x => x.getStartTime().getTime() < e && x.getEndTime().getTime() > s).length;
+      f[k] = e - 3600e3 > now && n < CFG.CITAS.MAX ? 1 : 0;   // hoy, cada franja se cierra 1 hora antes de terminar
+    });
+    dias.push({ d, f });
+  }
+  cache.put('slots', JSON.stringify(dias), 60);
+  return dias;
+}
+const ocupadas_ = c => citasCal_().getEvents(dt_(c.d, FR_()[c.f][0]), dt_(c.d, FR_()[c.f][1])).length;
+
+// crea la cita "por confirmar" si el cliente apartó en la página o si la IA entendió que pidió un día
+function citaDesdeTicket_(t, pedida) {
+  try {
+    let c = cleanCita_(pedida);
+    if (!c && /^\d{4}-\d{2}-\d{2}$/.test(String(t.cita_fecha || '')) && t.cita_fecha >= hoy_()) {
+      const f = FR_()[t.cita_franja] ? t.cita_franja : Object.keys(FR_()).find(k => ocupadas_({ d: t.cita_fecha, f: k }) < CFG.CITAS.MAX) || 'manana';
+      c = cleanCita_({ d: t.cita_fecha, f });
+    }
+    if (c) t.cita = crearCita_(t, c);
+  } catch (e) { console.error('cita', e); }
+}
+function crearCita_(t, c) {
+  const [a, b] = FR_()[c.f], lleno = ocupadas_(c) >= CFG.CITAS.MAX;
+  const ev = citasCal_().createEvent(`⏳ Por confirmar · ${t.servicio || 'Cita'} · ${t.nombre || t.telefono || t.email || 'Cliente'}`, dt_(c.d, a), dt_(c.d, b), {
+    location: t.ubicacion || '',
+    description: [`Cliente: ${t.nombre || '—'}`, `Teléfono: ${t.telefono || '—'}`, `Correo: ${t.email || '—'}`, `Dónde: ${t.ubicacion || '—'}`,
+      `Pedido: ${t.resumen || t.pedido_es || ''}`, `Origen: ${t.origen || ''}`].join('\n') });
+  ev.setColor(CalendarApp.EventColor.YELLOW);
+  const tag = { nombre: t.nombre, telefono: t.telefono, email: t.email, idioma: t.idioma, servicio: t.servicio, estado: 'pendiente' };
+  Object.keys(tag).forEach(k => ev.setTag('fg_' + k, String(tag[k] || '').slice(0, 200)));
+  CacheService.getScriptCache().remove('slots');
+  return { id: ev.getId(), d: c.d, f: c.f, lleno, texto: citaTexto_(c, 'es') };
+}
+const citaDeEvento_ = ev => { const s = ev.getStartTime(), h = +Utilities.formatDate(s, CFG.CITAS.TZ, 'H');
+  return { d: Utilities.formatDate(s, CFG.CITAS.TZ, 'yyyy-MM-dd'), f: Object.keys(FR_()).find(k => h >= FR_()[k][0] && h < FR_()[k][1]) || 'manana' }; };
+const tagsDe_ = ev => ['nombre', 'telefono', 'email', 'idioma', 'servicio'].reduce((o, k) => (o[k] = ev.getTag('fg_' + k) || '', o), {});
+
+// mensaje al cliente: tipo "ok" (confirmada) o "rec" (recordatorio del día antes); siempre como empresa
+function citaMsg_(t, c, tipo) {
+  const en = t.idioma === 'en', first = String(t.nombre || '').trim().split(/\s+/)[0], hi = first ? ' ' + first : '', when = citaTexto_(c, en ? 'en' : 'es');
+  if (en) return tipo === 'rec'
+    ? `Hi${hi}! Just a reminder: we'll see you tomorrow, ${when}. Need to change it? Just reply to this message.\n${CFG.BRAND} Team`
+    : `Hi${hi}! Your appointment is confirmed: ${when}. We'll text you before the appointment. Need to change it? Just reply to this message.\n${CFG.BRAND} Team`;
+  const para = t.servicio ? ` para ${String(t.servicio).toLowerCase()}` : '';
+  return tipo === 'rec'
+    ? `¡Hola${hi}! Te recordamos tu cita de mañana${para}: ${when}. ¿Necesitas cambiarla? Responde este mensaje.\n${CFG.SIGNATURE}`
+    : `¡Hola${hi}! Tu cita${para} quedó confirmada: ${when}. Te escribimos antes de la cita. ¿Necesitas cambiarla? Responde este mensaje.\n${CFG.SIGNATURE}`;
+}
+
+// botones del correo: firmados para que nadie más pueda confirmar o cancelar
+function sign_(s) {
+  const pr = PropertiesService.getScriptProperties(); let k = pr.getProperty('CITAS_KEY');
+  if (!k) { k = Utilities.getUuid() + Utilities.getUuid(); pr.setProperty('CITAS_KEY', k); }
+  return Utilities.base64EncodeWebSafe(Utilities.computeHmacSha256Signature(s, k)).replace(/=+$/, '').slice(0, 24);
+}
+const citaLink_ = (a, id) => `${CFG.WEBAPP}?a=${a}&id=${encodeURIComponent(id)}&k=${sign_(a + '|' + id)}`;
+
+// página que abre el botón del correo; la acción se hace con un botón (no con el enlace), así ningún
+// revisor automático de correos confirma o cancela por accidente
+function citaPagina_(p) {
+  const shell = body => HtmlService.createHtmlOutput(`<div id="b" style="font-family:Arial,sans-serif;max-width:460px;margin:28px auto;padding:0 18px;color:#14213D;line-height:1.45">${body}</div>`)
+    .setTitle('Citas ' + CFG.BRAND).addMetaTag('viewport', 'width=device-width, initial-scale=1');
+  const ok = (p.a === 'ok' || p.a === 'no') && p.k === sign_(p.a + '|' + p.id);
+  if (!ok) return shell('<h2>Enlace no válido</h2>');
+  const ev = citasCal_().getEventById(String(p.id));
+  if (!ev) return shell('<h2>Esa cita ya no existe</h2><p>Puede que ya la hayas cancelado.</p>');
+  const t = tagsDe_(ev), c = citaDeEvento_(ev), conf = p.a === 'ok', args = JSON.stringify({ a: p.a, id: p.id, k: p.k }).replace(/</g, '\\u003c');
+  return shell(`<h2>${conf ? '&#9989; Confirmar' : '&#10006; Cancelar'} cita</h2>
+    <p><b>${esc_(t.servicio || ev.getTitle())}</b>${t.nombre ? ' · ' + esc_(t.nombre) : ''}<br>${esc_(citaTexto_(c, 'es'))}</p>
+    ${conf && ev.getTag('fg_estado') === 'confirmada' ? '<p>Esta cita ya estaba confirmada.</p>' : ''}
+    <button id="go" style="width:100%;border:0;border-radius:14px;padding:16px;font-size:17px;font-weight:700;color:#fff;background:${conf ? '#1E8E3E' : '#C2410C'}">${conf ? 'Sí, confirmar' : 'Sí, cancelar la cita'}</button>
+    <script>document.getElementById('go').onclick=function(){this.disabled=true;this.textContent='Un momento…';
+      google.script.run.withSuccessHandler(function(h){document.getElementById('b').innerHTML=h})
+        .withFailureHandler(function(e){document.getElementById('b').innerHTML='<p>No se pudo: '+e.message+'</p>'}).citaHacer(${args});};</script>`);
+}
+function citaHacer(p) {
+  if (!p || (p.a !== 'ok' && p.a !== 'no') || p.k !== sign_(p.a + '|' + p.id)) throw new Error('enlace no válido');
+  const ev = citasCal_().getEventById(String(p.id)); if (!ev) return '<h2>Esa cita ya no existe</h2>';
+  const t = tagsDe_(ev), c = citaDeEvento_(ev), n = digits_(t.telefono);
+  CacheService.getScriptCache().remove('slots');
+  if (p.a === 'no') { ev.deleteEvent(); return `<h2>Cita cancelada</h2><p>${esc_(citaTexto_(c, 'es'))} quedó libre en tu calendario.</p>`; }
+  let aviso = '';
+  if (ev.getTag('fg_estado') !== 'confirmada') {
+    ev.setTitle(ev.getTitle().replace(/^⏳ Por confirmar/, '✅ Confirmada')); ev.setColor(CalendarApp.EventColor.GREEN); ev.setTag('fg_estado', 'confirmada');
+    if (t.email && hasAlias_()) {   // solo desde info@: el Gmail personal nunca le llega al cliente
+      try { GmailApp.sendEmail(t.email, `${CFG.BRAND} · ${t.idioma === 'en' ? 'Appointment confirmed' : 'Cita confirmada'}`, citaMsg_(t, c, 'ok'), { from: CFG.SUPPORT, name: CFG.BRAND }); aviso = 'Le llegó la confirmación a su correo.'; }
+      catch (e) { console.error(e); }
+    }
+  }
+  const m = encodeURIComponent(citaMsg_(t, c, 'ok'));
+  const b = (h, x, bg) => `<a href="${h}" target="_top" style="display:block;text-align:center;background:${bg};color:#fff;text-decoration:none;font-weight:700;padding:14px;border-radius:14px;margin:8px 0">${x}</a>`;
+  return `<h2>&#9989; Cita confirmada</h2><p>${esc_(citaTexto_(c, 'es'))}. En tu calendario ya está en verde.</p>${aviso ? `<p>${aviso}</p>` : ''}
+    ${n ? '<p>Avísale con un toque (o usa los botones del correo):</p>' + b(`sms:+${n}?&body=${m}`, 'Enviar confirmación por SMS', '#2FB344') + b(`https://wa.me/${n}?text=${m}`, 'Enviar por WhatsApp', '#1FA855') : ''}`;
+}
+
+// todos los días a las 9 am: recordatorio por correo a los clientes de mañana + tu resumen con botones de SMS/WhatsApp
+function recordatorios() {
+  const pr = PropertiesService.getScriptProperties();
+  if (pr.getProperty('rec_dia') === hoy_()) return;   // una sola vez al día, aunque lo llamen más veces
+  pr.setProperty('rec_dia', hoy_());
+  const man = masDias_(hoy_(), 1), evs = citasCal_().getEvents(dt_(man, 0), dt_(man, 23)), alias = hasAlias_();
+  if (!evs.length) return;
+  const b = (h, x, bg) => `<a href="${h}" style="display:inline-block;background:${bg};color:#fff;text-decoration:none;font-weight:700;padding:9px 14px;border-radius:10px;margin:6px 6px 0 0">${x}</a>`;
+  const filas = evs.map(ev => {
+    const t = tagsDe_(ev), c = citaDeEvento_(ev), conf = ev.getTag('fg_estado') === 'confirmada', n = digits_(t.telefono), m = encodeURIComponent(citaMsg_(t, c, 'rec'));
+    let nota = '';
+    if (conf && t.email && alias) {
+      try { GmailApp.sendEmail(t.email, `${CFG.BRAND} · ${t.idioma === 'en' ? 'See you tomorrow' : 'Te esperamos mañana'}`, citaMsg_(t, c, 'rec'), { from: CFG.SUPPORT, name: CFG.BRAND }); nota = ' · recordatorio enviado por correo'; }
+      catch (e) { console.error(e); }
+    }
+    return `<div style="border:1px solid #EBE3D6;border-radius:14px;padding:12px 14px;margin:10px 0">
+      <b>${conf ? '&#9989;' : '&#9203; SIN CONFIRMAR ·'} ${esc_(FR_()[c.f][2])} · ${esc_(t.servicio || ev.getTitle())}</b><br>${esc_(t.nombre)} ${esc_(t.telefono || t.email)}${nota}<br>
+      ${n ? b(`sms:+${n}?&body=${m}`, '&#128172; Recordar por SMS', '#2FB344') + b(`https://wa.me/${n}?text=${m}`, 'WhatsApp', '#1FA855') : ''}
+      ${conf ? '' : b(citaLink_('ok', ev.getId()), 'Confirmar', '#1E8E3E') + b(citaLink_('no', ev.getId()), 'Cancelar', '#C2410C')}</div>`;
+  }).join('');
+  GmailApp.sendEmail(Session.getEffectiveUser().getEmail(), `[CITAS MAÑANA] ${evs.length} cita${evs.length > 1 ? 's' : ''} · ${citaTexto_({ d: man, f: 'manana' }, 'es').split(',')[0]}`,
+    `Tienes ${evs.length} cita(s) mañana.`, { htmlBody: `<div style="font-family:Arial,sans-serif;max-width:560px;color:#14213D"><h2 style="margin:0 0 6px">Citas de mañana</h2>${filas}</div>`, name: 'Citas ' + CFG.BRAND });
 }
 
 /* ---------- utilidades ---------- */
