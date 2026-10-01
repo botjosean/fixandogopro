@@ -261,7 +261,7 @@ function ticket_(input, base) {
   base = base || {};
   const sys = `Eres el asistente de ${CFG.BRAND}, una empresa bilingüe de servicios para el hogar, tecnología, mecánica sencilla de carros, trámites y viajes en Birmingham y Atlanta.
 Recibes un contacto de un cliente (puede venir de una transcripción con errores). Devuelve SOLO JSON válido con:
-nombre, telefono, idioma ("es"|"en"), linea ("casa"|"tech"|"auto"|"tramites"|"negocio"|"viajes"|"otro"; "auto" = mecánica: frenos, alternador, arranque, bobinas, compresor, correas), servicio (corto, en español),
+nombre, telefono, idioma ("es"|"en"), linea ("casa"|"tech"|"auto"|"tramites"|"negocio"|"viajes"|"otro"; "auto" = mecánica: frenos, alternador, arranque, bobinas, compresor, correas; "casa" incluye reparación de drywall, huecos, grietas, techos con daño de agua y paredes sencillas), servicio (corto, en español),
 pedido_original (lo que dijo, en su idioma), resumen (2-3 líneas en español), urgencia ("hoy"|"semana"|"flexible"),
 ubicacion, disponibilidad, soluciones (array, español), materiales (array), precio (SOLO un rango de esta lista o "a cotizar": ${JSON.stringify(CFG.PRICES)}),
 preguntas (array de lo que falta saber), respuesta_sms (mensaje corto listo para enviarle, en SU idioma, cálido y directo, hablando como empresa en plural ("nosotros", nunca "yo"), firmado "${CFG.SIGNATURE}", sin precio exacto),
@@ -301,7 +301,7 @@ function conContacto_(texto, idioma) {
 // vocabulario propio: mejora el reconocimiento de estas palabras en español e inglés (máx. ~100 palabras)
 const KEYTERMS = ['PlayStation 5', 'PS5', 'PlayStation', 'Xbox', 'Nintendo Switch', 'iPhone', 'iPad', 'MacBook', 'iMac', 'Windows', 'laptop',
   'WiFi', 'router', 'HDMI', 'Alexa', 'Google Home', 'Ring', 'Wyze', 'Eufy', 'Fix and Go', 'LLC', 'ITIN', 'taxes', 'TikTok', 'Instagram',
-  'Facebook', 'WhatsApp', 'Gmail', 'iCloud', 'alternador', 'alternator', 'bobina', 'bujías', 'frenos', 'correa del tiempo', 'timing belt', 'check engine', 'Lucas', 'cambio de aceite', 'Homewood', 'Hoover', 'Birmingham', 'Chamblee', 'Doraville', 'Atlanta'];
+  'Facebook', 'WhatsApp', 'Gmail', 'iCloud', 'alternador', 'alternator', 'bobina', 'bujías', 'frenos', 'correa del tiempo', 'timing belt', 'check engine', 'Lucas', 'cambio de aceite', 'drywall', 'sheetrock', 'tablaroca', 'Homewood', 'Hoover', 'Birmingham', 'Chamblee', 'Doraville', 'Atlanta'];
 function deepgram_(bytes, mime) {
   const key = prop_('DEEPGRAM_KEY'); if (!key) return '';
   try {

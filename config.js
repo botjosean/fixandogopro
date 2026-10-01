@@ -90,7 +90,11 @@ const I = {
   oil:'<path d="M12 3s-5.5 6.2-5.5 10.5a5.5 5.5 0 0 0 11 0C17.5 9.2 12 3 12 3z"/><path d="M9.5 14a2.5 2.5 0 0 0 2.5 2.5"/>',
   gauge:'<path d="M3.5 17.5a9 9 0 1 1 17 0"/><path d="m12 15 4-5"/><circle cx="12" cy="15" r="1.3"/>',
   cal:'<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="M8 14h2M14 14h2M8 17.5h2"/>',
-  addc:'<circle cx="9.5" cy="8" r="3.8"/><path d="M2.5 20.5a7 7 0 0 1 14 0"/><path d="M19 8v6M16 11h6"/>'
+  addc:'<circle cx="9.5" cy="8" r="3.8"/><path d="M2.5 20.5a7 7 0 0 1 14 0"/><path d="M19 8v6M16 11h6"/>',
+  wall:'<rect x="3" y="4" width="18" height="16" rx="1.5"/><path d="M3 9.5h18M3 15h18M9 4v5.5M15 9.5V15M9 15v5"/>',
+  drop:'<path d="M3 4h18"/><path d="M12 8s-4.2 4.6-4.2 7.6a4.2 4.2 0 0 0 8.4 0C16.2 12.6 12 8 12 8z"/>',
+  crack:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="m10.5 3 2 5-3 4 4 4-2 5"/>',
+  studs:'<path d="M4 21V3M12 21V3M20 21V3M3 7h18M3 17h18"/>'
 };
 const ico = (k, c="") => `<svg class="i ${c}" viewBox="0 0 24 24" aria-hidden="true">${I[k]||I.msg}</svg>`;
 const CAT_ICON = {casa:"home", tech:"laptop", tramites:"file", negocio:"share", viajes:"car", auto:"wrench"};
@@ -108,6 +112,7 @@ const catsFor = l => (ORDER[l] || ORDER.es).filter(k => S[k]).concat(Object.keys
 const HOT = {
   es:[
     ["casa","cam","Cámaras y timbres"],
+    ["casa","wall","Drywall"],
     ["tramites","receipt","Taxes"],
     ["tech","phone","iPhone"],
     ["auto","brake","Frenos −20%"],
@@ -120,6 +125,7 @@ const HOT = {
   ],
   en:[
     ["casa","cam","Cameras"],
+    ["casa","wall","Drywall repair"],
     ["casa","tv","TV mounting"],
     ["tech","phone","iPhone"],
     ["auto","brake","Brakes −20%"],
@@ -225,10 +231,14 @@ const S = {
     ]
   },
   casa:{
-    es:{t:"Tu casa segura, conectada y al día", d:"Cámaras, WiFi, TV, lámparas y muebles. Una visita y listo.", tile:"Cámaras, timbres, WiFi, TV y ventiladores"},
-    en:{t:"Your home: safe, connected, done", d:"Cameras, Wi-Fi, TVs, lights, furniture. One visit, done.", tile:"Cameras, doorbells, Wi-Fi, TVs and ceiling fans"},
+    es:{t:"Tu casa segura, conectada y al día", d:"Cámaras, WiFi, TV, reparación de drywall, lámparas y muebles. Una visita y listo.", tile:"Cámaras, drywall, timbres, WiFi y TV"},
+    en:{t:"Your home: safe, connected, done", d:"Cameras, Wi-Fi, TVs, drywall repair, lights, furniture. One visit, done.", tile:"Cameras, drywall repair, doorbells, Wi-Fi and TVs"},
     items:[
       ["cam",{es:["Mira tu casa desde el teléfono","Cámaras Ring, Wyze, Eufy o sistema con grabador"],en:["See your home from your phone","Ring, Wyze, Eufy or wired camera systems"]}],
+      ["wall",{es:["¿Un hueco en la pared? Lo reparamos","Parche de drywall, igualamos la textura y queda listo para pintar"],en:["Hole in your wall? We'll patch it","Drywall patching and texture matching, ready to paint"],kw:"drywall pared hueco hoyo agujero parche yeso sheetrock tablaroca tabla roca wall hole patch patching repair texture"}],
+      ["drop",{es:["Techo o pared con daño de agua","Cambiamos el drywall dañado y lo dejamos como nuevo"],en:["Water-damaged ceiling or wall","We replace the damaged drywall so it looks like new"],kw:"techo cielo raso goteo gotera mancha agua humedad ceiling water damage stain leak drywall sheetrock"}],
+      ["crack",{es:["Grietas en paredes y techos","Grietas, esquinas golpeadas y clavos que se salen"],en:["Cracks in walls and ceilings","Cracks, dented corners and nail pops"],kw:"grieta fisura rajadura esquina clavo crack cracks corner bead nail pop drywall sheetrock"}],
+      ["studs",{es:["Paredes sencillas de drywall","Divisiones, cerrar un hueco o un closet"],en:["Simple drywall walls","Partition walls, closing an opening or a closet"],kw:"pared nueva division tabique armar drywall sheetrock partition wall framing closet"}],
       ["bell",{es:["Sabe quién toca antes de abrir","Timbre con video y cerraduras inteligentes"],en:["Know who's at the door before you open","Video doorbells and smart locks"]}],
       ["wifi",{es:["WiFi que llega a todos los cuartos","Se acabaron los puntos muertos"],en:["Wi-Fi in every room","No more dead spots"]}],
       ["shield",{es:["Que nadie se meta a tus cámaras ni a tu WiFi","Blindaje de tu red y tu router"],en:["Keep strangers out of your cameras and Wi-Fi","Home network and router lockdown"]}],
