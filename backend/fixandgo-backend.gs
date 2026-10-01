@@ -312,6 +312,10 @@ const U_ = { hoy: '&#128308; HOY', semana: '&#128992; Semana', flexible: '&#1289
 const UT_ = { hoy: 'HOY', semana: 'SEMANA', flexible: 'FLEXIBLE' };
 const esc_ = s => String(s || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const digits_ = p => { const d = String(p || '').replace(/\D/g, '').slice(-10); return d.length === 10 ? '1' + d : ''; };
+// a quién se le escribe por dónde: clientes en inglés → mensaje de texto (casi no usan WhatsApp); en español → WhatsApp
+const canal_ = (n, idioma, texto) => idioma === 'en' ? 'sms:+' + n + '?&body=' + encodeURIComponent(texto) : 'https://wa.me/' + n + '?text=' + encodeURIComponent(texto);
+const canalNombre_ = idioma => idioma === 'en' ? 'texto (SMS)' : 'WhatsApp';
+const canalColor_ = idioma => idioma === 'en' ? '#2FB344' : '#1FA855';
 
 function email_(t) {
   const n = digits_(t.telefono);
@@ -326,18 +330,17 @@ function email_(t) {
   <div style="margin:14px 0">
     ${!n && t.email ? btn('mailto:' + t.email + '?subject=' + encodeURIComponent('Fix & Go') + '&body=' + encodeURIComponent(t.respuesta_sms || ''), '&#9993; Responder por correo', '#2FB344') : ''}
     ${n ? btn('tel:+' + n, '&#128222; Llamar', '#14213D') : ''}
-    ${n ? btn('sms:+' + n + '?&body=' + encodeURIComponent(t.respuesta_sms || ''), '&#128172; Enviar respuesta', '#2FB344') : ''}
-    ${n ? btn('https://wa.me/' + n + '?text=' + encodeURIComponent(t.respuesta_sms || ''), 'WhatsApp', '#1FA855') : ''}
-    ${n && !t.cita ? btn(t.idioma === 'en' ? 'sms:+' + n + '?&body=' + encodeURIComponent(citaInvite_(t)) : 'https://wa.me/' + n + '?text=' + encodeURIComponent(citaInvite_(t)), '&#128197; Mandar link de cita', '#C2410C') : ''}
+    ${n ? btn(canal_(n, t.idioma, t.respuesta_sms || ''), '&#128172; Responder por ' + canalNombre_(t.idioma), canalColor_(t.idioma)) : ''}
+    ${n && !t.cita ? btn(canal_(n, t.idioma, citaInvite_(t)), '&#128197; Mandar link de cita', '#C2410C') : ''}
     ${t.audio ? btn(t.audio, '&#127911; Escuchar nota', '#F2A541') : ''}
-    ${n && t.equipo ? btn('sms:+' + n + '?&body=' + encodeURIComponent(consentMsg_(t)), '&#128221; Enviar consentimiento', '#8A5CF6') : ''}
+    ${n && t.equipo ? btn(canal_(n, t.idioma, consentMsg_(t)), '&#128221; Enviar consentimiento', '#8A5CF6') : ''}
     ${t.draft ? btn(t.draft, '&#9993; Ver borrador de respuesta', '#0E7C86') : ''}
   </div>
   ${t.cita ? `<div style="background:${t.cita.lleno ? '#FDE4D8' : '#FDF0DC'};border-radius:14px;padding:12px 14px;margin:0 0 12px">
     <b>&#128197; Cita por confirmar:</b> ${esc_(t.cita.texto)}${t.cita.lleno ? '<br><b>Ojo:</b> esa franja ya estaba llena. Confírmala igual o propónle otra hora.' : ''}
     <div style="font-size:13px;color:#4A5873;margin:4px 0 6px">Ya está en tu calendario "${esc_(CFG.CITAS.CAL)}" en amarillo. Al confirmar se pone en verde${t.email ? ' y le llega la confirmación por correo' : ''}.</div>
     ${btn(citaLink_('ok', t.cita.id), '&#9989; Confirmar cita', '#1E8E3E')}${btn(citaLink_('no', t.cita.id), '&#10006; Cancelar cita', '#C2410C')}
-    ${n ? btn('sms:+' + n + '?&body=' + encodeURIComponent(citaMsg_(t, t.cita, 'ok')), '&#128172; Enviar confirmación', '#2FB344') : ''}${n ? btn('https://wa.me/' + n + '?text=' + encodeURIComponent(citaMsg_(t, t.cita, 'ok')), 'Confirmar por WhatsApp', '#1FA855') : ''}
+    ${n ? btn(canal_(n, t.idioma, citaMsg_(t, t.cita, 'ok')), '&#128172; Enviar confirmación por ' + canalNombre_(t.idioma), canalColor_(t.idioma)) : ''}
   </div>` : ''}
   ${t.draft && !t.alias ? `<p style="background:#FDF0DC;padding:10px 12px;border-radius:10px;font-size:13px">⚠️ Gmail no tiene el alias ${esc_(CFG.SUPPORT)} en "Enviar como": no se mandó acuse al cliente y el borrador saldría desde tu Gmail personal. Configúralo (README → Correo de empresa).</p>` : ''}
   <p><b>Resumen:</b> ${esc_(t.resumen)}</p>
@@ -430,7 +433,7 @@ function crearCita_(t, c) {
     location: t.ubicacion || '',
     description: [`Cliente: ${t.nombre || '—'}`, `Teléfono: ${t.telefono || '—'}`, `Correo: ${t.email || '—'}`, `Dónde: ${t.ubicacion || '—'}`,
       `Pedido: ${t.resumen || t.pedido_es || ''}`, `Origen: ${t.origen || ''}`,
-      n ? `\nWhatsApp: https://wa.me/${n}\nLlamar o texto: +${n}` : (t.email ? `\nEscribirle: ${t.email}` : '')].join('\n') });
+      n ? (t.idioma === 'en' ? `\nTexto o llamada (inglés): +${n}` : `\nWhatsApp: https://wa.me/${n}\nLlamar: +${n}`) : (t.email ? `\nEscribirle: ${t.email}` : '')].join('\n') });
   ev.setColor(CalendarApp.EventColor.YELLOW);
   const tag = { nombre: t.nombre, telefono: t.telefono, email: t.email, idioma: t.idioma, servicio: t.servicio, estado: 'pendiente' };
   Object.keys(tag).forEach(k => ev.setTag('fg_' + k, String(tag[k] || '').slice(0, 200)));
@@ -501,10 +504,9 @@ function citaHacer(p) {
       catch (e) { console.error(e); }
     }
   }
-  const m = encodeURIComponent(citaMsg_(t, c, 'ok'));
   const b = (h, x, bg) => `<a href="${h}" target="_top" style="display:block;text-align:center;background:${bg};color:#fff;text-decoration:none;font-weight:700;padding:14px;border-radius:14px;margin:8px 0">${x}</a>`;
   return `<h2>&#9989; Cita confirmada</h2><p>${esc_(citaTexto_(c, 'es'))}. En tu calendario ya está en verde.</p>${aviso ? `<p>${aviso}</p>` : ''}
-    ${n ? '<p>Avísale con un toque (o usa los botones del correo):</p>' + b(`sms:+${n}?&body=${m}`, 'Enviar confirmación por SMS', '#2FB344') + b(`https://wa.me/${n}?text=${m}`, 'Enviar por WhatsApp', '#1FA855') : ''}`;
+    ${n ? '<p>Avísale con un toque (o usa el botón del correo):</p>' + b(canal_(n, t.idioma, citaMsg_(t, c, 'ok')), 'Enviar confirmación por ' + canalNombre_(t.idioma), canalColor_(t.idioma)) : ''}`;
 }
 
 // todos los días a las 9 am: recordatorio por correo a los clientes de mañana + tu resumen con botones de SMS/WhatsApp
@@ -516,7 +518,7 @@ function recordatorios() {
   if (!evs.length) return;
   const b = (h, x, bg) => `<a href="${h}" style="display:inline-block;background:${bg};color:#fff;text-decoration:none;font-weight:700;padding:9px 14px;border-radius:10px;margin:6px 6px 0 0">${x}</a>`;
   const filas = evs.map(ev => {
-    const t = tagsDe_(ev), c = citaDeEvento_(ev), conf = ev.getTag('fg_estado') === 'confirmada', n = digits_(t.telefono), m = encodeURIComponent(citaMsg_(t, c, 'rec'));
+    const t = tagsDe_(ev), c = citaDeEvento_(ev), conf = ev.getTag('fg_estado') === 'confirmada', n = digits_(t.telefono);
     let nota = '';
     if (conf && t.email && alias) {
       try { GmailApp.sendEmail(t.email, `${CFG.BRAND} · ${t.idioma === 'en' ? 'See you tomorrow' : 'Te esperamos mañana'}`, citaMsg_(t, c, 'rec'), { from: CFG.SUPPORT, name: CFG.BRAND }); nota = ' · recordatorio enviado por correo'; }
@@ -524,7 +526,7 @@ function recordatorios() {
     }
     return `<div style="border:1px solid #EBE3D6;border-radius:14px;padding:12px 14px;margin:10px 0">
       <b>${conf ? '&#9989;' : '&#9203; SIN CONFIRMAR ·'} ${esc_(FR_()[c.f][2])} · ${esc_(t.servicio || ev.getTitle())}</b><br>${esc_(t.nombre)} ${esc_(t.telefono || t.email)}${nota}<br>
-      ${n ? b(`sms:+${n}?&body=${m}`, '&#128172; Recordar por SMS', '#2FB344') + b(`https://wa.me/${n}?text=${m}`, 'WhatsApp', '#1FA855') : ''}
+      ${n ? b(canal_(n, t.idioma, citaMsg_(t, c, 'rec')), '&#128172; Recordar por ' + canalNombre_(t.idioma), canalColor_(t.idioma)) : ''}
       ${conf ? '' : b(citaLink_('ok', ev.getId()), 'Confirmar', '#1E8E3E') + b(citaLink_('no', ev.getId()), 'Cancelar', '#C2410C')}</div>`;
   }).join('');
   GmailApp.sendEmail(Session.getEffectiveUser().getEmail(), `[CITAS MAÑANA] ${evs.length} cita${evs.length > 1 ? 's' : ''} · ${citaTexto_({ d: man, f: 'manana' }, 'es').split(',')[0]}`,
