@@ -20,6 +20,7 @@ ap.add_argument("--placa-sin-nfc", action="store_true", help="solo la placa del 
 ap.add_argument("--opciones", default="abc", help="opciones de mecánica en la placa: a, b y/o c")
 ap.add_argument("--volante", action="store_true", help="volante 4x6 para entregar (PNG 600 dpi) + hoja carta con 2")
 ap.add_argument("--hoja4", action="store_true", help="hoja carta 8.5x11 con 4 volantes de 4.25x5.5 (JPG y PNG 300 dpi)")
+ap.add_argument("--hoja4doc", action="store_true", help="hoja carta para impresion de documento: 4 volantes con margen blanco (PDF y PNG)")
 a = ap.parse_args()
 
 P = a.phone
@@ -231,6 +232,18 @@ def render_png(page, w_in, h_in, path, dpi=600):
 
 os.makedirs(a.out, exist_ok=True)
 suf = f"-{a.zone}" if a.zone else ""
+if a.hoja4doc:   # "Document Printing" (impresora láser con borde blanco): 4 volantes con margen blanco parejo; 2 cortes en cruz
+    z = 5.0 / 7.25
+    one = plate(nfc=False, v="c").replace('<div class="pg plate vc">', f'<div class="pg plate vc" style="zoom:{z:.4f};width:{3.75 / z:.3f}in;height:7.25in">', 1)
+    cell = f'<div style="width:4.25in;height:5.5in;padding:.25in;box-sizing:border-box;background:#fff"><div style="width:3.75in;height:5in;overflow:hidden">{one}</div></div>'
+    marks = ('<div style="position:absolute;left:4.25in;top:0;height:.18in;border-left:.5pt solid #B8C0CC"></div>'
+             '<div style="position:absolute;left:4.25in;bottom:0;height:.18in;border-left:.5pt solid #B8C0CC"></div>'
+             '<div style="position:absolute;top:5.5in;left:0;width:.18in;border-top:.5pt solid #B8C0CC"></div>'
+             '<div style="position:absolute;top:5.5in;right:0;width:.18in;border-top:.5pt solid #B8C0CC"></div>')
+    sheet = f'<div style="width:8.5in;height:11in;position:relative;display:grid;grid-template-columns:4.25in 4.25in;background:#fff">{cell * 4}{marks}</div>'
+    render([sheet], "8.5in 11in", os.path.join(a.out, f"Fix-and-Go-volantes-documento{suf}.pdf"))
+    render_png(sheet, 8.5, 11, os.path.join(a.out, f"Fix-and-Go-volantes-documento{suf}.png"), dpi=300)
+    raise SystemExit
 if a.hoja4:   # hoja carta 8.5x11 con 4 volantes de 4.25x5.5" (para "Business Flyer" de Walgreens); se corta en cruz
     z = 5.5 / 7.25
     one = plate(nfc=False, v="c").replace('<div class="pg plate vc">', f'<div class="pg plate vc" style="zoom:{z:.4f};width:{4.25 / z:.3f}in;height:7.25in">', 1)
