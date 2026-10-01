@@ -180,6 +180,7 @@ function processEmail() {
     try {
       // último mensaje que no mandamos nosotros
       const m = th.getMessages().filter(x => { const f = addr_(x.getFrom()); return f !== me && f !== sup; }).pop();
+      if (m && isReport_(m)) { th.addLabel(lab); th.addLabel(reportsLabel_()); th.markRead(); th.moveToArchive(); return; }   // DMARC/TLS: ni ticket ni bandeja
       if (!m || isAutomated_(m)) { th.addLabel(lab); return; }
       const from = m.getFrom(), email = addr_(from), name = from.replace(/<[^>]*>/, '').replace(/"/g, '').trim();
       const subject = m.getSubject(), body = m.getPlainBody().slice(0, 6000);
@@ -207,6 +208,19 @@ function processEmail() {
 function hasAlias_() {
   try { return GmailApp.getAliases().some(a => a.toLowerCase() === CFG.SUPPORT.toLowerCase()); }
   catch (e) { console.error('getAliases', e); return false; }
+}
+
+// Reportes técnicos del correo (DMARC de Microsoft, Google, Yahoo…; TLS-RPT): no son clientes
+function isReport_(m) {
+  const from = String(m.getFrom()).toLowerCase(), subject = String(m.getSubject()).toLowerCase();
+  if (/dmarc|tls-?rpt|smtp-tls/.test(from)) return true;
+  if (/report domain:|report-id|dmarc|aggregate report|tls report/.test(subject)) return true;
+  try { return m.getAttachments().some(a => /\.(xml|xml\.gz|zip|gz|json\.gz)$/i.test(a.getName()) && /!|report|dmarc|tls/i.test(a.getName())); }
+  catch (e) { return false; }
+}
+
+function reportsLabel_() {
+  return GmailApp.getUserLabelByName('Reportes DMARC') || GmailApp.createLabel('Reportes DMARC');
 }
 
 function isAutomated_(m) {
