@@ -16,7 +16,8 @@ ap.add_argument("--phone", default="2054908033", help="10 dígitos, sin +1")
 ap.add_argument("--name", default="", help="nombre en el reverso; vacío = solo la marca Fix & Go")
 ap.add_argument("--zone", default="", help="atl para tarjetas de Chamblee/Atlanta")
 ap.add_argument("--out", default=".")
-ap.add_argument("--placa-sin-nfc", action="store_true", help="solo la placa del carro, sin la parte NFC, en PDF y PNG 600 dpi")
+ap.add_argument("--placa-sin-nfc", action="store_true", help="solo la placa del carro, sin la parte NFC, en PNG 600 dpi")
+ap.add_argument("--opciones", default="abc", help="opciones de mecánica en la placa: a, b y/o c")
 a = ap.parse_args()
 
 P = a.phone
@@ -116,13 +117,12 @@ h1,h2,.b{font-family:'Bricolage Grotesque','Arial Narrow',Arial,sans-serif}
 .qrbig{background:#fff;border-radius:.18in;padding:.16in;aspect-ratio:1}
 .qrbig svg{width:100%;height:100%;display:block}
 .tap{aspect-ratio:1;border-radius:50%;background:#fff;border:.07in dashed var(--mango);padding:.28in}
-/* mecánica en la esquina mango de la placa */
-.corner{position:absolute;right:.38in;top:.42in;z-index:2;text-align:right;color:var(--navy);line-height:1.05}
-.corner svg{width:.42in;height:.42in;display:inline-block}
-.corner b{display:block;font-family:'Bricolage Grotesque',Arial;font-weight:800;font-size:17pt;letter-spacing:-.01em;margin-top:.04in}
-.corner span{display:block;font-weight:700;font-size:10.5pt;margin-top:.03in}
-.corner em{display:inline-block;font-style:normal;font-weight:800;font-size:10.5pt;background:var(--navy);color:#fff;border-radius:999px;padding:.03in .12in;margin-top:.07in}
+/* mecánica en la placa */
+.plate .pill.auto{background:var(--mango);color:var(--navy)}
+.plate .pill svg,.plate .new svg{width:.2in;height:.2in;vertical-align:-.035in;margin-right:.07in}
+.plate .new{color:var(--mango);font-weight:800;font-size:14pt;margin-top:.12in}
 .solo{justify-content:center}
+.va .solo .col,.vc .solo .col{width:1.62in}
 .solo .col{flex:none;width:2.05in}
 """
 
@@ -179,17 +179,22 @@ PHONE_SVG = """<svg viewBox="0 0 120 120" width="100%" height="100%" fill="none"
     <path d="M90 42c6 9 6 27 0 36"/><path d="M100 32c10 14 10 42 0 56"/>
   </g></svg>"""
 
-WRENCH = '<svg viewBox="0 0 24 24" fill="none" stroke="#14213D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"/></svg>'
-CORNER = f'<div class="corner">{WRENCH}<b>Auto repair</b><span>Mec&aacute;nica</span><em>20% off labor</em></div>'
+WRENCH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"/></svg>'
 
-def plate(nfc=True):
+def plate(nfc=True, v="a"):
     # la placa es bilingüe: sin lang, así la página sale en el idioma del teléfono
     # nfc=False: sin el círculo "Tap here" (para imprimir antes de tener las etiquetas NFC); el QR queda solo y más grande
+    # v: cómo va mecánica  a) en el texto + etiqueta mango  b) solo en el texto  c) etiqueta mango al lado de recojo gratis
     url = f"https://{a.domain}/go/" + (f"?z={a.zone}" if a.zone else "")
     tap = f'<div class="col"><div class="tap">{PHONE_SVG}</div><b>Tap here</b><span>Hold your phone here</span></div>' if nfc else ""
-    return f'''<div class="pg plate">{CORNER}<div class="tx">
-      <div class="logo">{logo_white()}</div><h1>Need a hand?<br>We&#39;ve got you.</h1><h2>Home, tech, social media, rides and paperwork.</h2>
-      <p class="pill">Free pickup &middot; Recojo gratis</p>
+    sub = "Home, tech, social media and paperwork." if v == "c" else "Home, tech, auto repair, social media and paperwork."
+    auto = f'<p class="pill auto">{WRENCH}Auto repair &middot; 20% off labor</p>'
+    pills = {"a": f'<p class="pill">Free pickup &middot; Recojo gratis</p><br>{auto}',
+             "b": '<p class="pill">Free pickup &middot; Recojo gratis</p>',
+             "c": f'<p class="new">{WRENCH}New: auto repair &middot; 20% off labor</p><p class="pill">Free pickup &middot; Recojo gratis</p>'}[v]
+    return f'''<div class="pg plate v{v}"><div class="tx">
+      <div class="logo">{logo_white()}</div><h1>Need a hand?<br>We&#39;ve got you.</h1><h2>{sub}</h2>
+      {pills}
       <p class="ph">(205) 490-8033</p><p class="phs">Call or text &middot; Llama o escribe &middot; Se habla espa&ntilde;ol</p></div>
       <div class="duo{'' if nfc else ' solo'}">
         <div class="col"><div class="qrbig">{qr(url)}</div><b>Scan</b><span>Open your camera</span></div>
@@ -218,9 +223,9 @@ def render_png(page, w_in, h_in, path, dpi=600):
 
 os.makedirs(a.out, exist_ok=True)
 suf = f"-{a.zone}" if a.zone else ""
-if a.placa_sin_nfc:   # solo la placa del carro, sin la parte NFC ("Tap here")
-    render([plate(nfc=False)], "5.25in 7.25in", os.path.join(a.out, f"placa-carro-sin-nfc{suf}.pdf"))
-    render_png(plate(nfc=False), 5.25, 7.25, os.path.join(a.out, f"placa-carro-sin-nfc{suf}.png"))
+if a.placa_sin_nfc:   # solo la placa del carro, sin la parte NFC ("Tap here"), en las 3 opciones de mecánica
+    for v in a.opciones:
+        render_png(plate(nfc=False, v=v), 5.25, 7.25, os.path.join(a.out, f"placa-carro-sin-nfc-{v}{suf}.png"))
     raise SystemExit
 for lang in ("en", "es"):
     render([front_general(lang), back(lang)], "3.625in 2.125in", os.path.join(a.out, f"tarjeta-{lang}{suf}.pdf"))
