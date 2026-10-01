@@ -275,7 +275,7 @@ Si un dato no aparece, usa "". No inventes.`;
 // vocabulario propio: mejora el reconocimiento de estas palabras en español e inglés (máx. ~100 palabras)
 const KEYTERMS = ['PlayStation 5', 'PS5', 'PlayStation', 'Xbox', 'Nintendo Switch', 'iPhone', 'iPad', 'MacBook', 'iMac', 'Windows', 'laptop',
   'WiFi', 'router', 'HDMI', 'Alexa', 'Google Home', 'Ring', 'Wyze', 'Eufy', 'Fix and Go', 'LLC', 'ITIN', 'taxes', 'TikTok', 'Instagram',
-  'Facebook', 'WhatsApp', 'Gmail', 'iCloud', 'alternador', 'alternator', 'bobina', 'bujías', 'frenos', 'correa del tiempo', 'timing belt', 'check engine', 'Homewood', 'Hoover', 'Birmingham', 'Chamblee', 'Doraville', 'Atlanta'];
+  'Facebook', 'WhatsApp', 'Gmail', 'iCloud', 'alternador', 'alternator', 'bobina', 'bujías', 'frenos', 'correa del tiempo', 'timing belt', 'check engine', 'Lucas', 'cambio de aceite', 'Homewood', 'Hoover', 'Birmingham', 'Chamblee', 'Doraville', 'Atlanta'];
 function deepgram_(bytes, mime) {
   const key = prop_('DEEPGRAM_KEY'); if (!key) return '';
   try {
