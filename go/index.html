@@ -210,6 +210,10 @@ textarea:focus,.in:focus{outline:none;border-color:var(--sea)}
 [data-k=tech]{--c1:#E3EAFB;--c2:#3B5BDB;--c3:#3B5BDB}
 [data-k=negocio]{--c1:#F6E1F0;--c2:#A6318A;--c3:#A6318A}
 [data-k=viajes]{--c1:#DDF3E4;--c2:#1E8E3E;--c3:#1E8E3E}
+[data-k=auto]{--c1:#FDE4D8;--c2:#C2410C;--c3:#C2410C}
+/* oferta de una categoría (p. ej. 20% en mecánica) */
+.ct .promo{display:inline-block;margin-top:6px;padding:3px 9px;border-radius:9px;background:var(--mango);color:#14213D;font-style:normal;font-weight:800;font-size:.76rem;line-height:1.2}
+.hero .promo{display:inline-block;margin-top:10px;padding:5px 12px;border-radius:999px;background:var(--mango);color:#14213D;font-weight:800;font-size:.86rem;position:relative;z-index:1}
 
 :root{--paper:#FBF8F2;--line:#EBE3D6;--tint:#F2EBDD}
 .hero{background:linear-gradient(135deg,#0E7C86 0%,#0A626B 100%);box-shadow:0 28px 48px -30px rgba(14,124,134,.85)}
@@ -274,7 +278,7 @@ textarea:focus,.in:focus{outline:none;border-color:var(--sea)}
   <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="shTitle" tabindex="-1"></div>
 </div>
 
-<script src="/config.js?v=10"></script>
+<script src="/config.js?v=11"></script>
 <script>
 /* Si Cloudflare entrega un config.js viejo, la página sigue funcionando (sin "Lo más pedido" y con el orden de siempre) */
 if (typeof hotIndex === "undefined") window.hotIndex = (k, ic) => S[k].items.findIndex(x => x[0] === ic);
@@ -284,7 +288,7 @@ const T = {
   es:{
     menuTitle:"¿Necesitas una mano?", menuSub:"Aquí estamos. Toca una categoría, elige tu servicio y escríbenos.",
     search:"Busca: iPhone, taxes, PS5, Atlanta…", hot:"Lo más pedido", none:"No aparece aquí, pero déjanos un mensaje y lo vemos.",
-    services:n=>`${n}`, tag:{casa:"Casa",tech:"Tecnología",tramites:"Trámites",negocio:"Redes sociales",viajes:"Viajes"},
+    services:n=>`${n}`, tag:{casa:"Casa",tech:"Tecnología",tramites:"Trámites",negocio:"Redes sociales",viajes:"Viajes",auto:"Mecánica"},
     leave:"Déjanos un mensaje", leaveTitle:"Déjanos un mensaje", leaveSub:"Nota de voz o escrito. Te respondemos hoy.",
     leaveSubNoVoice:"Escríbenos y te respondemos hoy mismo.", quick:"Escríbenos ahora",
     when:"¿Para cuándo?", chips:["Hoy","Esta semana","Sin apuro"],
@@ -306,7 +310,7 @@ const T = {
   en:{
     menuTitle:"Need a hand?", menuSub:"We've got you. Tap a category, pick your service and message us.",
     search:"Search: iPhone, taxes, PS5, Atlanta…", hot:"Most requested", none:"Not listed? Leave us a message anyway.",
-    services:n=>`${n}`, tag:{casa:"Home",tech:"Tech",tramites:"Paperwork",negocio:"Social media",viajes:"Rides"},
+    services:n=>`${n}`, tag:{casa:"Home",tech:"Tech",tramites:"Paperwork",negocio:"Social media",viajes:"Rides",auto:"Auto repair"},
     leave:"Leave us a message", leaveTitle:"Leave us a message", leaveSub:"Voice note or text. We'll get back to you today.",
     leaveSubNoVoice:"Message us and we'll get back to you today.", quick:"Message us now",
     when:"When do you need it?", chips:["Today","This week","No rush"],
@@ -368,7 +372,7 @@ function render(){
   document.querySelectorAll(".lang button").forEach(b=>b.setAttribute("aria-pressed", String(b.dataset.l===lang)));
   const heroT = seg ? S[seg][lang].t : t.menuTitle, heroP = seg ? S[seg][lang].d : t.menuSub;
   app.innerHTML = `
-    <section class="hero"><h1>${esc(heroT)}</h1><p>${esc(heroP)}</p></section>
+    <section class="hero"><h1>${esc(heroT)}</h1><p>${esc(heroP)}</p>${seg&&S[seg][lang].promo?`<span class="promo">${esc(S[seg][lang].promo)}</span>`:""}</section>
     ${Z.note?`<p class="zone">${ico("pin")}<span>${esc(Z.note[lang])}</span></p>`:""}
     <label class="search">${ico("search")}<input id="q" type="search" inputmode="search" autocomplete="off" enterkeyhint="search" placeholder="${esc(t.search)}" aria-label="${esc(t.search)}"></label>
     ${seg||!hotList().length?"":`<div class="hot" id="hot"><p class="hot-l">${esc(t.hot)}</p><div class="hot-c">${hotList().map(([k,ic,n])=>`<button type="button" class="hotb" data-k="${k}" data-i="${hotIndex(k,ic)}">${ico(ic)}<span>${esc(n)}</span></button>`).join("")}</div></div>`}
@@ -377,7 +381,7 @@ function render(){
       return `<section class="cat${o?" open":""}" data-k="${k}">
         <button type="button" class="cat-h" aria-expanded="${o}" aria-controls="cb-${k}">
           <span class="ib">${ico(CAT_ICON[k])}</span>
-          <span class="ct"><b>${esc(c.t)}</b><small>${esc(c.tile)}</small></span>
+          <span class="ct"><b>${esc(c.t)}</b><small>${esc(c.tile)}</small>${c.promo?`<em class="promo">${esc(c.promo)}</em>`:""}</span>
           <span class="n">${S[k].items.length}</span>${ico("down","chev")}
         </button>
         <div class="cat-b" id="cb-${k}" ${o?"":"inert"}><div><ul class="list">${S[k].items.map((_,i)=>row(k,i,false)).join("")}</ul></div></div>

@@ -79,17 +79,26 @@ const I = {
   box:'<path d="M12 2.5 20.5 7v10L12 21.5 3.5 17V7z"/><path d="M3.5 7 12 11.5 20.5 7M12 11.5v10M7.8 4.8l8.4 4.5"/>',
   file:'<path d="M14 2.5H7A2.5 2.5 0 0 0 4.5 5v14A2.5 2.5 0 0 0 7 21.5h10a2.5 2.5 0 0 0 2.5-2.5V8z"/><path d="M14 2.5V8h5.5M8.5 13h7M8.5 17h5"/>',
   card:'<rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M2.5 10h19M6.5 15h4"/>',
-  form:'<rect x="4.5" y="3.5" width="15" height="18" rx="2.2"/><path d="M9 2.5h6v3H9zM8.5 11l1.5 1.5 3-3M8.5 16.5h7"/>'
+  form:'<rect x="4.5" y="3.5" width="15" height="18" rx="2.2"/><path d="M9 2.5h6v3H9zM8.5 11l1.5 1.5 3-3M8.5 16.5h7"/>',
+  wrench:'<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"/>',
+  brake:'<circle cx="11" cy="13" r="8"/><circle cx="11" cy="13" r="2.4"/><path d="M14.5 3.3a10.5 10.5 0 0 1 6.2 6.2l-3 1.1a7.3 7.3 0 0 0-4.3-4.3z"/>',
+  battery:'<rect x="3" y="7.5" width="18" height="12" rx="2"/><path d="M6.5 7.5V5h3.5v2.5M14 7.5V5h3.5v2.5M6.5 13.5h4M14 13.5h4M16 11.5v4"/>',
+  key:'<circle cx="7.5" cy="16.5" r="4"/><path d="m10.4 13.6 9.6-9.6M16.5 7.5l2.5 2.5M19 5l2 2"/>',
+  plug:'<path d="M12 2v2.5M9.5 4.5h5v4h-5zM8.5 8.5h7l-1 6h-5zM10.5 14.5h3v4h-3zM12 18.5V22"/>',
+  snow:'<path d="M12 2.5v19M3.8 7.2l16.4 9.6M20.2 7.2 3.8 16.8"/><path d="m9.5 4 2.5 2.5L14.5 4M9.5 20l2.5-2.5 2.5 2.5"/>',
+  belt:'<circle cx="7" cy="8" r="3.5"/><circle cx="16.5" cy="15.5" r="4.5"/><path d="M4.4 10.4l8.9 8.4M9.6 5.6l10.1 6.7"/>',
+  oil:'<path d="M12 3s-5.5 6.2-5.5 10.5a5.5 5.5 0 0 0 11 0C17.5 9.2 12 3 12 3z"/><path d="M9.5 14a2.5 2.5 0 0 0 2.5 2.5"/>',
+  gauge:'<path d="M3.5 17.5a9 9 0 1 1 17 0"/><path d="m12 15 4-5"/><circle cx="12" cy="15" r="1.3"/>'
 };
 const ico = (k, c="") => `<svg class="i ${c}" viewBox="0 0 24 24" aria-hidden="true">${I[k]||I.msg}</svg>`;
-const CAT_ICON = {casa:"home", tech:"laptop", tramites:"file", negocio:"share", viajes:"car"};
+const CAT_ICON = {casa:"home", tech:"laptop", tramites:"file", negocio:"share", viajes:"car", auto:"wrench"};
 
 
 /* Orden de las categorías según el idioma: en español primero casa y trámites; en inglés casa y tecnología.
    Redes sociales (negocio) siempre visible, pero no de primero. */
 const ORDER = {
-  es:["casa","tramites","tech","negocio","viajes"],
-  en:["casa","tech","negocio","viajes","tramites"]
+  es:["casa","tramites","tech","auto","negocio","viajes"],
+  en:["casa","tech","auto","negocio","viajes","tramites"]
 };
 const catsFor = l => (ORDER[l] || ORDER.es).filter(k => S[k]).concat(Object.keys(S).filter(k => !(ORDER[l] || ORDER.es).includes(k)));
 
@@ -99,6 +108,7 @@ const HOT = {
     ["casa","cam","Cámaras y timbres"],
     ["tramites","receipt","Taxes"],
     ["tech","phone","iPhone"],
+    ["auto","brake","Frenos −20%"],
     ["tech","gamepad","PS5"],
     ["tech","laptop","PC lenta"],
     ["tech","mac","Mac"],
@@ -110,6 +120,7 @@ const HOT = {
     ["casa","cam","Cameras"],
     ["casa","tv","TV mounting"],
     ["tech","phone","iPhone"],
+    ["auto","brake","Brakes −20%"],
     ["tech","gamepad","PS5"],
     ["tech","laptop","Slow PC"],
     ["tech","mac","Mac tune-up"],
@@ -195,6 +206,20 @@ const S = {
       ["translate",{es:["¿No hablas inglés? Te ayudamos","Te acompañamos hasta la puerta y traducimos en vivo"],en:["Need help with English or Spanish?","Door-to-door, with live translation"]}],
       ["repeat",{es:["Viajes fijos con descuento","Trabajo, escuela o citas cada semana"],en:["Discount on recurring rides","Work, school or weekly appointments"]}],
       ["bag",{es:["Diligencias locales",""],en:["Local errands",""]}]
+    ]
+  },
+  auto:{
+    es:{t:"Tu carro andando, sin precios de taller", d:"Frenos, alternador, arranque, bobinas, compresor y correas. Mecánica sencilla, bien hecha y a buen precio. Escríbenos y te cotizamos.", tile:"Frenos, alternador, arranque, bobinas y correas", promo:"20% de descuento en mano de obra"},
+    en:{t:"Keep your car running for less", d:"Brakes, alternators, starters, coils, A/C compressors and belts. Simple auto repair, done right at a fair price. Message us for a quote.", tile:"Brakes, alternators, starters, coils and belts", promo:"20% off labor"},
+    items:[
+      ["brake",{es:["Cambio de frenos","Pastillas y discos. ¿Chilla o vibra al frenar? Escríbenos"],en:["Brake replacement","Pads and rotors. Squeaking or shaking when you brake? Message us"],kw:"freno frenos pastillas discos balatas brakes brake pads rotors mecanica mecanico carro auto car mechanic"}],
+      ["battery",{es:["Alternador o batería","Si la batería no carga o se prenden luces en el tablero"],en:["Alternator or battery","Battery not charging or warning lights on the dash"],kw:"alternador bateria carga alternator battery charging mecanica carro car"}],
+      ["key",{es:["Motor de arranque","Para el carro que hace clic y no prende"],en:["Starter replacement","For the car that clicks and won't start"],kw:"arranque marcha starter no prende no arranca won't start mecanica carro car"}],
+      ["plug",{es:["Bobinas y bujías","Si el carro tiembla, falla o gasta mucha gasolina"],en:["Ignition coils and spark plugs","Rough idle, misfires or poor gas mileage"],kw:"bobina bobinas bujias coil coils spark plugs misfire tiembla falla mecanica carro car"}],
+      ["snow",{es:["Aire acondicionado que no enfría","Cambio de compresor del aire"],en:["A/C not blowing cold?","A/C compressor replacement"],kw:"aire acondicionado compresor ac a/c compressor mecanica carro car"}],
+      ["belt",{es:["Correa del tiempo y correa de accesorios","Cámbiala a tiempo y evita un daño grande en el motor"],en:["Timing belt and serpentine belt","Replace it on time and avoid major engine damage"],kw:"correa banda tiempo distribucion timing belt serpentine mecanica carro car"}],
+      ["gauge",{es:["Revisión y luz de check engine","Leemos el código con escáner y te decimos qué tiene"],en:["Inspection and check engine light","We scan the code and tell you what's wrong"],kw:"revision diagnostico escaner check engine luz inspection diagnostic scan mecanica carro car"}],
+      ["oil",{es:["Cambio de aceite y filtros",""],en:["Oil and filter change",""],kw:"aceite filtro oil change filter mecanica carro car"}]
     ]
   },
   casa:{
