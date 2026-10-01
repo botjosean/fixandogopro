@@ -18,6 +18,7 @@ ap.add_argument("--zone", default="", help="atl para tarjetas de Chamblee/Atlant
 ap.add_argument("--out", default=".")
 ap.add_argument("--placa-sin-nfc", action="store_true", help="solo la placa del carro, sin la parte NFC, en PNG 600 dpi")
 ap.add_argument("--opciones", default="abc", help="opciones de mecánica en la placa: a, b y/o c")
+ap.add_argument("--volante", action="store_true", help="volante 4x6 para entregar (PNG 600 dpi) + hoja carta con 2")
 a = ap.parse_args()
 
 P = a.phone
@@ -123,6 +124,7 @@ h1,h2,.b{font-family:'Bricolage Grotesque','Arial Narrow',Arial,sans-serif}
 .plate .new{color:var(--mango);font-weight:800;font-size:14pt;margin-top:.12in}
 .solo{justify-content:center}
 .va .solo .col,.vc .solo .col{width:1.62in}
+.vc.flyer .solo .col{width:2.15in}
 .solo .col{flex:none;width:2.05in}
 """
 
@@ -181,6 +183,11 @@ PHONE_SVG = """<svg viewBox="0 0 120 120" width="100%" height="100%" fill="none"
 
 WRENCH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"/></svg>'
 
+def flyer():
+    """Volante 4x6" para entregar en la mano: el mismo diseño de la placa (opción C), reducido; el espacio extra queda antes del QR."""
+    z = 4.25 / 5.25
+    return plate(nfc=False, v="c").replace('<div class="pg plate vc">', f'<div class="pg plate vc flyer" style="zoom:{z:.4f};height:{6.25 / z:.3f}in">', 1)
+
 def plate(nfc=True, v="a"):
     # la placa es bilingüe: sin lang, así la página sale en el idioma del teléfono
     # nfc=False: sin el círculo "Tap here" (para imprimir antes de tener las etiquetas NFC); el QR queda solo y más grande
@@ -223,6 +230,22 @@ def render_png(page, w_in, h_in, path, dpi=600):
 
 os.makedirs(a.out, exist_ok=True)
 suf = f"-{a.zone}" if a.zone else ""
+if a.volante:   # volante 4x6" (con 1/8" de sangrado) + hoja carta con 2 volantes para imprimir en casa
+    render_png(flyer(), 4.25, 6.25, os.path.join(a.out, f"volante-4x6{suf}.png"))
+    one = flyer()
+    sheet = f'''<div style="width:8.5in;height:11in;background:#fff;position:relative">
+      <div style="position:absolute;left:.25in;top:2.5in;width:8in;height:6in;display:flex;overflow:hidden">
+        <div style="width:4in;height:6in;overflow:hidden;position:relative"><div style="position:absolute;left:-.125in;top:-.125in">{one}</div></div>
+        <div style="width:4in;height:6in;overflow:hidden;position:relative"><div style="position:absolute;left:-.125in;top:-.125in">{one}</div></div>
+      </div>
+      <div style="position:absolute;left:4.25in;top:2.2in;height:6.6in;border-left:1px dashed #9AA5B5"></div>
+      <div style="position:absolute;left:.1in;right:.1in;top:2.5in;border-top:1px dashed #9AA5B5"></div>
+      <div style="position:absolute;left:.1in;right:.1in;top:8.5in;border-top:1px dashed #9AA5B5"></div>
+      <div style="position:absolute;left:.25in;top:2.2in;height:6.6in;border-left:1px dashed #9AA5B5"></div>
+      <div style="position:absolute;left:8.25in;top:2.2in;height:6.6in;border-left:1px dashed #9AA5B5"></div>
+      <p style="position:absolute;left:0;right:0;top:9in;text-align:center;font-size:9pt;color:#9AA5B5">Corta por las líneas · 2 volantes de 4x6"</p></div>'''
+    render_png(sheet, 8.5, 11, os.path.join(a.out, f"volantes-hoja-carta{suf}.png"), dpi=300)
+    raise SystemExit
 if a.placa_sin_nfc:   # solo la placa del carro, sin la parte NFC ("Tap here"), en las 3 opciones de mecánica
     for v in a.opciones:
         render_png(plate(nfc=False, v=v), 5.25, 7.25, os.path.join(a.out, f"placa-carro-sin-nfc-{v}{suf}.png"))
