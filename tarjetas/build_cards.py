@@ -116,6 +116,12 @@ h1,h2,.b{font-family:'Bricolage Grotesque','Arial Narrow',Arial,sans-serif}
 .qrbig{background:#fff;border-radius:.18in;padding:.16in;aspect-ratio:1}
 .qrbig svg{width:100%;height:100%;display:block}
 .tap{aspect-ratio:1;border-radius:50%;background:#fff;border:.07in dashed var(--mango);padding:.28in}
+/* mecánica en la esquina mango de la placa */
+.corner{position:absolute;right:.38in;top:.42in;z-index:2;text-align:right;color:var(--navy);line-height:1.05}
+.corner svg{width:.42in;height:.42in;display:inline-block}
+.corner b{display:block;font-family:'Bricolage Grotesque',Arial;font-weight:800;font-size:17pt;letter-spacing:-.01em;margin-top:.04in}
+.corner span{display:block;font-weight:700;font-size:10.5pt;margin-top:.03in}
+.corner em{display:inline-block;font-style:normal;font-weight:800;font-size:10.5pt;background:var(--navy);color:#fff;border-radius:999px;padding:.03in .12in;margin-top:.07in}
 .solo{justify-content:center}
 .solo .col{flex:none;width:2.05in}
 """
@@ -173,12 +179,15 @@ PHONE_SVG = """<svg viewBox="0 0 120 120" width="100%" height="100%" fill="none"
     <path d="M90 42c6 9 6 27 0 36"/><path d="M100 32c10 14 10 42 0 56"/>
   </g></svg>"""
 
+WRENCH = '<svg viewBox="0 0 24 24" fill="none" stroke="#14213D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"/></svg>'
+CORNER = f'<div class="corner">{WRENCH}<b>Auto repair</b><span>Mec&aacute;nica</span><em>20% off labor</em></div>'
+
 def plate(nfc=True):
     # la placa es bilingüe: sin lang, así la página sale en el idioma del teléfono
     # nfc=False: sin el círculo "Tap here" (para imprimir antes de tener las etiquetas NFC); el QR queda solo y más grande
     url = f"https://{a.domain}/go/" + (f"?z={a.zone}" if a.zone else "")
     tap = f'<div class="col"><div class="tap">{PHONE_SVG}</div><b>Tap here</b><span>Hold your phone here</span></div>' if nfc else ""
-    return f'''<div class="pg plate"><div class="tx">
+    return f'''<div class="pg plate">{CORNER}<div class="tx">
       <div class="logo">{logo_white()}</div><h1>Need a hand?<br>We&#39;ve got you.</h1><h2>Home, tech, social media, rides and paperwork.</h2>
       <p class="pill">Free pickup &middot; Recojo gratis</p>
       <p class="ph">(205) 490-8033</p><p class="phs">Call or text &middot; Llama o escribe &middot; Se habla espa&ntilde;ol</p></div>
