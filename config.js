@@ -209,17 +209,17 @@ const S = {
     ]
   },
   auto:{
-    es:{t:"Tu carro andando, sin precios de taller", d:"Frenos, alternador, arranque, bobinas, compresor y correas. Mecánica sencilla, bien hecha y a buen precio. Escríbenos y te cotizamos.", tile:"Frenos, alternador, arranque, bobinas y correas", promo:"20% de descuento en mano de obra"},
-    en:{t:"Keep your car running for less", d:"Brakes, alternators, starters, coils, A/C compressors and belts. Simple auto repair, done right at a fair price. Message us for a quote.", tile:"Brakes, alternators, starters, coils and belts", promo:"20% off labor"},
+    es:{t:"¿Problemas con tu carro? Te lo arreglamos", d:"Frenos, luz de check engine, batería y alternador, arranque, aire acondicionado y correas. Trabajo honesto, buen precio y te cotizamos antes de empezar.", tile:"Frenos, check engine, alternador, arranque, aire y correas", promo:"20% de descuento en mano de obra"},
+    en:{t:"Car trouble? We'll fix it for less", d:"Brakes, check engine light, batteries and alternators, starters, A/C and belts. Honest work, fair prices and a quote before we start.", tile:"Brakes, check engine, alternators, starters, A/C and belts", promo:"Save 20% on labor"},
     items:[
-      ["brake",{es:["Cambio de frenos","Pastillas y discos. ¿Chilla o vibra al frenar? Escríbenos"],en:["Brake replacement","Pads and rotors. Squeaking or shaking when you brake? Message us"],kw:"freno frenos pastillas discos balatas brakes brake pads rotors mecanica mecanico carro auto car mechanic"}],
-      ["battery",{es:["Alternador o batería","Si la batería no carga o se prenden luces en el tablero"],en:["Alternator or battery","Battery not charging or warning lights on the dash"],kw:"alternador bateria carga alternator battery charging mecanica carro car"}],
-      ["key",{es:["Motor de arranque","Para el carro que hace clic y no prende"],en:["Starter replacement","For the car that clicks and won't start"],kw:"arranque marcha starter no prende no arranca won't start mecanica carro car"}],
-      ["plug",{es:["Bobinas y bujías","Si el carro tiembla, falla o gasta mucha gasolina"],en:["Ignition coils and spark plugs","Rough idle, misfires or poor gas mileage"],kw:"bobina bobinas bujias coil coils spark plugs misfire tiembla falla mecanica carro car"}],
-      ["snow",{es:["Aire acondicionado que no enfría","Cambio de compresor del aire"],en:["A/C not blowing cold?","A/C compressor replacement"],kw:"aire acondicionado compresor ac a/c compressor mecanica carro car"}],
-      ["belt",{es:["Correa del tiempo y correa de accesorios","Cámbiala a tiempo y evita un daño grande en el motor"],en:["Timing belt and serpentine belt","Replace it on time and avoid major engine damage"],kw:"correa banda tiempo distribucion timing belt serpentine mecanica carro car"}],
-      ["gauge",{es:["Revisión y luz de check engine","Leemos el código con escáner y te decimos qué tiene"],en:["Inspection and check engine light","We scan the code and tell you what's wrong"],kw:"revision diagnostico escaner check engine luz inspection diagnostic scan mecanica carro car"}],
-      ["oil",{es:["Cambio de aceite y filtros",""],en:["Oil and filter change",""],kw:"aceite filtro oil change filter mecanica carro car"}]
+      ["brake",{es:["¿Tus frenos chillan o rechinan?","Cambio de pastillas y discos"],en:["Brakes squeaking or grinding?","Brake pads and rotors replaced"],kw:"freno frenos pastillas discos balatas rechinan chillan brakes brake pads rotors grinding mecanica mecanico carro auto car mechanic repair"}],
+      ["gauge",{es:["¿Se prendió la luz de check engine?","La revisamos con escáner y te decimos qué tiene"],en:["Check engine light on?","We scan it and tell you what's wrong"],kw:"revision diagnostico escaner check engine luz inspection diagnostic scan mecanica mecanico carro auto car mechanic repair"}],
+      ["battery",{es:["¿La batería se descarga sola?","Cambio de alternador y batería"],en:["Battery keeps dying?","Alternator and battery replacement"],kw:"alternador bateria carga descarga alternator battery dying charging mecanica carro auto car repair"}],
+      ["key",{es:["¿Hace clic y no prende?","Cambio de motor de arranque"],en:["Car clicks but won't start?","Starter replacement"],kw:"arranque marcha starter no prende no arranca won't start mecanica carro auto car repair"}],
+      ["snow",{es:["¿El aire acondicionado no enfría?","Cambio de compresor del aire"],en:["A/C blowing warm air?","A/C compressor replacement"],kw:"aire acondicionado compresor ac a/c compressor caliente mecanica carro auto car repair"}],
+      ["plug",{es:["¿El motor tiembla o falla?","Cambio de bobinas y bujías"],en:["Engine shaking or misfiring?","Ignition coils and spark plugs"],kw:"bobina bobinas bujias coil coils spark plugs misfire tiembla falla mecanica carro auto car repair"}],
+      ["belt",{es:["¿Ya te toca la correa del tiempo?","Correa del tiempo y de accesorios, antes de que dañe el motor"],en:["Timing belt or serpentine belt due?","Replace it before it damages your engine"],kw:"correa banda tiempo distribucion timing belt serpentine mecanica carro auto car repair"}],
+      ["oil",{es:["Cambio de aceite","Aceite y filtro, rápido y bien hecho"],en:["Oil change","Oil and filter, quick and done right"],kw:"aceite filtro oil change filter mecanica carro auto car"}]
     ]
   },
   casa:{
