@@ -99,60 +99,59 @@ const I = {
   shocks:'<path d="M12 2v3M12 19v3"/><path d="M7.5 5h9l-9 2.8h9l-9 2.8h9l-9 2.8h9l-9 2.8h9"/>'
 };
 const ico = (k, c="") => `<svg class="i ${c}" viewBox="0 0 24 24" aria-hidden="true">${I[k]||I.msg}</svg>`;
-const CAT_ICON = {casa:"home", tech:"laptop", tramites:"file", negocio:"share", viajes:"car", auto:"wrench"};
+const CAT_ICON = {tech:"laptop", seg:"cam", negocio:"share", casa:"home", tramites:"file"};
 
 
-/* Orden de las categorías según el idioma: en español primero casa y trámites; en inglés casa y tecnología.
-   Redes sociales (negocio) siempre visible, pero no de primero. */
+/* Orden de las categorías según el idioma. En inglés solo lo que dominamos (tecnología, seguridad y web);
+   en español se muestra todo. Una categoría con only:"es" no sale en inglés. */
 const ORDER = {
-  es:["casa","tramites","tech","auto","negocio","viajes"],
-  en:["casa","tech","auto","negocio","viajes","tramites"]
+  es:["tech","seg","negocio","casa","tramites"],
+  en:["tech","seg","negocio"]
 };
-const catsFor = l => (ORDER[l] || ORDER.es).filter(k => S[k]).concat(Object.keys(S).filter(k => !(ORDER[l] || ORDER.es).includes(k)));
+const catsFor = l => (ORDER[l] || ORDER.es).filter(k => S[k] && (!S[k].only || S[k].only === l));
 
 /* Lo más pedido: accesos directos que salen primero (categoría, ícono del servicio, nombre corto), por idioma. */
 const HOT = {
   es:[
     ["tech","headset","Soporte en línea −20%"],
-    ["casa","cam","Cámaras y timbres"],
-    ["casa","wall","Drywall"],
-    ["tramites","receipt","Taxes"],
-    ["tech","phone","iPhone"],
-    ["auto","brake","Frenos"],
-    ["auto","pin","GPS"],
-    ["tech","gamepad","PS5"],
-    ["tech","laptop","PC lenta"],
+    ["tech","laptop","PC lenta o no prende"],
+    ["seg","cam","Cámaras de seguridad"],
+    ["seg","pin","GPS para tu carro"],
+    ["tech","wrench","Tarjeta madre"],
+    ["tech","gamepad","PS5 y consolas"],
+    ["tech","phone","iPhone y Android"],
+    ["negocio","globe","Página web"],
+    ["negocio","share","Redes sociales"],
     ["tech","mac","Mac"],
     ["tech","lock","Cuenta hackeada"],
-    ["negocio","share","Redes sociales"],
-    ["tramites","file","Tu LLC"]
+    ["casa","wall","Drywall"],
+    ["tramites","receipt","Taxes"]
   ],
   en:[
     ["tech","headset","Online support −20%"],
-    ["casa","cam","Cameras"],
-    ["casa","wall","Drywall repair"],
-    ["casa","tv","TV mounting"],
-    ["tech","phone","iPhone"],
-    ["auto","brake","Brakes"],
-    ["auto","pin","GPS tracker"],
-    ["tech","gamepad","PS5"],
-    ["tech","laptop","Slow PC"],
+    ["tech","laptop","PC won't turn on"],
+    ["seg","cam","Security cameras"],
+    ["seg","pin","GPS tracker"],
+    ["tech","wrench","Motherboard repair"],
+    ["tech","gamepad","PS5 & consoles"],
+    ["tech","phone","iPhone & Android"],
+    ["negocio","globe","Website"],
+    ["negocio","share","Social media"],
     ["tech","mac","Mac tune-up"],
     ["tech","lock","Hacked account"],
-    ["casa","sofa","Furniture assembly"],
-    ["negocio","share","Social media"]
+    ["tech","cpu","Custom PC build"]
   ]
 };
 /* Precios "desde" (USD): ~30% por debajo del mercado de Birmingham. Número = por trabajo; [n,"mo"] = por mes. Sin entrada = sin precio.
    Cambia un número aquí y se actualiza en todas las páginas. */
 const PRICE = {
   "tech:phone":39, "tech:gamepad":59, "tech:laptop":55, "tech:mac":55, "tech:lock":69, "tech:mail":45, "tech:db":79,
-  "tech:shield":49, "tech:bug":65, "tech:joy":45, "tech:bolt":45, "tech:tablet":39, "tech:headset":39, "tech:cpu":99,
+  "tech:shield":49, "tech:bug":65, "tech:joy":45, "tech:bolt":45, "tech:headset":39, "tech:cpu":99, "tech:wrench":79, "tech:cloud":99,
   "tramites:receipt":99, "tramites:file":149, "tramites:card":15, "tramites:form":25,
   "negocio:share":[299,"mo"], "negocio:pen":149, "negocio:trend":199, "negocio:mega":[199,"mo"], "negocio:globe":299,
   "negocio:pin":99, "negocio:search":149, "negocio:bot":149, "negocio:shield":99,
-  "viajes:car":129, "viajes:plane":20, "viajes:heart":25, "viajes:translate":30, "viajes:bag":20,
-  "casa:cam":59, "casa:bell":49, "casa:wifi":59, "casa:shield":49, "casa:home":69, "casa:tv":99, "casa:sofa":45, "casa:frame":35
+  "seg:cam":59, "seg:bell":49, "seg:wifi":59, "seg:shield":49, "seg:home":69, "seg:lock":59, "seg:pin":79, "seg:key":99, "seg:car":49,
+  "casa:tv":99, "casa:sofa":45, "casa:frame":35
 };
 const priceOf = (k, ic, lang) => {
   const v = PRICE[k + ":" + ic]; if (v == null) return "";
@@ -164,26 +163,75 @@ const hotIndex = (k, ic) => S[k].items.findIndex(x => x[0] === ic);
 const S = {
   tech:{
     promoItem:"headset",   // el aviso de la oferta abre directo este servicio
-    es:{t:"¿Lenta, caliente o no prende? La arreglamos", d:"iPhone, PS5, PC y Mac, cuentas hackeadas, correos y datos perdidos. En tu casa o a distancia.", tile:"iPhone, PS5, PC y Mac, cuentas hackeadas y datos", promo:"20% de descuento en soporte en línea", promoTag:"Soporte en línea", promoSub:"Mac, Windows, Linux e iPhone, a distancia"},
-    en:{t:"Slow, overheating or dead? We'll fix it", d:"iPhone, PS5, PCs and Macs, hacked accounts, email and lost data. At your place or remote.", tile:"iPhone, PS5, PC and Mac, hacked accounts and data", promo:"20% off online tech support", promoTag:"Online tech support", promoSub:"Mac, Windows, Linux & iPhone, remotely"},
+    es:{t:"¿No prende, está lenta o se calienta? La arreglamos", d:"Laptops, PCs, consolas y celulares: reparamos hasta la tarjeta madre. Y soporte en línea para Windows, Mac, Linux e iPhone, estés donde estés.", tile:"Reparación de laptops, PCs, consolas y celulares, y soporte en línea", promo:"20% de descuento en soporte en línea", promoTag:"Soporte en línea", promoSub:"Mac, Windows, Linux e iPhone, a distancia"},
+    en:{t:"Won't turn on, slow or overheating? We fix it", d:"Laptops, PCs, game consoles and phones, down to board-level repair. Plus online support for Windows, Mac, Linux and iPhone, wherever you are.", tile:"Laptop, PC, console and phone repair, plus online support", promo:"20% off online tech support", promoTag:"Online tech support", promoSub:"Mac, Windows, Linux & iPhone, remotely"},
     items:[
-      ["headset",{es:["Soporte técnico en línea: Mac, Windows, Linux e iPhone","Lo arreglamos a distancia, estés donde estés · 20% de descuento"],en:["Online tech support: Mac, Windows, Linux & iPhone","Fixed remotely, wherever you are · 20% off"],kw:"remoto online en linea distancia ayuda tecnologica soporte remote support help desk windows linux mac macos apple computadora laptop software programa instalar"}],
-      ["phone",{es:["Tu iPhone con fallas, lento o lleno","Reparación, iCloud, fotos, respaldo y optimización"],en:["iPhone acting up, slow or full?","Repair, iCloud, photos, backup and tune-up"],kw:"celular telefono apple ios pantalla bateria"}],
-      ["gamepad",{es:["PS5 o Xbox que suena como avión","Limpieza interna, pasta térmica, puerto HDMI"],en:["PS5 or Xbox loud as a jet engine","Deep cleaning, thermal paste, HDMI port repair"],kw:"playstation consola"}],
-      ["laptop",{es:["Tu computadora lenta o que no prende","Limpieza, reparación y que no se caliente"],en:["Slow computer or won't turn on?","Cleanup, repair, no more overheating"],kw:"pc laptop windows reparacion limpieza"}],
+      ["headset",{es:["Soporte técnico en línea: Windows, Mac, Linux e iPhone","Lo arreglamos a distancia, estés donde estés · 20% de descuento"],en:["Online tech support: Windows, Mac, Linux & iPhone","Fixed remotely, wherever you are · 20% off"],kw:"remoto online en linea distancia ayuda tecnologica soporte remote support help desk windows linux mac macos apple computadora laptop software programa instalar"}],
+      ["laptop",{es:["Tu computadora no prende, está lenta o se calienta","Reparación, limpieza y mantenimiento profesional de laptops y PCs"],en:["Computer won't turn on, slow or overheating?","Professional repair, cleaning and maintenance for laptops and PCs"],kw:"pc laptop windows reparacion limpieza mantenimiento no prende lenta calienta repair computer maintenance"}],
+      ["wrench",{es:["Tarjeta madre, tarjeta de video y memoria RAM","Diagnóstico y reparación a nivel de componentes"],en:["Motherboard, graphics card and RAM repair","Component-level diagnosis and repair"],kw:"motherboard board mainboard tarjeta madre placa video grafica gpu ram memoria soldadura componentes reparacion hardware"}],
+      ["bolt",{es:["Repotenciamos tu computadora vieja","SSD, memoria RAM y tarjeta de video: velocidad de equipo nuevo sin comprar otro"],en:["Give your old PC a second life","SSD, RAM and graphics upgrades: new-PC speed without buying one"],kw:"repotenciar upgrade mejorar acelerar ssd ram vieja lenta rapida"}],
+      ["cpu",{es:["Te armamos tu PC gamer o de trabajo","A tu medida y a tu presupuesto"],en:["Custom gaming or work PC build","Built to your needs and budget"],kw:"pc gamer armar build custom gaming trabajo workstation"}],
+      ["cloud",{es:["Mantenimiento de servidores","Limpieza, revisión, discos, respaldos y mantenimiento profesional"],en:["Server maintenance","Cleaning, health checks, drives, backups and professional upkeep"],kw:"servidor server rack nas mantenimiento respaldo backup raid disco"}],
+      ["gamepad",{es:["PS4, PS5, Xbox, Nintendo y Wii","Limpieza interna, pasta térmica, puerto HDMI y reparaciones"],en:["PS4, PS5, Xbox, Nintendo & Wii repair","Deep cleaning, thermal paste, HDMI port and more"],kw:"playstation consola xbox nintendo switch wii ps4 ps5 console hdmi"}],
+      ["joy",{es:["Control que se mueve solo","Reparamos el drift, botones y batería"],en:["Controller moving on its own?","Stick drift, buttons and battery repair"]}],
+      ["phone",{es:["Celulares Android e iPhone","Puerto de carga, pantalla, batería, fotos, iCloud y respaldo"],en:["Android & iPhone repair","Charge port, screen, battery, photos, iCloud and backup"],kw:"celular telefono android samsung apple ios pantalla bateria puerto carga charging port"}],
       ["mac",{es:["Tu Mac como nueva","Optimización, limpieza y actualización de macOS"],en:["Your Mac, like new","Tune-up, cleanup and macOS updates"],kw:"macbook imac apple optimizacion"}],
+      ["db",{es:["Recuperamos tus fotos y archivos","De teléfonos, computadoras, discos y memorias USB"],en:["Get your photos and files back","From phones, computers, drives and USB sticks"],kw:"datos recuperar borrados perdidos data recovery disco"}],
       ["lock",{es:["¿Te hackearon Facebook, Instagram o WhatsApp?","Recuperamos la cuenta y la blindamos"],en:["Hacked Facebook, Instagram or WhatsApp?","We recover it and lock it down"],kw:"hackeo hackearon robaron cuenta seguridad hacked"}],
       ["mail",{es:["Recuperamos tu correo","Gmail, Outlook, iCloud o Yahoo: contraseña olvidada o cuenta robada"],en:["Get your email back","Gmail, Outlook, iCloud or Yahoo: forgotten password or stolen account"],kw:"correo email contraseña password recuperar gmail hotmail outlook"}],
-      ["db",{es:["Recuperamos tus fotos y archivos","De teléfonos, computadoras, discos y memorias USB"],en:["Get your photos and files back","From phones, computers, drives and USB sticks"],kw:"datos recuperar borrados perdidos data recovery disco"}],
-      ["shield",{es:["Ciberseguridad para tu familia y tu negocio","Contraseñas, verificación en dos pasos y cómo no caer en estafas"],en:["Cybersecurity for your family and business","Passwords, two-step verification and avoiding scams"],kw:"ciberseguridad estafa fraude phishing seguridad cybersecurity scam"}],
       ["bug",{es:["Virus, anuncios raros y ventanas que se abren solas",""],en:["Viruses, pop-ups and weird ads, gone",""]}],
-      ["joy",{es:["Control que se mueve solo","Reparamos el drift, botones y batería"],en:["Controller moving on its own?","Stick drift, buttons and battery repair"]}],
-      ["bolt",{es:["Más velocidad sin comprar otra PC","SSD, memoria RAM, tarjeta de video"],en:["More speed without buying a new PC","SSD, RAM and graphics upgrades"]}],
-      ["tablet",{es:["Tablet o teléfono nuevo, listo para usar","Pasar datos, control parental, configuración"],en:["New phone or tablet, ready to go","Data transfer, parental controls, setup"]}],
-      ["cpu",{es:["Te armamos tu PC gamer o de trabajo",""],en:["Custom gaming or work PC build",""]}]
+      ["shield",{es:["Ciberseguridad para tu familia y tu negocio","Contraseñas, verificación en dos pasos y cómo no caer en estafas"],en:["Cybersecurity for your family and business","Passwords, two-step verification and avoiding scams"],kw:"ciberseguridad estafa fraude phishing seguridad cybersecurity scam"}]
+    ]
+  },
+  seg:{
+    es:{t:"Cámaras, alarmas y GPS: tú lo ves todo", d:"Instalamos y configuramos cámaras, sistemas de seguridad en puertas y ventanas, y GPS para tu carro o tu flota. Lo ves todo desde tu teléfono.", tile:"Cámaras, alarmas en puertas y ventanas, GPS y WiFi seguro"},
+    en:{t:"Cameras, alarms and GPS: see it all", d:"We install and set up cameras, door and window security, and GPS trackers for your car or fleet. Watch everything from your phone.", tile:"Cameras, door and window alarms, GPS and secure Wi-Fi"},
+    items:[
+      ["cam",{es:["Cámaras de seguridad y circuito cerrado","Ring, Wyze, Eufy o sistema con grabador (DVR/NVR), instalado y configurado"],en:["Security cameras and CCTV systems","Ring, Wyze, Eufy or wired DVR/NVR systems, installed and configured"],kw:"camaras camara seguridad cctv circuito cerrado dvr nvr vigilancia ring wyze eufy security camera surveillance"}],
+      ["shield",{es:["Alarma en puertas y ventanas","Sensores, sirenas y avisos al teléfono"],en:["Door and window alarms","Sensors, sirens and phone alerts"],kw:"alarma sensor puerta ventana sirena seguridad alarm sensor door window siren"}],
+      ["bell",{es:["Sabe quién toca antes de abrir","Timbre con video"],en:["Know who's at the door before you open","Video doorbells"],kw:"timbre video doorbell ring"}],
+      ["lock",{es:["Cerraduras inteligentes","Abre con el teléfono o un código"],en:["Smart locks","Open with your phone or a code"],kw:"cerradura inteligente smart lock candado codigo"}],
+      ["pin",{es:["Mira tu carro en vivo desde el teléfono","Instalamos el GPS y lo ves en una app, con avisos si se mueve"],en:["See your car live on your phone","We install a GPS tracker and you watch it in an app, with alerts"],kw:"gps rastreo rastreador localizador tracker tracking ubicacion robo seguridad app flota"}],
+      ["key",{es:["GPS que apaga el motor","Corte de motor a distancia si roban el carro o dejan de pagar"],en:["GPS with engine shut-off","Cut the engine remotely if the car is stolen or payments stop"],kw:"gps apagar motor corte bloqueo inmovilizador kill switch engine cut stolen financiado"}],
+      ["car",{es:["Geocerca: aviso si el carro sale de la zona","Tú defines el área y te avisamos al instante"],en:["Geofence alerts when the car leaves the area","You set the zone and get an instant alert"],kw:"geocerca geofence zona area aviso alerta flota empleados"}],
+      ["wifi",{es:["WiFi que llega a todos los cuartos","Se acabaron los puntos muertos y tu red queda blindada"],en:["Wi-Fi in every room","No more dead spots, and your network locked down"],kw:"wifi router red internet senal mesh"}],
+      ["home",{es:["Casa inteligente","Alexa, Google Home, luces y enchufes por voz"],en:["Smart home setup","Alexa, Google Home, voice-controlled lights"]}]
+    ]
+  },
+  negocio:{
+    es:{t:"Redes sociales, páginas web y sistemas a medida", d:"Community manager, contenido, anuncios, landing pages y sistemas hechos para tu negocio. Desde cero o para rescatarlo.", tile:"Redes sociales, landing pages, sistemas a medida y anuncios"},
+    en:{t:"Social media, websites and custom systems", d:"Community management, content, ads, landing pages and custom software. From scratch or to relaunch your business.", tile:"Social media, landing pages, custom systems and ads"},
+    items:[
+      ["share",{es:["Manejamos tus redes: community manager","Publicamos, contestamos y hacemos crecer Instagram, Facebook y TikTok"],en:["We run your social media","We post, reply and grow your Instagram, Facebook and TikTok"],kw:"redes sociales social media community manager instagram facebook tiktok contenido reels posts seguidores followers"}],
+      ["globe",{es:["Landing page o página web que vende","Con dominio, correo propio y lista para tus anuncios"],en:["Landing page or website that sells","Your own domain, business email, ready for ads"],kw:"landing page pagina web sitio website diseno design"}],
+      ["grid",{es:["Un sistema hecho a la medida de tu negocio","Inventario, facturación, reservas, adiós a los papeles"],en:["Software built for your business","Inventory, invoicing, bookings, no more paper"],kw:"sistema a medida software custom inventario facturacion app"}],
+      ["bot",{es:["Que tu WhatsApp conteste solo","Respuestas automáticas, citas y chatbots con IA"],en:["Your WhatsApp answers itself","AI auto-replies, bookings and chatbots"]}],
+      ["mega",{es:["Anuncios en Facebook, Instagram y TikTok que traen mensajes","Meta Ads con presupuesto que tú controlas"],en:["Facebook, Instagram and TikTok ads that bring in messages","Ads on a budget you control"],kw:"publicidad anuncios ads promocion marketing"}],
+      ["pen",{es:["Tu marca desde cero","Nombre, logo, colores y cómo hablarle a tus clientes"],en:["Your brand from scratch","Name, logo, colors and how you talk to customers"],kw:"branding logo identidad marca emprender diseno design"}],
+      ["trend",{es:["Rescatamos tu negocio si bajaron las ventas","Vemos qué está fallando y relanzamos tu marca"],en:["Sales down? We relaunch your business","We find what's failing and relaunch your brand"],kw:"rescate relanzar recuperar ventas clientes"}],
+      ["pin",{es:["Que te encuentren en Google Maps","Perfil de Google optimizado con fotos y reseñas"],en:["Get found on Google Maps","Optimized Google Business Profile, photos and reviews"]}],
+      ["search",{es:["Google Ads para salir primero",""],en:["Google Ads to show up first",""]}],
+      ["shield",{es:["Protege tu negocio de hackeos",""],en:["Protect your business from hackers",""]}]
+    ]
+  },
+  casa:{
+    only:"es",   // solo en español: en inglés nos enfocamos en tecnología, seguridad y web
+    es:{t:"Arreglos para tu casa", d:"Reparación de drywall, TV, lámparas y muebles. Una visita y listo.", tile:"Drywall, TV, lámparas y muebles"},
+    en:{t:"Home fixes", d:"Drywall repair, TVs, lights, furniture. One visit, done.", tile:"Drywall repair, TVs, lights and furniture"},
+    items:[
+      ["wall",{es:["¿Un hueco en la pared? Lo reparamos","Parche de drywall, igualamos la textura y queda listo para pintar"],en:["Hole in your wall? We'll patch it","Drywall patching and texture matching, ready to paint"],kw:"drywall pared hueco hoyo agujero parche yeso sheetrock tablaroca tabla roca wall hole patch patching repair texture"}],
+      ["drop",{es:["Techo o pared con daño de agua","Cambiamos el drywall dañado y lo dejamos como nuevo"],en:["Water-damaged ceiling or wall","We replace the damaged drywall so it looks like new"],kw:"techo cielo raso goteo gotera mancha agua humedad ceiling water damage stain leak drywall sheetrock"}],
+      ["crack",{es:["Grietas en paredes y techos","Grietas, esquinas golpeadas y clavos que se salen"],en:["Cracks in walls and ceilings","Cracks, dented corners and nail pops"],kw:"grieta fisura rajadura esquina clavo crack cracks corner bead nail pop drywall sheetrock"}],
+      ["studs",{es:["Paredes sencillas de drywall","Divisiones, cerrar un hueco o un closet"],en:["Simple drywall walls","Partition walls, closing an opening or a closet"],kw:"pared nueva division tabique armar drywall sheetrock partition wall framing closet"}],
+      ["tv",{es:["Tu TV en la pared, derechito","Cables escondidos y soundbar incluidos"],en:["TV mounted on the wall, perfectly level","Hidden cables and soundbar setup"]}],
+      ["fan",{es:["Ventilador de techo nuevo, instalado hoy",""],en:["New ceiling fan, installed today",""]}],
+      ["bulb",{es:["Lámparas y luces que por fin se ven bien","Cambio de lámparas, LED y dimmers"],en:["Lights that finally look right","Fixture swaps, LED upgrades and dimmers"]}],
+      ["sofa",{es:["Armamos tus muebles para que no pelees con las instrucciones","Camas, closets, escritorios, cunas"],en:["Furniture assembly, no instructions needed","Beds, dressers, desks, cribs"]}],
+      ["frame",{es:["Cuadros, espejos y repisas bien colgados",""],en:["Shelves, mirrors and art hung right",""]}]
     ]
   },
   tramites:{
+    only:"es",
     es:{t:"Tus trámites, resueltos", d:"Taxes, LLC, seguros, pagos, citas y paquetería. Tú nos dices qué necesitas y nosotros nos encargamos.", tile:"Taxes, LLC, seguro de auto, pagos de USCIS, citas y paquetería"},
     en:{t:"Paperwork, handled", d:"Taxes, LLCs, insurance, payments, appointments and shipping. Tell us what you need and we take care of it.", tile:"Taxes, LLCs, car insurance, USCIS payments, appointments and shipping"},
     items:[
@@ -193,67 +241,6 @@ const S = {
       ["card",{es:["Pagos en línea sin enredos","USCIS, multas, facturas y más"],en:["Online payments, no hassle","USCIS, tickets, bills and more"],kw:"migracion inmigracion asilo tasa immigration asylum fee"}],
       ["form",{es:["Citas, formularios y cuentas en línea","Cita de licencia, consulado o pasaporte, correo y contraseñas"],en:["Appointments, forms and online accounts","Driver's license, consulate or passport appointments, email and passwords"],kw:"dmv alea licencia de conducir driver license matricula"}],
       ["box",{es:["Envío de paquetes a tu país","México y Latinoamérica"],en:["Ship packages home","Mexico and Latin America"],kw:"paqueteria paquete caja envio encomienda guatemala honduras salvador"}]
-    ]
-  },
-  negocio:{
-    es:{t:"Tus redes sociales, vendiendo", d:"Community manager, contenido, anuncios y páginas que venden. Desde cero o para rescatar tu negocio.", tile:"Redes sociales, community manager, anuncios y landing pages"},
-    en:{t:"Social media that sells", d:"Community management, content, ads and landing pages. From scratch or to relaunch your business.", tile:"Social media, community management, ads and landing pages"},
-    items:[
-      ["share",{es:["Manejamos tus redes: community manager","Publicamos, contestamos y hacemos crecer Instagram, Facebook y TikTok"],en:["We run your social media","We post, reply and grow your Instagram, Facebook and TikTok"],kw:"redes sociales social media community manager instagram facebook tiktok contenido reels posts seguidores followers"}],
-      ["pen",{es:["Tu marca desde cero","Nombre, logo, colores y cómo hablarle a tus clientes"],en:["Your brand from scratch","Name, logo, colors and how you talk to customers"],kw:"branding logo identidad marca emprender"}],
-      ["trend",{es:["Rescatamos tu negocio si bajaron las ventas","Vemos qué está fallando y relanzamos tu marca"],en:["Sales down? We relaunch your business","We find what's failing and relaunch your brand"],kw:"rescate relanzar recuperar ventas clientes"}],
-      ["mega",{es:["Anuncios en Facebook, Instagram y TikTok que traen mensajes","Meta Ads con presupuesto que tú controlas"],en:["Facebook, Instagram and TikTok ads that bring in messages","Ads on a budget you control"],kw:"publicidad anuncios ads promocion marketing"}],
-      ["globe",{es:["Landing page o página web que vende","Con dominio, correo propio y lista para tus anuncios"],en:["Landing page or website that sells","Your own domain, business email, ready for ads"],kw:"landing page pagina web sitio website"}],
-      ["pin",{es:["Que te encuentren en Google Maps","Perfil de Google optimizado con fotos y reseñas"],en:["Get found on Google Maps","Optimized Google Business Profile, photos and reviews"]}],
-      ["search",{es:["Google Ads para salir primero",""],en:["Google Ads to show up first",""]}],
-      ["bot",{es:["Que tu WhatsApp conteste solo","Respuestas automáticas, citas y chatbots con IA"],en:["Your WhatsApp answers itself","AI auto-replies, bookings and chatbots"]}],
-      ["grid",{es:["Un sistema hecho para tu negocio","Inventario, facturación, reservas, adiós a los papeles"],en:["Software built for your business","Inventory, invoicing, bookings, no more paper"]}],
-      ["shield",{es:["Protege tu negocio de hackeos",""],en:["Protect your business from hackers",""]}]
-    ]
-  },
-  viajes:{
-    es:{t:"Te llevamos, te esperamos y te traemos", d:"Viajes personalizados con un chofer que habla tu idioma y te acompaña.", tile:"Consulado en Atlanta, aeropuerto y citas"},
-    en:{t:"We drive you, wait, and bring you back", d:"Personal rides with a bilingual driver who goes with you.", tile:"Atlanta trips, airport rides and appointments"},
-    items:[
-      ["car",{es:["Consulado o trámites en Atlanta, sin estrés","Salimos temprano, te esperamos y regresamos"],en:["Atlanta appointments, stress-free","Early start, we wait, we come back together"]}],
-      ["plane",{es:["Al aeropuerto a tiempo","Birmingham y Atlanta"],en:["To the airport on time","Birmingham and Atlanta"]}],
-      ["heart",{es:["Citas médicas: no vas solo","Te llevamos, te esperamos y te regresamos"],en:["Medical appointments, you're not alone","We take you, wait, and bring you home"]}],
-      ["translate",{es:["¿No hablas inglés? Te ayudamos","Te acompañamos hasta la puerta y traducimos en vivo"],en:["Need help with English or Spanish?","Door-to-door, with live translation"]}],
-      ["repeat",{es:["Viajes fijos con descuento","Trabajo, escuela o citas cada semana"],en:["Discount on recurring rides","Work, school or weekly appointments"]}],
-      ["bag",{es:["Diligencias locales",""],en:["Local errands",""]}]
-    ]
-  },
-  auto:{
-    es:{t:"¿Problemas con tu carro? Te lo arreglamos", d:"Vamos a donde está tu carro o nos lo traes. Mantenimiento anual con productos Lucas, frenos, alternador, arranque, radiador y amortiguadores, y GPS para verlo en tu teléfono. Trabajo honesto, buen precio y te cotizamos antes de empezar.", tile:"Mantenimiento, frenos, alternador, radiador, GPS y más. Vamos a donde estés"},
-    en:{t:"Car trouble? We'll fix it for less", d:"We come to you, or you bring it to us. Annual maintenance with Lucas products, brakes, alternators, starters, radiators and shocks, plus GPS so you can see your car on your phone. Honest work, fair prices and a quote before we start.", tile:"Maintenance, brakes, alternators, radiators, GPS and more. We come to you"},
-    items:[
-      ["oil",{es:["Mantenimiento anual para que tu carro funcione perfecto","Cambio de aceite y filtro, limpieza del motor y del tanque de gasolina con productos Lucas"],en:["Annual maintenance to keep your car running right","Oil and filter change, engine flush and fuel system cleaning with Lucas products"],kw:"aceite filtro mantenimiento anual enjuague limpieza motor tanque gasolina aditivo lucas oil change filter maintenance engine flush fuel system cleaning tune up service mecanica mecanico carro auto car mechanic mobile mechanic a domicilio"}],
-      ["brake",{es:["¿Tus frenos chillan o vibran?","Cambio de discos y pastillas de freno"],en:["Brakes squeaking or shaking?","Brake rotor and pad replacement"],kw:"freno frenos pastillas discos balatas rechinan chillan vibran brakes brake pads rotors grinding mecanica mecanico carro auto car mechanic repair mobile mechanic a domicilio"}],
-      ["pin",{es:["Mira tu carro en vivo desde el teléfono","Instalamos un GPS y lo ves en nuestra app, con avisos si se mueve"],en:["See your car live on your phone","We install a GPS tracker and you watch it in our app, with alerts"],kw:"gps rastreo rastreador localizador tracker tracking ubicacion robo seguridad app flota"}],
-      ["battery",{es:["¿La batería se descarga sola?","Cambio de alternador"],en:["Battery keeps dying?","Alternator replacement"],kw:"alternador bateria carga descarga alternator battery dying charging mecanica carro auto car repair"}],
-      ["key",{es:["¿Hace clic y no prende?","Cambio de motor de arranque"],en:["Car clicks but won't start?","Starter replacement"],kw:"arranque marcha starter no prende no arranca won't start mecanica carro auto car repair"}],
-      ["radiator",{es:["¿Se calienta el motor?","Cambio de radiador"],en:["Engine overheating?","Radiator replacement"],kw:"radiador calienta recalienta temperatura refrigerante radiator overheating coolant mecanica carro auto car repair"}],
-      ["shocks",{es:["¿El carro rebota o se siente flojo?","Cambio de amortiguadores"],en:["Bouncy or rough ride?","Shock absorber replacement"],kw:"amortiguadores suspension rebota golpea shocks struts bouncy mecanica carro auto car repair"}],
-    ]
-  },
-  casa:{
-    es:{t:"Tu casa segura, conectada y al día", d:"Cámaras, WiFi, TV, reparación de drywall, lámparas y muebles. Una visita y listo.", tile:"Cámaras, drywall, timbres, WiFi y TV"},
-    en:{t:"Your home: safe, connected, done", d:"Cameras, Wi-Fi, TVs, drywall repair, lights, furniture. One visit, done.", tile:"Cameras, drywall repair, doorbells, Wi-Fi and TVs"},
-    items:[
-      ["cam",{es:["Mira tu casa desde el teléfono","Cámaras Ring, Wyze, Eufy o sistema con grabador"],en:["See your home from your phone","Ring, Wyze, Eufy or wired camera systems"]}],
-      ["wall",{es:["¿Un hueco en la pared? Lo reparamos","Parche de drywall, igualamos la textura y queda listo para pintar"],en:["Hole in your wall? We'll patch it","Drywall patching and texture matching, ready to paint"],kw:"drywall pared hueco hoyo agujero parche yeso sheetrock tablaroca tabla roca wall hole patch patching repair texture"}],
-      ["drop",{es:["Techo o pared con daño de agua","Cambiamos el drywall dañado y lo dejamos como nuevo"],en:["Water-damaged ceiling or wall","We replace the damaged drywall so it looks like new"],kw:"techo cielo raso goteo gotera mancha agua humedad ceiling water damage stain leak drywall sheetrock"}],
-      ["crack",{es:["Grietas en paredes y techos","Grietas, esquinas golpeadas y clavos que se salen"],en:["Cracks in walls and ceilings","Cracks, dented corners and nail pops"],kw:"grieta fisura rajadura esquina clavo crack cracks corner bead nail pop drywall sheetrock"}],
-      ["studs",{es:["Paredes sencillas de drywall","Divisiones, cerrar un hueco o un closet"],en:["Simple drywall walls","Partition walls, closing an opening or a closet"],kw:"pared nueva division tabique armar drywall sheetrock partition wall framing closet"}],
-      ["bell",{es:["Sabe quién toca antes de abrir","Timbre con video y cerraduras inteligentes"],en:["Know who's at the door before you open","Video doorbells and smart locks"]}],
-      ["wifi",{es:["WiFi que llega a todos los cuartos","Se acabaron los puntos muertos"],en:["Wi-Fi in every room","No more dead spots"]}],
-      ["shield",{es:["Que nadie se meta a tus cámaras ni a tu WiFi","Blindaje de tu red y tu router"],en:["Keep strangers out of your cameras and Wi-Fi","Home network and router lockdown"]}],
-      ["home",{es:["Casa inteligente","Alexa, Google Home, luces y enchufes por voz"],en:["Smart home setup","Alexa, Google Home, voice-controlled lights"]}],
-      ["tv",{es:["Tu TV en la pared, derechito","Cables escondidos y soundbar incluidos"],en:["TV mounted on the wall, perfectly level","Hidden cables and soundbar setup"]}],
-      ["fan",{es:["Ventilador de techo nuevo, instalado hoy",""],en:["New ceiling fan, installed today",""]}],
-      ["bulb",{es:["Lámparas y luces que por fin se ven bien","Cambio de lámparas, LED y dimmers"],en:["Lights that finally look right","Fixture swaps, LED upgrades and dimmers"]}],
-      ["sofa",{es:["Armamos tus muebles para que no pelees con las instrucciones","Camas, closets, escritorios, cunas"],en:["Furniture assembly, no instructions needed","Beds, dressers, desks, cribs"]}],
-      ["frame",{es:["Cuadros, espejos y repisas bien colgados",""],en:["Shelves, mirrors and art hung right",""]}]
     ]
   }
 };

@@ -8,14 +8,14 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="format-detection" content="telephone=no">
 <title>Fix &amp; Go · Servicios y contacto · Birmingham y Atlanta</title>
-<meta name="description" content="Need a hand? We've got you. Home, tech, social media, rides and paperwork. Birmingham and Atlanta. English and Spanish.">
+<meta name="description" content="Need a hand? We've got you. Computer, console and phone repair, online support, cameras and GPS, websites and social media. Birmingham and Atlanta. English and Spanish.">
 <link rel="icon" type="image/png" sizes="32x32" href="/logo/logo-mark-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="/logo/logo-mark-192.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/logo/apple-touch-icon.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Fix &amp; Go">
 <meta property="og:title" content="Fix &amp; Go · Need a hand? We've got you.">
-<meta property="og:description" content="Home, tech, social media, rides and paperwork. Birmingham and Atlanta. English and Spanish.">
+<meta property="og:description" content="Computer, console and phone repair, online support, cameras and GPS, websites and social media. Birmingham and Atlanta. English and Spanish.">
 <meta property="og:url" content="https://fixandgopro.com/go/">
 <link rel="canonical" href="https://fixandgopro.com/go/">
 <meta property="og:image" content="https://fixandgopro.com/logo/og-image.png">
@@ -227,8 +227,7 @@ textarea:focus,.in:focus{outline:none;border-color:var(--sea)}
 [data-k=tramites]{--c1:#FCEBCB;--c2:#9A5A08;--c3:#B26A0B}
 [data-k=tech]{--c1:#E3EAFB;--c2:#3B5BDB;--c3:#3B5BDB}
 [data-k=negocio]{--c1:#F6E1F0;--c2:#A6318A;--c3:#A6318A}
-[data-k=viajes]{--c1:#DDF3E4;--c2:#1E8E3E;--c3:#1E8E3E}
-[data-k=auto]{--c1:#FDE4D8;--c2:#C2410C;--c3:#C2410C}
+[data-k=seg]{--c1:#DDF3E4;--c2:#1E8E3E;--c3:#1E8E3E}
 /* oferta de una categoría (p. ej. 20% en mecánica) */
 .ct .promo{display:inline-block;margin-top:6px;padding:3px 9px;border-radius:9px;background:var(--mango);color:#14213D;font-style:normal;font-weight:800;font-size:.76rem;line-height:1.2}
 .hero .promo{display:inline-block;margin-top:10px;padding:5px 12px;border-radius:999px;background:var(--mango);color:#14213D;font-weight:800;font-size:.86rem;position:relative;z-index:1}
@@ -315,8 +314,8 @@ const cats = () => typeof catsFor === "function" ? catsFor(lang) : Object.keys(S
 const T = {
   es:{
     menuTitle:"¿Necesitas una mano?", menuSub:"Aquí estamos. Toca una categoría, elige tu servicio y escríbenos.",
-    search:"Busca: iPhone, taxes, PS5, Atlanta…", hot:"Lo más pedido", none:"No aparece aquí, pero déjanos un mensaje y lo vemos.",
-    services:n=>`${n}`, tag:{casa:"Casa",tech:"Tecnología",tramites:"Trámites",negocio:"Redes sociales",viajes:"Viajes",auto:"Mecánica"},
+    search:"Busca: PC, PS5, cámaras, GPS, página web…", hot:"Lo más pedido", none:"No aparece aquí, pero déjanos un mensaje y lo vemos.",
+    services:n=>`${n}`, tag:{tech:"Tecnología",seg:"Cámaras y GPS",negocio:"Web y redes",casa:"Casa",tramites:"Trámites"},
     leave:"Déjanos un mensaje", leaveTitle:"Déjanos un mensaje", leaveSub:"Nota de voz o escrito. Te respondemos hoy.",
     leaveSubNoVoice:"Escríbenos y te respondemos hoy mismo.", quick:"Escríbenos ahora",
     when:"¿Para cuándo?", chips:["Hoy","Esta semana","Sin apuro"],
@@ -327,7 +326,7 @@ const T = {
     recIdle:"Toca para grabar (hasta 90 s)", recOn:"Grabando… toca para parar", recDone:"Lista. Escúchala o envíala.", redo:"Grabar de nuevo",
     hold:"Mantén pulsado para hablar", prep:"Preparando el micrófono…", slow:"Sigue enviando, un momento… no cierres esta pantalla.", tapstop:"Grabando… toca para parar", micHelp:"No pudimos usar el micrófono. Toca el candado junto a la dirección, permite el micrófono y vuelve a intentar. O escribe tu mensaje.", useText:"Escribir mi mensaje", release:"Suelta cuando termines", typing:"Escribiendo lo que dijiste", check:"Esto entendimos. Corrígelo si hace falta:", txFail:"No pudimos escribirlo. Puedes escribirlo tú o enviar solo la nota de voz.", reach:"¿A dónde te respondemos?", play:"Escuchar", pause:"Pausa",
     micErr:"No se pudo usar el micrófono. Escríbenos aquí abajo.",
-    ph:"Cuéntanos qué necesitas. Ej: TV de 65\" en pared de drywall, en Hoover.",
+    ph:"Cuéntanos qué necesitas. Ej: mi laptop no prende, o quiero 4 cámaras en mi casa.",
     name:"Tu nombre", phone:"Tu teléfono o correo",
     send:"Enviar mensaje", sending:"Enviando…",
     needPhone:"Escribe un teléfono (10 números) o un correo, como tú prefieras.", needMsg:"Graba una nota o escribe tu mensaje.",
@@ -340,8 +339,8 @@ const T = {
   },
   en:{
     menuTitle:"Need a hand?", menuSub:"We've got you. Tap a category, pick your service and message us.",
-    search:"Search: iPhone, taxes, PS5, Atlanta…", hot:"Most requested", none:"Not listed? Leave us a message anyway.",
-    services:n=>`${n}`, tag:{casa:"Home",tech:"Tech",tramites:"Paperwork",negocio:"Social media",viajes:"Rides",auto:"Auto repair"},
+    search:"Search: PC, PS5, cameras, GPS, website…", hot:"Most requested", none:"Not listed? Leave us a message anyway.",
+    services:n=>`${n}`, tag:{tech:"Tech",seg:"Cameras & GPS",negocio:"Web & social",casa:"Home",tramites:"Paperwork"},
     leave:"Leave us a message", leaveTitle:"Leave us a message", leaveSub:"Voice note or text. We'll get back to you today.",
     leaveSubNoVoice:"Message us and we'll get back to you today.", quick:"Message us now",
     when:"When do you need it?", chips:["Today","This week","No rush"],
@@ -352,7 +351,7 @@ const T = {
     recIdle:"Tap to record (up to 90s)", recOn:"Recording… tap to stop", recDone:"Ready. Play it back or send it.", redo:"Record again",
     hold:"Hold to talk", prep:"Getting the microphone ready…", slow:"Still sending, one moment… please keep this screen open.", tapstop:"Recording… tap to stop", micHelp:"We couldn't use the microphone. Tap the lock next to the address, allow the microphone and try again. Or type your message.", useText:"Type my message", release:"Release when you're done", typing:"Writing what you said", check:"Here's what we heard. Fix it if needed:", txFail:"We couldn't write it out. You can type it or just send the voice note.", reach:"Where can we reply?", play:"Play", pause:"Pause",
     micErr:"Couldn't use the microphone. Type your message below.",
-    ph:"Tell us what you need. E.g. 65\" TV on drywall, in Hoover.",
+    ph:"Tell us what you need. E.g. my laptop won't turn on, or I want 4 cameras at home.",
     name:"Your name", phone:"Your phone or email",
     send:"Send message", sending:"Sending…",
     needPhone:"Enter a phone number (10 digits) or an email, whichever you prefer.", needMsg:"Record a voice note or type your message.",
@@ -404,12 +403,13 @@ function render(){
   const t = T[lang], app = document.getElementById("app");
   document.documentElement.lang = lang;
   document.querySelectorAll(".lang button").forEach(b=>b.setAttribute("aria-pressed", String(b.dataset.l===lang)));
-  const heroT = seg ? S[seg][lang].t : t.menuTitle, heroP = seg ? S[seg][lang].d : t.menuSub;
+  const sg = seg && cats().includes(seg) ? seg : null;
+  const heroT = sg ? S[sg][lang].t : t.menuTitle, heroP = sg ? S[sg][lang].d : t.menuSub;
   app.innerHTML = `
-    <section class="hero"><h1>${esc(heroT)}</h1><p>${esc(heroP)}</p>${seg&&S[seg][lang].promo?`<span class="promo">${esc(S[seg][lang].promo)}</span>`:""}</section>
+    <section class="hero"><h1>${esc(heroT)}</h1><p>${esc(heroP)}</p>${sg&&S[sg][lang].promo?`<span class="promo">${esc(S[sg][lang].promo)}</span>`:""}</section>
     ${Z.note?`<p class="zone">${ico("pin")}<span>${esc(Z.note[lang])}</span></p>`:""}
     <label class="search">${ico("search")}<input id="q" type="search" inputmode="search" autocomplete="off" enterkeyhint="search" placeholder="${esc(t.search)}" aria-label="${esc(t.search)}"></label>
-    ${seg||!hotList().length?"":`<div class="hot" id="hot"><p class="hot-l">${esc(t.hot)}</p><div class="hot-c">${hotList().map(([k,ic,n])=>`<button type="button" class="hotb" data-k="${k}" data-i="${hotIndex(k,ic)}">${ico(ic)}<span>${esc(n)}</span></button>`).join("")}</div></div>`}
+    ${sg||!hotList().length?"":`<div class="hot" id="hot"><p class="hot-l">${esc(t.hot)}</p><div class="hot-c">${hotList().map(([k,ic,n])=>`<button type="button" class="hotb" data-k="${k}" data-i="${hotIndex(k,ic)}">${ico(ic)}<span>${esc(n)}</span></button>`).join("")}</div></div>`}
     <div class="cats" id="cats">${cats().map(k=>{
       const o = k===openCat, c = S[k][lang];
       return `<section class="cat${o?" open":""}" data-k="${k}">
@@ -422,7 +422,7 @@ function render(){
       </section>`;}).join("")}</div>
     <ul class="list results" id="results" hidden>${cats().flatMap(k=>S[k].items.map((_,i)=>row(k,i,true))).join("")}</ul>
     <p class="empty" id="empty" hidden>${t.none}</p>`;
-  document.title = seg ? `${S[seg][lang].t} | Fix & Go` : "Fix & Go";
+  document.title = sg ? `${S[sg][lang].t} | Fix & Go` : "Fix & Go";
   document.getElementById("brand").href = U();
   document.getElementById("leave").innerHTML = `${ico(canVoice()?"mic":"msg")}<span>${t.leave}</span>`;
   const call = document.getElementById("call"); call.href = links.tel(); call.innerHTML = ico("call"); call.setAttribute("aria-label", t.tel);
@@ -434,7 +434,7 @@ function render(){
   if (st) fillSheet();
   promoToast();
 }
-/* Aviso de la oferta (p. ej. mecánica −20%): sale a los 2.5 s, se cierra con la X y no vuelve a salir en 3 días */
+/* Aviso de la oferta (p. ej. soporte en línea −20%): sale a los 2.5 s, se cierra con la X y no vuelve a salir en 3 días */
 let toastT = null;
 function promoToast(){
   const el = document.getElementById("toast"), k = cats().find(x => S[x][lang].promo);
@@ -814,7 +814,7 @@ new MutationObserver(() => { const el = document.querySelector(".hot-c"); if (el
 autoScrollChips(document.querySelector(".hot-c"));
 if (qs.has("cita") && canPick()) { openSheet(null, null); st.when = 3; fillSheet(); }   // /go/?cita=1 abre directo "Apartar cita" (para compartir el link)
 else if (qs.has("m")) openSheet(null, null);   // /go/?m=1 abre directo "Déjanos un mensaje" (lo usa la página principal)
-else if (seg && qs.get("i")) { const i = hotIndex(seg, qs.get("i")); if (i > -1) openSheet(seg, i); }   // /go/?s=tech&i=lock abre ese servicio
+else if (seg && cats().includes(seg) && qs.get("i")) { const i = hotIndex(seg, qs.get("i")); if (i > -1) openSheet(seg, i); }   // /go/?s=tech&i=lock abre ese servicio
 </script>
 </body>
 </html>
