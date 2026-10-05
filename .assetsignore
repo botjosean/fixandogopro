@@ -19,3 +19,6 @@ node_modules/
 fixandgopro/
 *.zip
 pin*
+
+# Codigo del Worker (regla /youtube): no es un archivo del sitio
+worker/
