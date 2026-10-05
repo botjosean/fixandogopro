@@ -563,6 +563,127 @@ footer{background:#0F1A30}
 #como{background:#F4EEE2}
 .faq details,.faq .q{box-shadow:0 12px 26px -22px rgba(63,45,20,.45)}
 .finder label{box-shadow:0 14px 30px -22px rgba(63,45,20,.45)}
+/* ================= diseño v2 ================= */
+/* 1 · órbita con los servicios reales */
+.orbit .sat{transition:background .3s,box-shadow .3s}
+.orbit .sat>div{transition:scale .35s cubic-bezier(.2,.8,.2,1)}
+.orbit .sat.on{background:var(--mango);box-shadow:0 0 0 6px rgba(242,165,65,.25),0 18px 40px -8px rgba(242,165,65,.8);z-index:2}
+.orbit .sat.on>div{scale:1.18}
+.orbit .sat.on .i{color:#14213D}
+.orb-cap{position:absolute;left:50%;top:74%;transform:translateX(-50%);display:inline-flex;align-items:center;gap:8px;white-space:nowrap;padding:8px 14px;border-radius:999px;
+  background:#14213D;border:1px solid rgba(255,255,255,.12);box-shadow:0 14px 28px -12px rgba(20,33,61,.7);color:#fff;font-weight:800;font-size:.92rem;transition:opacity .3s,transform .3s}
+.orb-cap .i{width:18px;height:18px;color:var(--mango);stroke-width:2}
+.orb-cap.out{opacity:0;transform:translateX(-50%) translateY(6px)}
+
+/* 2 · cámaras y GPS */
+.camgps{background:linear-gradient(180deg,var(--paper) 0%,#EEF5F1 100%)}
+.cg-g{display:grid;gap:36px;align-items:center}
+@media (min-width:980px){.cg-g{grid-template-columns:1fr 1.02fr;gap:64px}}
+.cg-g>*{min-width:0}
+.cg-copy .sec-h{margin-bottom:22px}
+.cg-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.cg-list li{display:flex;align-items:center;gap:14px;padding:12px 14px;border-radius:18px;background:var(--card);border:1.5px solid var(--line);box-shadow:0 14px 30px -24px rgba(63,45,20,.5)}
+.cg-list .ib{flex:none;width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:#DDF3E4;color:#1E8E3E}
+.cg-list b{display:block;font-size:1rem;line-height:1.25}
+.cg-list small{display:block;color:var(--muted);font-size:.86rem;line-height:1.35;margin-top:2px}
+.cg-list .pr{margin-left:auto;flex:none;font-style:normal;font-weight:800;font-size:.76rem;padding:4px 10px;border-radius:999px;background:#DDF3E4;color:#1E8E3E;white-space:nowrap}
+.cg-copy .cta .btn-ghost{background:var(--card);color:var(--navy);border-color:var(--line)}
+.cg-ui{position:relative;border-radius:32px;padding:14px;color:#fff;background:linear-gradient(160deg,#16294A,#0B1526);box-shadow:0 50px 90px -40px rgba(11,21,38,.75),inset 0 0 0 1.5px rgba(255,255,255,.08)}
+.cg-bar{display:flex;align-items:center;gap:10px;padding:6px 8px 12px;font-weight:800}
+.cg-bar .dot{width:10px;height:10px;border-radius:50%;background:#3DDC84;box-shadow:0 0 0 4px rgba(61,220,132,.2)}
+.cg-bar small{margin-left:auto;font-weight:700;font-size:.74rem;color:rgba(255,255,255,.6);letter-spacing:.04em;text-transform:uppercase}
+.cg-map{position:relative;border-radius:22px;overflow:hidden;background:#102240;aspect-ratio:16/11}
+.cg-map svg{position:absolute;inset:0;width:100%;height:100%}
+.cg-fence{animation:fence 3s ease-in-out infinite alternate;transform-origin:150px 110px}
+@keyframes fence{to{transform:scale(1.03)}}
+.cg-alert{position:absolute;left:10px;right:10px;top:10px;display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;background:#E5484D;color:#fff;font-weight:800;font-size:.84rem;box-shadow:0 14px 30px -12px rgba(229,72,77,.8);animation:cgAlert 9s ease-in-out infinite}
+.cg-alert .i{width:18px;height:18px;stroke-width:2.2}
+.cg-alert small{display:block;font-weight:400;opacity:.9;font-size:.74rem}
+@keyframes cgAlert{0%,52%{opacity:0;transform:translateY(-12px)}58%,94%{opacity:1;transform:none}100%{opacity:0;transform:translateY(-12px)}}
+.cg-row{display:flex;align-items:center;gap:12px;margin-top:10px;padding:12px 14px;border-radius:18px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1)}
+.cg-row .ib{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:rgba(242,165,65,.18);color:var(--mango);flex:none}
+.cg-row b{font-size:.95rem}
+.cg-sw{margin-left:auto;position:relative;width:48px;height:28px;border-radius:999px;background:rgba(255,255,255,.18);animation:cgSw 9s ease-in-out infinite;flex:none}
+.cg-sw::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;animation:cgKnob 9s ease-in-out infinite}
+@keyframes cgSw{0%,66%{background:rgba(255,255,255,.18)}72%,94%{background:#E5484D}100%{background:rgba(255,255,255,.18)}}
+@keyframes cgKnob{0%,66%{transform:none}72%,94%{transform:translateX(20px)}100%{transform:none}}
+.cg-cams{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.cg-cam{position:relative;aspect-ratio:4/3;border-radius:14px;overflow:hidden;background:linear-gradient(150deg,#27406B,#12213D)}
+.cg-cam:nth-child(2){background:linear-gradient(150deg,#2C5A55,#11302F)}
+.cg-cam:nth-child(3){background:linear-gradient(150deg,#5A4A2C,#2E2410)}
+.cg-cam::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,.05) 0 1px,transparent 1px 4px)}
+.cg-cam i{position:absolute;top:7px;left:8px;display:inline-flex;align-items:center;gap:5px;font-style:normal;font-weight:800;font-size:.6rem;letter-spacing:.06em}
+.cg-cam i::before{content:"";width:6px;height:6px;border-radius:50%;background:#E5484D;animation:rec 1.2s steps(2) infinite}
+@keyframes rec{50%{opacity:.15}}
+.cg-cam span{position:absolute;left:8px;bottom:6px;font-size:.68rem;font-weight:700;color:rgba(255,255,255,.85)}
+.cg-demo{margin:12px 0 0;text-align:center;font-size:.8rem;color:var(--muted)}
+
+/* 3 · servicios en bento */
+.feat{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+@media (min-width:900px){.feat{grid-template-columns:repeat(4,1fr);gap:16px;grid-auto-rows:minmax(150px,auto)}}
+.ft{position:relative;display:flex;flex-direction:column;gap:6px;padding:18px;border-radius:26px;background:var(--card);border:1.5px solid var(--line);text-decoration:none;color:var(--text);overflow:hidden;
+  box-shadow:0 18px 36px -28px rgba(63,45,20,.55);transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s,border-color .25s}
+.ft.w{grid-column:span 2}
+@media (min-width:900px){.ft{padding:22px}.ft.tall{grid-row:span 2}}
+.ft .ib{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;background:var(--c1);color:var(--c2);margin-bottom:6px;transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.ft .ib .i{width:24px;height:24px}
+.ft b{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:1.02rem;line-height:1.18;letter-spacing:-.01em}
+.ft small{color:var(--muted);font-size:.86rem;line-height:1.35;display:none}
+.ft.w small,.ft.tall small{display:block}
+@media (min-width:900px){.ft small{display:block}.ft b{font-size:1.12rem}}
+.ft .pr{margin-top:auto;align-self:flex-start;font-style:normal;font-weight:800;font-size:.76rem;padding:4px 10px;border-radius:999px;background:var(--c1);color:var(--c2)}
+.ft .arr{position:absolute;right:16px;bottom:16px;width:32px;height:32px;padding:7px;border-radius:50%;background:var(--mango);color:#14213D;stroke-width:2.4;transition:transform .25s}
+.ft .badge{position:absolute;top:16px;right:16px;background:var(--mango);color:#14213D;font-weight:800;font-size:.78rem;padding:5px 11px;border-radius:999px}
+@media (hover:hover){.ft:hover{transform:translateY(-5px);box-shadow:0 34px 56px -30px rgba(63,45,20,.6);border-color:var(--c2)}.ft:hover .ib{transform:rotate(-8deg) scale(1.08)}.ft:hover .arr{transform:translateX(3px)}}
+.ft:active{transform:scale(.975)}
+.ft.hero-t{background:radial-gradient(420px circle at 100% 0%,rgba(25,167,178,.45),transparent 60%),radial-gradient(360px circle at 0% 100%,rgba(242,165,65,.28),transparent 60%),#0F1B31;border-color:transparent;color:#fff}
+.ft.hero-t b{font-size:1.35rem}
+@media (min-width:900px){.ft.hero-t b{font-size:1.9rem;max-width:14ch}}
+.ft.hero-t small{color:rgba(255,255,255,.75)}
+.ft.hero-t .ib{background:rgba(255,255,255,.12);color:var(--mango)}
+.ft.hero-t .pr{background:rgba(255,255,255,.14);color:#fff}
+.ft.rv{transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.2,1),box-shadow .25s,border-color .25s}
+.allsv{margin-top:22px}
+.allsv>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:0 22px;border-radius:999px;border:1.5px solid var(--line);background:var(--card);font-weight:800;width:max-content;max-width:100%;margin:0 auto;box-shadow:0 12px 26px -20px rgba(63,45,20,.5);transition:border-color .15s,transform .15s}
+.allsv>summary::-webkit-details-marker{display:none}
+.allsv>summary .i{width:20px;height:20px;transition:transform .25s}
+.allsv[open]>summary .i{transform:rotate(180deg)}
+.allsv>summary:active{transform:scale(.97)}
+@media (hover:hover){.allsv>summary:hover{border-color:var(--sea)}}
+.allsv .picker{margin-top:18px}
+
+/* 4 · detalles de movimiento */
+.card,.pill,.ways a,.sos-t a,.why div,.step,.zone,.hot-c a,.faq summary,.btn-ghost{-webkit-tap-highlight-color:transparent}
+.card:active,.pill:active,.ways a:active,.sos-t a:active,.why div:active,.zone:active{transform:scale(.98)}
+@media (hover:hover){.why div,.zone{transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s}.why div:hover,.zone:hover{transform:translateY(-4px);box-shadow:0 28px 46px -28px rgba(63,45,20,.55)}.why div:hover .i{animation:wob .6s}}
+@keyframes wob{30%{transform:rotate(-10deg) scale(1.1)}60%{transform:rotate(6deg)}}
+.why .rv:nth-child(2),.cg-list li:nth-child(2){transition-delay:.06s}
+.why .rv:nth-child(3),.cg-list li:nth-child(3){transition-delay:.12s}
+.why .rv:nth-child(4),.cg-list li:nth-child(4){transition-delay:.18s}
+.why .rv:nth-child(5){transition-delay:.24s}
+.why .rv:nth-child(6){transition-delay:.3s}
+.btn-mango{background-image:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.45) 50%,transparent 70%);background-size:250% 100%;background-position:150% 0;background-repeat:no-repeat}
+@media (hover:hover){.btn-mango:hover{background-position:-50% 0;transition:background-position .7s,transform .18s,box-shadow .18s}}
+.hero h1,.hero p.lead{animation:rise .9s cubic-bezier(.2,.8,.2,1) both}
+.hero p.lead{animation-delay:.12s}
+.hero .cta{animation:rise .9s .22s cubic-bezier(.2,.8,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(22px)}}
+
+/* 5 · pie de página */
+footer{padding-top:56px}
+.ft-top{display:grid;gap:34px}
+@media (min-width:900px){.ft-top{grid-template-columns:1.4fr 1fr 1fr auto;gap:48px}}
+.ft-brand .brand{color:#fff}
+.ft-brand p{margin:12px 0 0;max-width:34ch;line-height:1.5}
+.ft-brand .btn{margin-top:18px;min-height:46px;font-size:.95rem}
+.ft-col h4{margin:0 0 12px;font-family:"Bricolage Grotesque",system-ui;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5);font-weight:700}
+.ft-col a{display:block;padding:6px 0;color:rgba(255,255,255,.85);text-decoration:none;font-weight:700;transition:color .15s,transform .15s}
+.ft-col a:hover{color:var(--mango);transform:translateX(3px)}
+.ft-bot{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-top:40px;padding-top:22px;border-top:1px solid rgba(255,255,255,.1);font-size:.88rem}
+.ft-bot a{color:#fff;font-weight:700;text-decoration:none}
+.ft-bot a:hover{color:var(--mango)}
+.qr{align-self:start}
+
 </style>
 </head>
 <body>
@@ -573,6 +694,7 @@ footer{background:#0F1A30}
     <a class="brand" href="/"><img src="/logo/logo-mark-teal.svg" alt="" width="34" height="34"><span>Fix <b>&amp;</b> Go</span></a>
     <div class="links">
       <a href="#servicios" data-t="nServ">Servicios</a>
+      <a href="#camaras" data-t="nCam">Cámaras y GPS</a>
       <a href="#redes" data-t="nSoc">Redes sociales</a>
       <a href="#como" data-t="nHow">Cómo funciona</a>
       <a href="#zonas" data-t="nZones">Zonas</a>
@@ -603,6 +725,7 @@ footer{background:#0F1A30}
       <div class="ring"></div><div class="ring r2"></div>
       <div class="spin" id="sats"></div>
       <div class="core"><img src="/logo/logo-mark-teal.svg" alt=""></div>
+      <div class="orb-cap" id="orbCap"></div>
     </div>
   </div>
 </section>
@@ -628,7 +751,42 @@ footer{background:#0F1A30}
         <input id="q" type="search" autocomplete="off" enterkeyhint="search"></label>
       <ul class="sugg" id="sugg" hidden></ul>
     </div>
-    <div class="picker" id="bento"></div>
+    <div class="feat" id="feat"></div>
+    <details class="allsv" id="allsv"><summary><span data-t="allSv">Ver todos los servicios por categoría</span><svg class="i" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></summary>
+      <div class="picker" id="bento"></div>
+    </details>
+  </div>
+</section>
+
+<section class="sec camgps" id="camaras">
+  <div class="wrap cg-g">
+    <div class="cg-copy rv">
+      <div class="sec-h"><span class="eyebrow" data-t="cgEye">Cámaras, alarmas y GPS</span>
+        <h2 data-t="cgH">Mira tu casa y tu carro desde el teléfono.</h2>
+        <p data-t="cgP">Instalamos y configuramos todo. Tú solo abres la app.</p></div>
+      <ul class="cg-list" id="cgList"></ul>
+      <div class="cta"><a class="btn btn-mango" id="cgAsk"><span data-t="cgCta">Pedir cámaras o GPS</span></a>
+        <a class="btn btn-ghost" id="cgWa"><span id="cgWaT"></span></a></div>
+    </div>
+    <div class="rv">
+      <div class="cg-ui" aria-hidden="true">
+        <div class="cg-bar"><span class="dot"></span><span data-t="cgCar">Mi carro</span><small data-t="cgLive">En vivo</small></div>
+        <div class="cg-map">
+          <svg viewBox="0 0 300 220" preserveAspectRatio="xMidYMid slice">
+            <g fill="none" stroke="#1D3560" stroke-width="10" stroke-linecap="round"><path d="M-10 160 C 60 120, 120 190, 200 130 S 280 80, 320 90"/><path d="M60 -10 C 90 60, 70 120, 110 230"/><path d="M220 -10 C 210 50, 250 120, 240 230"/></g>
+            <g fill="none" stroke="#2A4A7F" stroke-width="2" stroke-dasharray="3 7"><path d="M-10 160 C 60 120, 120 190, 200 130 S 280 80, 320 90"/></g>
+            <circle class="cg-fence" cx="150" cy="110" r="68" fill="rgba(61,220,132,.12)" stroke="#3DDC84" stroke-width="2.5" stroke-dasharray="7 6"/>
+            <path id="cgRoute" d="M96 130 C 120 118, 150 112, 190 112 S 250 100, 292 70" fill="none" stroke="none"/>
+            <g><circle r="22" fill="rgba(242,165,65,.25)"><animate attributeName="r" values="14;26;14" dur="2s" repeatCount="indefinite"/></circle><circle r="11" fill="#F2A541" stroke="#fff" stroke-width="3"/>
+              <animateMotion dur="9s" repeatCount="indefinite" keyPoints="0;.62;.62;1" keyTimes="0;.5;.72;1" calcMode="linear"><mpath href="#cgRoute"/></animateMotion></g>
+          </svg>
+          <div class="cg-alert"><svg class="i" viewBox="0 0 24 24"><path d="M12 2.5 19.5 5.5v5.8c0 4.7-3.2 8.6-7.5 10.2-4.3-1.6-7.5-5.5-7.5-10.2V5.5z"/><path d="M12 8.5v4.5M12 16.5v.01"/></svg><span data-t="cgAlert">El carro salió de la zona<small data-t="cgAlertS">Te avisamos al instante</small></span></div>
+        </div>
+        <div class="cg-row"><span class="ib"><svg class="i" viewBox="0 0 24 24"><circle cx="7.5" cy="16.5" r="4"/><path d="m10.4 13.6 9.6-9.6M16.5 7.5l2.5 2.5M19 5l2 2"/></svg></span><b data-t="cgEng">Corte de motor</b><span class="cg-sw"></span></div>
+        <div class="cg-cams"><div class="cg-cam"><i>REC</i><span data-t="cgC1">Entrada</span></div><div class="cg-cam"><i>REC</i><span data-t="cgC2">Patio</span></div><div class="cg-cam"><i>REC</i><span data-t="cgC3">Garaje</span></div></div>
+      </div>
+      <p class="cg-demo" data-t="cgDemo">Ejemplo de lo que ves en tu teléfono.</p>
+    </div>
   </div>
 </section>
 
@@ -777,12 +935,30 @@ footer{background:#0F1A30}
 </main>
 
 <footer>
-  <div class="wrap foot-g">
-    <div>
-      <a class="brand" href="/"><img src="/logo/logo-mark-teal.svg" alt="" width="34" height="34"><span>Fix <b>&amp;</b> Go</span></a>
-      <p style="margin:10px 0 0" id="footTxt"></p>
+  <div class="wrap">
+    <div class="ft-top">
+      <div class="ft-brand">
+        <a class="brand" href="/"><img src="/logo/logo-mark-teal.svg" alt="" width="34" height="34"><span>Fix <b>&amp;</b> Go</span></a>
+        <p data-t="ftTag">Reparación, soporte en línea, cámaras, GPS, web y redes. Birmingham, Atlanta y en línea.</p>
+        <a class="btn btn-mango" id="ftMsg" target="_blank" rel="noopener"><span id="ftMsgT"></span></a>
+      </div>
+      <nav class="ft-col" aria-label="Fix &amp; Go">
+        <h4 data-t="ftServ">Servicios</h4>
+        <a href="#servicios" data-t="nServ">Servicios</a>
+        <a href="#camaras" data-t="nCam">Cámaras y GPS</a>
+        <a href="#redes" data-t="nSoc">Redes sociales</a>
+        <a href="#como" data-t="nHow">Cómo funciona</a>
+        <a href="#preguntas" data-t="nFaq">Preguntas</a>
+      </nav>
+      <nav class="ft-col" aria-label="Contacto">
+        <h4 data-t="cEye">Contacto</h4>
+        <a id="ftTel"></a>
+        <a id="ftMail"></a>
+        <a id="ftSave" data-t="ftSave">Guardar contacto</a>
+      </nav>
+      <div class="qr"><img src="/logo/qr-go.svg" alt="QR fixandgopro.com/go"><span data-t="qr">Escanea con tu celular<br>para escribirnos.</span></div>
     </div>
-    <div class="qr"><img src="/logo/qr-go.svg" alt="QR fixandgopro.com/go"><span data-t="qr">Escanea con tu celular<br>para escribirnos.</span></div>
+    <div class="ft-bot"><span id="footTxt"></span><a href="#top" data-t="ftTop">Volver arriba ↑</a></div>
   </div>
 </footer>
 
@@ -792,7 +968,7 @@ footer{background:#0F1A30}
   <a class="btn btn-wa" id="dockWa" aria-label="WhatsApp"><svg class="i" viewBox="0 0 24 24"><path d="M3.5 20.5 5 16a8.5 8.5 0 1 1 3.3 3.3z"/><path d="M9 8.5c0 3.5 2.9 6.5 6.5 6.5l1-1.6-2-1-1 .8a4.3 4.3 0 0 1-2.2-2.2l.8-1-1-2z"/></svg></a>
 </div>
 
-<script src="/config.js?v=17"></script>
+<script src="/config.js?v=18"></script>
 <script>
 /* Si Cloudflare entrega un config.js viejo, la página sigue funcionando (sin "Lo más pedido" y con el orden de siempre) */
 if (typeof hotIndex === "undefined") window.hotIndex = (k, ic) => S[k].items.findIndex(x => x[0] === ic);
@@ -874,7 +1050,16 @@ const L = {
     wMsg:"Nota de voz o mensaje", wMsgNoVoice:"Escríbenos", wMsgS:"Desde nuestra página, en 1 minuto", wWa:"WhatsApp", wTel:"Llamar", wMail:"Correo",
     qr:"Escanea con tu celular<br>para escribirnos.",
     foot:"Reparación · Soporte en línea · Cámaras y GPS · Web y redes",
-    waMsg:"Hola Fix & Go, vi su página y quiero información."
+    waMsg:"Hola Fix & Go, vi su página y quiero información.",
+    nCam:"Cámaras y GPS", allSv:"Ver todos los servicios por categoría",
+    cgEye:"Cámaras, alarmas y GPS", cgH:"Mira tu casa y tu carro desde el teléfono.",
+    cgP:"Instalamos y configuramos todo: cámaras, alarmas en puertas y ventanas, y GPS con corte de motor y geocerca. Tú solo abres la app.",
+    cgCta:"Pedir cámaras o GPS", cgWaMsg:"Hola Fix & Go, quiero información sobre cámaras, alarmas o GPS.",
+    cgCar:"Mi carro", cgLive:"En vivo", cgAlert:"El carro salió de la zona<small>Te avisamos al instante</small>", cgEng:"Corte de motor",
+    cgC1:"Entrada", cgC2:"Patio", cgC3:"Garaje", cgDemo:"Ejemplo de lo que ves en tu teléfono.",
+    ftTag:"Reparación, soporte en línea, cámaras, GPS, web y redes. Birmingham, Atlanta y en línea.", ftServ:"Servicios", ftSave:"Guardar contacto", ftTop:"Volver arriba ↑",
+    sat:{laptop:"PCs y laptops",gamepad:"Consolas",phone:"Celulares",cam:"Cámaras",pin:"GPS",share:"Web y redes"},
+    featAll:"Ver todos"
   },
   en:{
     nServ:"Services", nSoc:"Social media", nHow:"How it works", nZones:"Areas", nFaq:"FAQ", navCta:"Message us",
@@ -950,7 +1135,16 @@ const L = {
     wMsg:"Voice note or message", wMsgNoVoice:"Message us", wMsgS:"From our page, in 1 minute", wWa:"WhatsApp", wTel:"Call", wMail:"Email",
     qr:"Scan with your phone<br>to message us.",
     foot:"Repair · Online support · Cameras & GPS · Web & social",
-    waMsg:"Hi Fix & Go, I saw your website and I'd like some info."
+    waMsg:"Hi Fix & Go, I saw your website and I'd like some info.",
+    nCam:"Cameras & GPS", allSv:"See all services by category",
+    cgEye:"Cameras, alarms and GPS", cgH:"See your home and your car from your phone.",
+    cgP:"We install and set up everything: cameras, door and window alarms, and GPS with engine shut-off and geofence. You just open the app.",
+    cgCta:"Ask about cameras or GPS", cgWaMsg:"Hi Fix & Go, I'd like info about cameras, alarms or GPS.",
+    cgCar:"My car", cgLive:"Live", cgAlert:"The car left the zone<small>We alert you instantly</small>", cgEng:"Engine shut-off",
+    cgC1:"Front door", cgC2:"Backyard", cgC3:"Garage", cgDemo:"Example of what you see on your phone.",
+    ftTag:"Repair, online support, cameras, GPS, web and social media. Birmingham, Atlanta and online.", ftServ:"Services", ftSave:"Save our contact", ftTop:"Back to top ↑",
+    sat:{laptop:"PCs & laptops",gamepad:"Consoles",phone:"Phones",cam:"Cameras",pin:"GPS",share:"Web & social"},
+    featAll:"See all"
   }
 };
 
@@ -971,7 +1165,7 @@ const go = (extra="") => `/go/?lang=${lang}${extra}`;   // la página del QR, en
 function apply(){
   const t = L[lang];
   document.documentElement.lang = lang;
-  $$("[data-t]").forEach(el => { const v = t[el.dataset.t]; if (typeof v === "string") el.innerHTML = v.includes("<br>") ? v : esc(v); });
+  $$("[data-t]").forEach(el => { const v = t[el.dataset.t]; if (typeof v === "string") el.innerHTML = (v.includes("<br>") || v.includes("<small>")) ? v : esc(v); });
   $$(".lang button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.l===lang)));
   $$('[data-href="msg"]').forEach(a => a.href = go("&m=1"));
   $$('[data-href="go"]').forEach(a => a.href = go());
@@ -992,6 +1186,7 @@ function apply(){
   const hot = hotList(); $("#hot").parentElement.hidden = !hot.length;
   $("#hot").innerHTML = hot.map(([k,ic,n]) => `<a href="${go(`&s=${k}&i=${ic}`)}">${ico(ic)}<span>${esc(n)}</span></a>`).join("");
   renderBento(); renderSocial(); startRot();
+  renderFeat(); renderCam(); renderFoot();
   autoScrollChips($("#hot"));
   const f = $("#demo"); if (f.src && !f.src.endsWith(go())) f.src = go();
 }
@@ -1079,6 +1274,41 @@ if (!reduce && "IntersectionObserver" in window) {   // mientras se ve la secci�
   $("#wheel").addEventListener("pointerenter", () => { if (matchMedia("(hover:hover)").matches) { wo.done = true; wo.disconnect(); stopNetAuto(); } });
 }
 
+
+/* ---------- servicios destacados (bento), cámaras y GPS, pie ---------- */
+const FEAT = [["tech","headset","hero-t tall w"],["tech","laptop","w"],["tech","wrench",""],["tech","gamepad",""],["tech","phone",""],["seg","cam",""],["seg","pin",""],["negocio","globe",""],
+  ["negocio","share","w"],["negocio","grid","w"],["casa","wall","w"],["tramites","receipt","w"]];
+function observeRv(root){ root.querySelectorAll(".rv:not(.in)").forEach(el => { if (typeof io !== "undefined" && io) io.observe(el); else el.classList.add("in"); }); }
+function renderFeat(){
+  const t = L[lang], ok = cats();
+  $("#feat").innerHTML = FEAT.filter(([k,ic]) => ok.includes(k) && S[k] && hotIndex(k, ic) > -1).map(([k,ic,c],n) => {
+    const it = S[k].items[hotIndex(k, ic)], [name, sub] = it[1][lang], pr = priceOf(k, ic, lang), big = c.includes("hero-t");
+    const off = big && S[k][lang].promo ? (S[k][lang].promo.match(/\d+%/) || [""])[0] : "";
+    return `<a class="ft rv ${c}" data-k="${k}" style="transition-delay:${Math.min(n,6)*50}ms" href="${go(`&s=${k}&i=${ic}`)}"><span class="ib">${ico(ic)}</span><b>${esc(name)}</b>${sub ? `<small>${esc(sub)}</small>` : ""}${pr ? `<em class="pr">${esc(pr)}</em>` : ""}${off ? `<span class="badge">−${off}</span>` : ""}${big ? "" : ico("right","arr")}</a>`;
+  }).join("");
+  observeRv($("#feat"));
+}
+function renderCam(){
+  const t = L[lang], pick = ["cam","shield","pin","key"];
+  $("#cgList").innerHTML = pick.map(ic => { const i = hotIndex("seg", ic); if (i < 0) return ""; const [n, sub] = S.seg.items[i][1][lang], pr = priceOf("seg", ic, lang);
+    return `<li class="rv"><span class="ib">${ico(ic)}</span><span><b>${esc(n)}</b>${sub ? `<small>${esc(sub)}</small>` : ""}</span>${pr ? `<em class="pr">${esc(pr)}</em>` : ""}</li>`; }).join("");
+  observeRv($("#cgList"));
+  $("#cgAsk").href = go("&s=seg");
+  const w = $("#cgWa"), en = lang === "en", msg = t.cgWaMsg;
+  w.href = en ? `sms:+${CONFIG.PHONE}?&body=${encodeURIComponent(msg)}` : `https://wa.me/${CONFIG.PHONE}?text=${encodeURIComponent(msg)}`;
+  if (en) { w.removeAttribute("target"); } else { w.target = "_blank"; w.rel = "noopener"; }
+  $("#cgWaT").textContent = en ? "Text us" : "WhatsApp";
+}
+function renderFoot(){
+  const t = L[lang], en = lang === "en", m = $("#ftMsg");
+  m.href = en ? `sms:+${CONFIG.PHONE}?&body=${encodeURIComponent(t.waMsg)}` : `https://wa.me/${CONFIG.PHONE}?text=${encodeURIComponent(t.waMsg)}`;
+  if (en) m.removeAttribute("target"); else { m.target = "_blank"; m.rel = "noopener"; }
+  $("#ftMsgT").textContent = en ? "Text us" : "WhatsApp";
+  $("#ftTel").href = "tel:+" + CONFIG.PHONE; $("#ftTel").textContent = phoneFmt(CONFIG.PHONE);
+  $("#ftMail").href = "mailto:" + CONFIG.EMAIL; $("#ftMail").textContent = CONFIG.EMAIL;
+  $("#ftSave").href = en ? "/contact" : "/contacto";
+}
+
 /* ---------- héroe: frases que rotan, órbita, luz que sigue el cursor ---------- */
 let rotI = 0, rotTimer = null;
 /* el título va en dos líneas ("¿Necesitas una mano?" / "Aquí estamos."): si una no cabe, se achica la letra en vez de partirla */
@@ -1104,25 +1334,32 @@ function fitRot(){
 }
 addEventListener("resize", () => fitRot());
 function startRot(){
-  const el = $("#rot"), list = L[lang].rot; clearInterval(rotTimer); rotI = 0; el.textContent = list[0]; fitRot();
+  const el = $("#rot"), list = L[lang].rot; clearInterval(rotTimer); rotI = 0; el.textContent = list[0]; fitRot(); setOrb(0);
   if (reduce) return;
-  rotTimer = setInterval(() => { el.classList.add("out"); setTimeout(() => { rotI = (rotI+1) % list.length; el.textContent = list[rotI]; el.classList.remove("out"); }, 350); }, 2600);
+  rotTimer = setInterval(() => { el.classList.add("out"); setTimeout(() => { rotI = (rotI+1) % list.length; el.textContent = list[rotI]; el.classList.remove("out"); setOrb(rotI, true); }, 350); }, 2600);
 }
-$("#sats").innerHTML = ["cam","cpu","phone","gamepad","laptop","mac","share","pin"].map((k,i,a) => `<div class="sat" style="--a:${i*360/a.length}deg"><div>${ico(k)}</div></div>`).join("");
+const SATS = ["laptop","gamepad","phone","cam","pin","share"];   // mismo orden que las frases de arriba
+$("#sats").innerHTML = SATS.map((k,i,a) => `<div class="sat" data-s="${k}" style="--a:${i*360/a.length-90}deg"><div>${ico(k)}</div></div>`).join("");
+function setOrb(i, swap){
+  const k = SATS[i % SATS.length], cap = $("#orbCap");
+  $$(".orbit .sat").forEach(x => x.classList.toggle("on", x.dataset.s === k));
+  const put = () => { cap.innerHTML = `${ico(k)}<span>${esc(L[lang].sat[k])}</span>`; cap.classList.remove("out"); };
+  if (swap) { cap.classList.add("out"); setTimeout(put, 300); } else put();
+}
 if (matchMedia("(hover:hover)").matches && !reduce) {
   $(".hero").addEventListener("pointermove", e => { const r = e.currentTarget.getBoundingClientRect(); $("#spot").style.setProperty("--mx", (e.clientX-r.left)+"px"); $("#spot").style.setProperty("--my", (e.clientY-r.top)+"px"); });
 }
-if (reduce) { const m = document.querySelector("animateMotion"); if (m) m.remove(); }
+if (reduce) $$("animateMotion").forEach(m => m.remove());
 
 /* ---------- scroll: nav sólido, barra del celular, apariciones, pasos, demo ---------- */
-let pendingRv = [];   // respaldo: si se baja muy rápido, lo que ya pasó por la pantalla se muestra igual
+let io = null, pendingRv = [];   // respaldo: si se baja muy rápido, lo que ya pasó por la pantalla se muestra igual
 const onScroll = () => { const y = scrollY, max = document.documentElement.scrollHeight - innerHeight;
   if (pendingRv.length) pendingRv = pendingRv.filter(el => { if (el.classList.contains("in")) return false; if (el.getBoundingClientRect().top < innerHeight) { el.classList.add("in"); return false; } return true; });
   $("#nav").classList.toggle("solid", y > 30); $("#dock").classList.toggle("show", y > innerHeight * .6);
   $("#prog").style.transform = `scaleX(${max > 0 ? Math.min(1, y / max) : 0})`; };
 addEventListener("scroll", onScroll, {passive:true}); onScroll();
 if ("IntersectionObserver" in window) {
-  const io = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); } }), {rootMargin:"0px 0px -8% 0px"});
+  io = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); } }), {rootMargin:"0px 0px -8% 0px"});
   $$(".rv").forEach(el => el.offsetHeight ? io.observe(el) : el.classList.add("in"));
   pendingRv = $$(".rv").filter(el => !el.classList.contains("in"));   // los que no se ven (alto 0) no esperan
   const navLinks = $$(".links a"), secs = navLinks.map(a => $(a.getAttribute("href")));

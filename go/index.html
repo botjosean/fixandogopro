@@ -283,6 +283,21 @@ textarea:focus,.in:focus{outline:none;border-color:var(--sea)}
 @media (prefers-reduced-motion:reduce){.wave.fake i,.dots i{animation:none}}
 .micerr{color:var(--rec);font-weight:700}
 .recinfo small{overflow-wrap:anywhere}
+/* acciones rapidas: escribir ya, sin buscar en la lista */
+.qk{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0 0}
+.qb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-height:92px;padding:12px 6px;border-radius:20px;background:var(--card);border:1.5px solid var(--line);
+  text-decoration:none;color:var(--text);font-weight:800;font-size:.88rem;line-height:1.15;text-align:center;box-shadow:0 14px 26px -22px rgba(63,45,20,.6);
+  transition:transform .15s,border-color .15s,box-shadow .2s;-webkit-tap-highlight-color:transparent}
+.qb:active{transform:scale(.95)}
+@media (hover:hover){.qb:hover{border-color:var(--sea);transform:translateY(-3px);box-shadow:0 22px 34px -22px rgba(63,45,20,.6)}}
+.qb .qi{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:var(--tint);color:var(--sea)}
+.qb .qi .i{width:22px;height:22px}
+.qb.q-wa .qi{background:#DDF3E4;color:#1E8E3E}
+.qb.q-vo .qi{background:var(--mango);color:#14213D}
+.qb.q-vo{border-color:var(--mango)}
+@media (prefers-reduced-motion:no-preference){.qb{animation:qin .5s both}.qb:nth-child(2){animation-delay:.07s}.qb:nth-child(3){animation-delay:.14s}}
+@keyframes qin{from{opacity:0;transform:translateY(12px)}}
+
 </style>
 </head>
 <body>
@@ -305,7 +320,7 @@ textarea:focus,.in:focus{outline:none;border-color:var(--sea)}
   <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="shTitle" tabindex="-1"></div>
 </div>
 
-<script src="/config.js?v=17"></script>
+<script src="/config.js?v=18"></script>
 <script>
 /* Si Cloudflare entrega un config.js viejo, la página sigue funcionando (sin "Lo más pedido" y con el orden de siempre) */
 if (typeof hotIndex === "undefined") window.hotIndex = (k, ic) => S[k].items.findIndex(x => x[0] === ic);
@@ -399,6 +414,14 @@ function row(k,i,tag){
   return `<li data-k="${k}" data-i="${i}"><button type="button" class="row" data-k="${k}" data-i="${i}">
     ${ico(ic,"ri")}<span>${tag?`<span class="tag">${T[lang].tag[k]}</span>`:""}<b>${esc(n)}</b>${s?`<small>${esc(s)}</small>`:""}${priceOf(k,ic,lang)?`<em class="pr">${esc(priceOf(k,ic,lang))}</em>`:""}</span>${ico("right","go")}</button></li>`;
 }
+function quick(t){
+  const msg = t.generic, en = lang==="en";
+  const first = en ? `<a class="qb" href="${links.sms(msg)}"><span class="qi">${ico("sms")}</span>${esc(t.sms)}</a>`
+                   : `<a class="qb q-wa" href="${links.wa(msg)}" target="_blank" rel="noopener"><span class="qi">${ico("wa")}</span>${esc(t.wa)}</a>`;
+  const call = `<a class="qb" href="${links.tel()}"><span class="qi">${ico("call")}</span>${esc(t.tel)}</a>`;
+  const voice = `<button type="button" class="qb q-vo qkv"><span class="qi">${ico(canVoice()?"mic":"msg")}</span>${esc(canVoice()?t.voice:t.write)}</button>`;
+  return `<div class="qk" role="group">${first}${call}${voice}</div>`;
+}
 function render(){
   const t = T[lang], app = document.getElementById("app");
   document.documentElement.lang = lang;
@@ -407,6 +430,7 @@ function render(){
   const heroT = sg ? S[sg][lang].t : t.menuTitle, heroP = sg ? S[sg][lang].d : t.menuSub;
   app.innerHTML = `
     <section class="hero"><h1>${esc(heroT)}</h1><p>${esc(heroP)}</p>${sg&&S[sg][lang].promo?`<span class="promo">${esc(S[sg][lang].promo)}</span>`:""}</section>
+    ${quick(t)}
     ${Z.note?`<p class="zone">${ico("pin")}<span>${esc(Z.note[lang])}</span></p>`:""}
     <label class="search">${ico("search")}<input id="q" type="search" inputmode="search" autocomplete="off" enterkeyhint="search" placeholder="${esc(t.search)}" aria-label="${esc(t.search)}"></label>
     ${sg||!hotList().length?"":`<div class="hot" id="hot"><p class="hot-l">${esc(t.hot)}</p><div class="hot-c">${hotList().map(([k,ic,n])=>`<button type="button" class="hotb" data-k="${k}" data-i="${hotIndex(k,ic)}">${ico(ic)}<span>${esc(n)}</span></button>`).join("")}</div></div>`}
@@ -451,6 +475,8 @@ function promoToast(){
   if (!el.classList.contains("on")){ clearTimeout(toastT); toastT = setTimeout(() => el.classList.add("on"), 2500); }
 }
 function onClick(e){
+  const qv = e.target.closest(".qkv");
+  if (qv){ openSheet(null, null, qv); return; }
   const hb = e.target.closest(".hotb");
   if (hb){ openSheet(hb.dataset.k, +hb.dataset.i, hb); return; }
   const h = e.target.closest(".cat-h");

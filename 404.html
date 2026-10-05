@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0B1526">
+<title>404 · Fix &amp; Go</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/logo/logo-mark-32.png">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0B1526;--sea:#0E7C86;--sea-2:#19A7B2;--mango:#F2A541}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{min-height:100vh;display:grid;place-items:center;padding:28px 20px;background:var(--ink);color:#fff;font-family:"Atkinson Hyperlegible",system-ui,sans-serif;font-size:17px;line-height:1.55;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+.blob{position:fixed;border-radius:50%;filter:blur(80px);z-index:0;pointer-events:none}
+.blob.a{width:480px;height:480px;background:var(--sea);top:-160px;right:-120px;opacity:.5}
+.blob.b{width:360px;height:360px;background:var(--mango);bottom:-160px;left:-100px;opacity:.3}
+main{position:relative;z-index:1;width:100%;max-width:560px;text-align:center}
+.brand{display:inline-flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-family:"Bricolage Grotesque",system-ui;font-weight:800;font-size:1.3rem;letter-spacing:-.02em}
+.brand img{width:34px;height:34px}.brand b{color:var(--mango)}
+.plug{width:min(280px,70vw);margin:34px auto 0;display:block}
+.cable{animation:sway 4s ease-in-out infinite;transform-origin:50% 0}
+.spark{animation:spark 1.6s steps(2) infinite}
+@keyframes sway{50%{transform:rotate(-2.5deg)}}
+@keyframes spark{50%{opacity:0}}
+h1{font-family:"Bricolage Grotesque",system-ui;font-weight:800;letter-spacing:-.03em;line-height:.95;margin:14px 0 0;font-size:clamp(4.5rem,24vw,8rem);background:linear-gradient(120deg,#fff 20%,var(--mango));-webkit-background-clip:text;background-clip:text;color:transparent}
+h2{font-family:"Bricolage Grotesque",system-ui;font-weight:800;letter-spacing:-.02em;font-size:clamp(1.5rem,5vw,2rem);line-height:1.1;margin:8px 0 0}
+p{color:rgba(255,255,255,.75);margin:14px auto 0;max-width:40ch}
+.cta{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:28px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:54px;padding:0 24px;border-radius:999px;font-weight:700;text-decoration:none;color:#fff;border:1.5px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);transition:transform .18s,background .18s}
+.btn:active{transform:scale(.97)}
+.btn:hover{background:rgba(255,255,255,.15)}
+.btn.m{background:var(--mango);color:#14213D;border-color:var(--mango);box-shadow:0 12px 30px -10px rgba(242,165,65,.8)}
+.btn.m:hover{transform:translateY(-2px);background:var(--mango)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="blob a"></div><div class="blob b"></div>
+<main>
+  <a class="brand" href="/"><img src="/logo/logo-mark-teal.svg" alt="" width="34" height="34"><span>Fix <b>&amp;</b> Go</span></a>
+  <svg class="plug" viewBox="0 0 280 150" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <g class="cable" stroke="#19A7B2" stroke-width="7"><path d="M10 14 C 70 14, 70 80, 110 80"/></g>
+    <g stroke="#fff" stroke-width="3.5"><rect x="110" y="62" width="40" height="36" rx="9" fill="#14213D"/><path d="M150 72h14M150 88h14"/></g>
+    <g stroke="#F2A541" stroke-width="3.5"><rect x="190" y="62" width="40" height="36" rx="9" fill="#14213D"/><path d="M190 72h-12M190 88h-12"/></g>
+    <path d="M230 80 C 250 80, 260 110, 272 136" stroke="#F2A541" stroke-width="7"/>
+    <g class="spark" stroke="#F2A541" stroke-width="3"><path d="M170 52l-6-12M178 50v-14M186 52l6-12"/></g>
+  </svg>
+  <h1>404</h1>
+  <h2 id="t">Esta página se desconectó.</h2>
+  <p id="p">No encontramos lo que buscabas, pero lo que necesites, lo arreglamos. Escríbenos y te respondemos hoy.</p>
+  <div class="cta">
+    <a class="btn m" id="b1" href="/go/?m=1">Escríbenos</a>
+    <a class="btn" id="b2" href="/">Ir al inicio</a>
+  </div>
+</main>
+<script>
+(function(){
+  var lang = "es";
+  try { var v = localStorage.getItem("lang"); if (v === "es" || v === "en") lang = v; else lang = /^es/i.test((navigator.languages && navigator.languages[0]) || navigator.language || "en") ? "es" : "en"; } catch (e) {}
+  if (lang === "en") {
+    document.documentElement.lang = "en";
+    document.getElementById("t").textContent = "This page got unplugged.";
+    document.getElementById("p").textContent = "We couldn't find what you were looking for, but whatever you need fixed, we've got you. Message us and we'll reply today.";
+    document.getElementById("b1").textContent = "Message us";
+    document.getElementById("b2").textContent = "Go home";
+  }
+  document.getElementById("b1").href = "/go/?lang=" + lang + "&m=1";
+})();
+</script>
+</body>
+</html>
