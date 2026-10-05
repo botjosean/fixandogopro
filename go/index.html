@@ -232,15 +232,7 @@ textarea:focus,.in:focus{outline:none;border-color:var(--sea)}
 .ct .promo{display:inline-block;margin-top:6px;padding:3px 9px;border-radius:9px;background:var(--mango);color:#14213D;font-style:normal;font-weight:800;font-size:.76rem;line-height:1.2}
 .hero .promo{display:inline-block;margin-top:10px;padding:5px 12px;border-radius:999px;background:var(--mango);color:#14213D;font-weight:800;font-size:.86rem;position:relative;z-index:1}
 /* aviso flotante de la oferta: encima de la barra de abajo, no ocupa espacio; se cierra con la X */
-.toast{position:absolute;left:0;right:0;bottom:calc(100% - 6px);display:flex;align-items:center;gap:12px;padding:10px 8px 10px 10px;background:var(--card);border:1.5px solid var(--c3);border-radius:20px;
   box-shadow:0 18px 36px -18px rgba(63,45,20,.6);transform:translateY(14px);opacity:0;visibility:hidden;transition:transform .35s cubic-bezier(.2,.8,.2,1),opacity .25s,visibility 0s .35s}
-.toast.on{transform:none;opacity:1;visibility:visible;transition:transform .35s cubic-bezier(.2,.8,.2,1),opacity .25s}
-.toast .tgo{display:flex;align-items:center;gap:12px;flex:1;min-width:0}
-.toast .ib{width:44px;height:44px;border-radius:14px;background:var(--c3);color:#fff}
-.toast b{display:block;font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:1rem;line-height:1.15}
-.toast b em{font-style:normal;background:var(--mango);color:#14213D;border-radius:8px;padding:1px 7px;margin-left:4px;white-space:nowrap}
-.toast small{display:block;color:var(--muted);font-size:.82rem;line-height:1.25;margin-top:2px}
-.toast .x{width:40px;height:40px;margin:0}
 
 :root{--paper:#FBF8F2;--line:#EBE3D6;--tint:#F2EBDD}
 .hero{background:linear-gradient(135deg,#0E7C86 0%,#0A626B 100%);box-shadow:0 28px 48px -30px rgba(14,124,134,.85)}
@@ -309,7 +301,7 @@ textarea:focus,.in:focus{outline:none;border-color:var(--sea)}
     </div>
   </header>
   <main id="app"></main>
-  <div class="bar"><div class="toast" id="toast" role="status" aria-live="polite"></div><div class="row2">
+  <div class="bar"><div class="row2">
     <button class="btn main" id="leave" type="button"></button>
     <a class="btn round" id="call"></a>
   </div></div>
@@ -456,23 +448,6 @@ function render(){
   q.addEventListener("keydown", e=>{ if (e.key==="Enter"){ e.preventDefault(); q.blur(); } });
   app.addEventListener("click", onClick);
   if (st) fillSheet();
-  promoToast();
-}
-/* Aviso de la oferta (p. ej. soporte en línea −20%): sale a los 2.5 s, se cierra con la X y no vuelve a salir en 3 días */
-let toastT = null;
-function promoToast(){
-  const el = document.getElementById("toast"), k = cats().find(x => S[x][lang].promo);
-  let seen = 0; try{ seen = +localStorage.getItem("promoX_"+k) || 0; }catch(e){}
-  if (!k || seg === k || Date.now() - seen < 3*864e5){ el.classList.remove("on"); return; }
-  const c = S[k][lang], m = (c.promo.match(/\d+%/) || [""])[0];
-  el.dataset.k = k;
-  const pi = S[k].promoItem ? hotIndex(k, S[k].promoItem) : -1;   // servicio de la oferta (p. ej. soporte en línea)
-  el.innerHTML = `<button type="button" class="tgo"><span class="ib">${ico(pi > -1 ? S[k].items[pi][0] : CAT_ICON[k])}</span><span><b>${esc(c.promoTag || T[lang].tag[k] || c.t)}${m?`<em>−${m}</em>`:""}</b><small>${esc(c.promoSub || c.promo)}</small></span></button>
-    <button type="button" class="x" aria-label="${esc(T[lang].close)}">${ico("close")}</button>`;
-  const hide = () => { el.classList.remove("on"); try{ localStorage.setItem("promoX_"+k, Date.now()); }catch(e){} };
-  el.querySelector(".x").onclick = hide;
-  el.querySelector(".tgo").onclick = () => { hide(); if (pi > -1) { openSheet(k, pi, el); return; } if (openCat !== k) toggleCat(k); else document.querySelector(`.cat[data-k="${k}"] .cat-h`).scrollIntoView({behavior:"smooth",block:"start"}); };
-  if (!el.classList.contains("on")){ clearTimeout(toastT); toastT = setTimeout(() => el.classList.add("on"), 2500); }
 }
 function onClick(e){
   const qv = e.target.closest(".qkv");
